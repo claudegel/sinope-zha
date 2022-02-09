@@ -33,6 +33,6 @@ You should see the following:
 # Editing the quirks:
 You can edit the files as you like and restart HA to test your changes. Don't forget to delete the ```__pycache__``` folder before restarting HA
 
-# Custom cluster details:
+# Custom cluster attributes details:
 
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
