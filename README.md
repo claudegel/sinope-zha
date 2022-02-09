@@ -21,12 +21,14 @@ logger:
     zhaquirks: debug
 ```
 You should see the following:
+```
 ...[zhaquirks] Loading quirks module zhaquirks.aduro
 ...
 ...[zhaquirks] Loading custom quirks from /config/zhaquirks
 ...[zhaquirks] Loading custom quirks module light
 ...[zhaquirks] Loading custom quirks module switch
 ...[zhaquirks] Loading custom quirks module thermostat
+```
 
 # Editing the quirks:
 You can edit the files as you like and restart HA to test your changes. Don't forget to delete the __pycache__ folder before restarting HA
