@@ -40,19 +40,23 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0xff01| 0x105|Sensor mode|Air: 1, floor: 2
-|0xff01|0x119|Connected load|None: 0xffff
-|0xff01| 0x118|Aux. connected load| None: 0xffff
+|0xff01|0x0010|second display|setpoint: 0, outdoor: 1
+|0xff01|0x0011|Outdoor temperature| celcius*100
+|0xff01|0x0020|hour| second since year 2000
+|0xff01|0x0105|Sensor mode|Air: 1, floor: 2
+|0xff01|0x0119|Connected load|None: 0xffff
+|0xff01| 0x0118|Aux. connected load| None: 0xffff
 |0xff01|0x010a|Floor max temperature| off: -32768, temp: temp*100
-|0xff01|0x109|Floor min temperature| off: -32768, temp: temp*100
-|0xff01|0x108|Air max temperature|temp: temp*100, valid only if floor mode is selected
-|0xff01|0x10b|Sensor type|0: 10k, 1: 12k
-|0xff01|0x128|Pump protection| Off: 0xff, On: 0x1
-|0xff01|0x114|Time format|12h: 0x1, 24h: 0x0
+|0xff01|0x0109|Floor min temperature| off: -32768, temp: temp*100
+|0xff01|0x0108|Air max temperature|temp: celcius*100, valid only if floor mode is selected
+|0xff01|0x010b|Sensor type|0: 10k, 1: 12k
+|0xff01|0x0128|Pump protection| Off: 0xff, On: 0x1
+|0xff01|0x0114|Time format|12h: 0x1, 24h: 0x0
 | --- | --- | --- | ---
-|0x0201| 0x401 |Main ouput cycle|Number of second
-|0x0201|0x402 |Backlight mode|OnDemand: 0, Always: 1
-|0x0201| 0x404|Aux ouput cycle|Number of second
+|0x0201| 0x0400 |Occupancy|Home: 0, away:1
+|0x0201| 0x0401 |Main ouput cycle|Number of second
+|0x0201|0x0402 |Backlight mode|OnDemand: 0, Always: 1
+|0x0201| 0x0404|Aux ouput cycle|Number of second
 | --- | --- | --- | ---
 
 - lights:
@@ -65,7 +69,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0051|Off - Led color|0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
 |0xff01| 0x0052|On - Led color intensity|Percent
 |0xff01|0x0053|Off - Led color intensity| Percent
-|0xff01|0x119|Load connected|None: 0, watt
+|0xff01|0x0119|Load connected|None: 0, watt
 | --- | --- | --- | ---
 
 
