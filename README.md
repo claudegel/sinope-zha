@@ -55,7 +55,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201| 0x404|Aux ouput cycle|Number of second
 | --- | --- | --- | ---
 
-- light:
+- lights:
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
