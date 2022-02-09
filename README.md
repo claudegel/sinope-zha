@@ -36,4 +36,6 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 # Custom cluster attributes details:
 
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
-|Cluster|Attributes|Fonction |Value|
+
+|Cluster|Attributes|Fonction |Value
+| --- | --- | --- | ---
