@@ -36,6 +36,8 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 # Custom cluster attributes details:
 
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
+- Thermostats
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
+|0xff01| 0x105|Sensor mode|Air: 1, floor: 2
