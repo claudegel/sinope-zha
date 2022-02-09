@@ -31,7 +31,7 @@ You should see the following:
 ```
 
 # Editing the quirks:
-You can edit the files as you like and restart HA to test your changes. Don't forget to delete the __pycache__ folder before restarting HA
+You can edit the files as you like and restart HA to test your changes. Don't forget to delete the ```__pycache__``` folder before restarting HA
 
 # Custom cluster details:
 
