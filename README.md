@@ -91,9 +91,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
-              cluster_id: 0xff01
+              cluster_id: 0xff01 # 65281
               cluster_type: in
-              attribute: 0x0010
+              attribute: 0x0010 # 16
               value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
 ```
 
