@@ -40,8 +40,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0xff01|0x0010|second display|setpoint: 0, outdoor: 1
-|0xff01|0x0011|Outdoor temperature| celcius*100
+|0xff01|0x0010|Outdoor Temperature|celcius*100
+|0xff01|0x0011|Outdoor temperature timeout| seconds
 |0xff01|0x0020|hour| second since year 2000
 |0xff01|0x0105|Sensor mode|Air: 1, floor: 2
 |0xff01|0x0119|Connected load|None: 0xffff
