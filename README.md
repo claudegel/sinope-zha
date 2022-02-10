@@ -72,6 +72,37 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0119|Load connected|None: 0, watt
 | --- | --- | --- | ---
 
+# Automation examples:
+- Sending outside temperature to thermostats
+```
+- alias: Send-OutdoorTemp
+  trigger:
+    - platform: state
+      entity_id: sensor.local_temp # sensor to get local temperature
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:2d:6d  #ieee of your thermostat dvices, one per line
+      - 50:0b:91:40:00:02:2a:65
+  action:
+    - repeat:  #service will be call for each ieee
+        count: "{{thermostats|length}}"
+        sequence:
+          - service: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01
+              cluster_type: in
+              attribute: 0x0010
+              value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
+```
 
-
+- setting the sensor
+```
+  - platform: template
+    sensors:
+      local_temp:
+        friendly_name: "Outside_temperature"
+        value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
+```
 
