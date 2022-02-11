@@ -74,6 +74,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 # Automation examples:
 - Sending outside temperature to thermostats:
+  - Celcius:
 ```
 - alias: Send-OutdoorTemp
   trigger:
@@ -95,8 +96,28 @@ I'll list here all the custom cluster attribute with explanation about how to us
               cluster_type: in
               attribute: 0x0010 # 16
               value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
+            mode: single
 ```
-You can use either 0xff01 or 65281 in automation
+  - farenheight:
+```
+alias: Update outside Temperature
+description: ''
+trigger:
+  - platform: time_pattern
+    minutes: '45'
+action:
+  - service: zha.set_zigbee_cluster_attribute
+    data:
+      ieee: 50:0b:91:32:01:03:6b:2f
+      endpoint_id: 1
+      cluster_id: 65281
+      cluster_type: in
+      attribute: 16
+      value: >-
+        {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
+    mode: single
+```
+You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minte or thermostat display will go back to setpoint display.
 
 - setting the outside temperature sensor:
 
