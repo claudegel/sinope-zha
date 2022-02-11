@@ -98,7 +98,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
               value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
             mode: single
 ```
-  - farenheight:
+   - Farenheight:
 ```
 alias: Update outside Temperature
 description: ''
