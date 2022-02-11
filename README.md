@@ -41,7 +41,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
 |0xff01|0x0010|Outdoor Temperature|celcius*100
-|0xff01|0x0011|Outdoor temperature timeout| seconds
+|0xff01|0x0011|Outdoor temperature timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
 |0xff01|0x0020|hour| second since year 2000
 |0xff01|0x0105|Sensor mode|Air: 1, floor: 2
 |0xff01|0x0119|Connected load|None: 0xffff
@@ -96,6 +96,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
               attribute: 0x0010 # 16
               value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
 ```
+You can use either 0xff01 or 65281 in automation
 
 - setting the sensor
 ```
