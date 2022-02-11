@@ -73,7 +73,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | ---
 
 # Automation examples:
-- Sending outside temperature to thermostats
+- Sending outside temperature to thermostats:
 ```
 - alias: Send-OutdoorTemp
   trigger:
@@ -99,7 +99,6 @@ I'll list here all the custom cluster attribute with explanation about how to us
 You can use either 0xff01 or 65281 in automation
 
 - setting the outside temperature sensor:
-
 You can use any temperature source, local or remote.
 ```
   - platform: template
