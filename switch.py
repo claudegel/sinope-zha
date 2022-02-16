@@ -32,23 +32,23 @@ from zhaquirks.sinope import SINOPE
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
-class SinopeMultiControlerManufacturerCluster(CustomCluster):
+class SinopeMultiControllerManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
-    name = "Sinopé Multi Controler Manufacturer specific"
-    ep_attribute = "sinope_multi_controler_manufacturer_specific"
+    name = "Sinopé Multi Controller Manufacturer specific"
+    ep_attribute = "sinope_multi_controller_manufacturer_specific"
     manufacturer_attributes = {
         0x00A0: ("Timer", t.uint32_t),
     }
 
 
-class SinopeLoadControlerManufacturerCluster(CustomCluster):
+class SinopeLoadControllerManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
-    name = "Sinopé Load Controler Manufacturer specific"
-    ep_attribute = "sinope_load_controler_manufacturer_specific"
+    name = "Sinopé Load Controller Manufacturer specific"
+    ep_attribute = "sinope_load_controller_manufacturer_specific"
     manufacturer_attributes = {
         0x0002: ("KeyboardLock", t.enum8),
         0x0060: ("ConnectedLoad", t.uint16_t),
@@ -110,8 +110,8 @@ class SinopeTechnologiesSwitch(CustomDevice):
     }
 
 
-class SinopeTechnologiesLoadControler(CustomDevice):
-    """SinopeTechnologiesSwitch custom device."""
+class SinopeTechnologiesLoadController(CustomDevice):
+    """SinopeTechnologiesLoadController custom device."""
 
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
@@ -158,7 +158,7 @@ class SinopeTechnologiesLoadControler(CustomDevice):
                     Metering.cluster_id,
                     ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeLoadControlerManufacturerCluster,
+                    SinopeLoadControllerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -171,7 +171,7 @@ class SinopeTechnologiesLoadControler(CustomDevice):
 
 
 class SinopeTechnologiesValve(CustomDevice):
-    """SinopeTechnologiesSwitch custom device."""
+    """SinopeTechnologiesValve custom device."""
 
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
@@ -232,8 +232,8 @@ class SinopeTechnologiesValve(CustomDevice):
     }
 
 
-class SinopeTechnologiesMultiControler(CustomDevice):
-    """SinopeTechnologiesSwitch custom device."""
+class SinopeTechnologiesMultiController(CustomDevice):
+    """SinopeTechnologiesMultiController custom device."""
 
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
@@ -290,7 +290,7 @@ class SinopeTechnologiesMultiControler(CustomDevice):
                     TemperatureMeasurement.cluster_id,
                     RelativeHumidity.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeMultiControlerManufacturerCluster,
+                    SinopeMultiControllerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [Ota.cluster_id],
             },
@@ -301,7 +301,7 @@ class SinopeTechnologiesMultiControler(CustomDevice):
                     OnOff.cluster_id,
                     BinaryInput.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    SinopeMultiControlerManufacturerCluster,
+                    SinopeMultiControllerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [],
             },
