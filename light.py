@@ -41,10 +41,11 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     ep_attribute = "sinope_manufacturer_specific"
     manufacturer_attributes = {
         0x0002: ("KeypadLock", t.enum8),
-        0x0050: ("onLedColor", t.uint24_t),
-        0x0051: ("offLedColor", t.uint24_t),
-        0x0052: ("onLedIntensity", t.uint8_t),
-        0x0053: ("offLedIntensity", t.uint8_t),
+        0x0050: ("OnLedColor", t.uint24_t),
+        0x0051: ("OffLedColor", t.uint24_t),
+        0x0052: ("OnLedIntensity", t.uint8_t),
+        0x0053: ("OffLedIntensity", t.uint8_t),
+        0x0055: ("MinIntensity", t.uint16_t),
         0x00A0: ("Timer", t.uint32_t),
         0x0119: ("ConnectedLoad", t.uint16_t),
     }
