@@ -1,5 +1,5 @@
 """Module to handle quirks of the Sinopé Technologies switches SP2600ZB, SP2610ZB, RM3250ZB, RM3500ZB,
-VA4200ZB, VA4201ZB, VA4220ZB and VA4221ZB."""
+VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB."""
 
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
@@ -32,7 +32,7 @@ from zhaquirks.sinope import SINOPE
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
-class SinopeMultiControlManufacturerCluster(CustomCluster):
+class SinopeMultiControlerManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
@@ -232,7 +232,7 @@ class SinopeTechnologiesValve(CustomDevice):
     }
 
 
-class SinopeTechnologiesMultiControl(CustomDevice):
+class SinopeTechnologiesMultiControler(CustomDevice):
     """SinopeTechnologiesSwitch custom device."""
 
     signature = {
@@ -290,7 +290,7 @@ class SinopeTechnologiesMultiControl(CustomDevice):
                     TemperatureMeasurement.cluster_id,
                     RelativeHumidity.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeMultiControlManufacturerCluster,
+                    SinopeMultiControlerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [Ota.cluster_id],
             },
@@ -301,7 +301,7 @@ class SinopeTechnologiesMultiControl(CustomDevice):
                     OnOff.cluster_id,
                     BinaryInput.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    SinopeMultiControlManufacturerCluster,
+                    SinopeMultiControlerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [],
             },
