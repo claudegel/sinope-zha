@@ -40,21 +40,21 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     name = "Sinopé Technologies Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     manufacturer_attributes = {
-        0x0010: ("OutdoorTemp", t.int16s),
-        0x0011: ("OutdoorTempTimeout", t.uint16_t),
-        0x0020: ("SecSince2k", t.uint32_t),
+        0x0010: ("outdoor_temp", t.int16s),
+        0x0011: ("outdoor_temp_timeout", t.uint16_t),
+        0x0020: ("secs_since_2k", t.uint32_t),
         0x0070: ("CurrentLoad", t.bitmap8),
-        0x0105: ("AirFloorMode", t.enum8),
-        0x0106: ("AuxOutputMode", t.enum8),
-        0x0108: ("AirMaxLimit", t.int16s),
-        0x0109: ("FloorMinSetpoint", t.int16s),
-        0x010A: ("FloorMaxSetpoint", t.int16s),
-        0x010B: ("TempSensorType", t.enum8),
-        0x0114: ("TimeFormat", t.enum8),
-        0x0118: ("AuxConnectedLoad", t.uint16_t),
+        0x0105: ("airFloorMode", t.enum8),
+        0x0106: ("auxOutputMode", t.enum8),
+        0x0108: ("airMaxLimit", t.int16s),
+        0x0109: ("floorMinSetpoint", t.int16s),
+        0x010A: ("floorMaxSetpoint", t.int16s),
+        0x010B: ("tempSensorType", t.enum8),
+        0x0114: ("timeFormat", t.enum8),
+        0x0118: ("auxConnectedLoad", t.uint16_t),
         0x0119: ("ConnectedLoad", t.uint16_t),
-        0x0128: ("PumpProtection", t.uint8_t),
-        0x012d: ("ReportLocalTemperature", t.int16s),
+        0x0128: ("pumpProtection", t.uint8_t),
+        0x012d: ("reportLocalTemperature", t.int16s),
     }
 
 
@@ -62,10 +62,10 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     """SinopeTechnologiesThermostatCluster custom cluster."""
 
     manufacturer_attributes = {
-        0x0400: ("SetOccupancy", t.enum8),
-        0x0401: ("MainCycleOutput", t.uint16_t),
-        0x0402: ("BacklightAutoDimParam", t.enum8),
-        0x0404: ("AuxCycleOutput", t.uint16_t),
+        0x0400: ("set_occupancy", t.enum8),
+        0x0401: ("mainCycleOutput", t.uint16_t),
+        0x0402: ("backlightAutoDimParam", t.enum8),
+        0x0404: ("auxCycleOutput", t.uint16_t),
     }
 
 
