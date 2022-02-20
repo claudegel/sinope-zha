@@ -32,7 +32,7 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     """SinopeTechnologiesThermostatCluster custom cluster."""
 
     manufacturer_attributes = {
-        0x0030: ("ZoneStatus", t.enum8),
+        0x0030: ("zoneStatus", t.enum8),
     }
 
 
