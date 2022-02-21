@@ -41,42 +41,46 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0xff01|0x0010|Outdoor Temperature|celcius*100
-|0xff01|0x0011|Outdoor temperature timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
-|0xff01|0x0020|hour| second since year 2000
-|0xff01|0x0070|CurrentLoad| watt/hr
+|0xff01|0x0010|outdoor_temp|celcius*100
+|0xff01|0x0011|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
+|0xff01|0x0020|secs_since_2k| second since year 2000
+|0xff01|0x0070|currentLoad| watt/hr
 |0xff01|0x0071|Unknown| ?
-|0xff01|0x0105|Sensor mode|Air: 1, floor: 2
-|0xff01|0x0106|AuxOutputMode|0=off, 1=expantion module
-|0xff01|0x0108|Air max temperature|temp: celcius*100, valid only if floor mode is selected
-|0xff01|0x0109|Floor min temperature| off: -32768, temp: temp*100
-|0xff01|0x010A|Floor max temperature| off: -32768, temp: temp*100
+|0xff01|0x0105|airFloorMode|Air: 1, floor: 2
+|0xff01|0x0106|auxOutputMode|0=off, 1=expantion module
+|0xff01|0x0108|airMaxLimit|temp: celcius*100, valid only if floor mode is selected
+|0xff01|0x0109|floorMinSetpoint| off: -32768, temp: temp*100
+|0xff01|0x010A|floorMaxSetpoint| off: -32768, temp: temp*100
 |0xff01|0x010B|tempSensorType| 0=10k, 1=12k
+|0xff01|0x010C|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached
 |0xff01|0x0114|timeFormat|0=24h, 1=12h
-|0xff01|0x0115|Unknown| ?
+|0xff01|0x0115|gfciStatus|0=ok, 1=error
 |0xff01|0x0118|auxConnectedLoad| watt/hr, 0xffff=off
-|0xff01|0x0119|Connected load|None: 0xffff
-|0xff01|0x0128|Pump protection| Off: 0xff, On: 0x1
-|0xff01|0x012D|ReportLocalTemperature| Celcius * 100
+|0xff01|0x0119|connectedLoad|None: 0xffff
+|0xff01|0x0128|pumpProtection| Off: 0xff, On: 0x1
+|0xff01|0x012D|reportLocalTemperature| Celcius * 100
 | --- | --- | --- | ---
 |0x0201|0x0400 |SetOccupancy| Home: 0, away:1
 |0x0201|0x0401 |MainCycleOutput| Number of second
 |0x0201|0x0402 |BacklightAutoDimParam| OnDemand: 0, Always: 1
 |0x0201|0x0404|AuxCycleOutput| Number of second
 | --- | --- | --- | ---
+|0x0b04|0x050f|Apparent_Power|watt/hr			
+|0x0b04|0x050b|Active_Power|watt/hr			
+
 
 - lights and dimmer:
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0xff01|0x0002|Keyboard lock| Locked: 1, Unlocked: 0
-|0xff01|0x0050|OnLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0051|OffLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0052|OnLedIntensity| Percent
-|0xff01|0x0053|OffLedIntensity| Percent
-|0xff01|0x0055|MinIntensity| 0 to 3000
+|0xff01|0x0002|KeypadLock| Locked: 1, Unlocked: 0
+|0xff01|0x0050|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
+|0xff01|0x0051|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
+|0xff01|0x0052|onLedIntensity| Percent
+|0xff01|0x0053|offLedIntensity| Percent
+|0xff01|0x0055|minIntensity| 0 to 3000
 |0xff01|0x00A0|Timer| Number of seconds
-|0xff01|0x0119|Load connected| None: 0, watt
+|0xff01|0x0119|ConnectedLoad| None: 0, watt
 | --- | --- | --- | ---
 |0x0702|0x0000|CurrentSummationDelivered| Sum of delivered watt/hr
 |0x0006|0x0000|OnOff| 1=on, 0=off
@@ -86,8 +90,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0x0702|0x0000|CurrentSummationDelivered|	watt/hr
-|0x0b04|0x050b|ActivePower|	watt/hr
+|0x0702|0x0000|CurrentSummationDelivered|watt/hr
+|0x0b04|0x050B|Active_Power|watt/hr
 |0x0b04|0x0605|ACPowerDivisor| 10
 |0x0b04|0x0604|ACPowerMultiplier|	1
 |0x0006|0x0000|OnOff| 0=off, 1=on
@@ -97,28 +101,28 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
 |0xff01|0x0060|ConnectedLoad|	watt/hr
-|0xff01|0x00a0|Timer| Seconds
-|0xff01|0x0002|LockKeyboard| on=1, off=0
+|0xff01|0x00A0|Timer| Seconds
+|0xff01|0x0002|KeyboardLock| on=1, off=0
 |0xff01|0x0070|CurrentLoad|	watt/hr
 |0x0006|0x0000|OnOff|	1=on, 0=off
-|0x0b04|0x050b|ActivePower|	watt/hr
-|0x0b04|0x0605|ACPowerDivisor| 1
-|0x0b04|0x0604|ACPowerMultiplier|	1
+|0x0b04|0x050B|Active_Power|	watt/hr
+|0x0b04|0x0605|AC_Power_Divisor| 1
+|0x0b04|0x0604|AC_Power_Multiplier|	1
 |0x0702|0x0000|CurrentSummationDelivered|	watt/hr
 
 - Switch MC3100ZB, multi controller
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0xff01|0x00a0|Timer one and two|	second, on endpoint 1 and 2
-|0x0001|0x003e|BatteryAlarmState| 0=no alarm, 1=alarn
-|0x0006|0x0000|OnOff on and two| 1=on, 0=off, on endpoint 1 and 2
+|0xff01|0x00A0|Timer|	second, on endpoint 1 and 2
+|0x0001|0x003E|BatteryAlarmState| 0=no alarm, 1=alarn
+|0x0006|0x0000|OnOff| 1=on, 0=off, on endpoint 1 and 2
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
-|0x0001|0x0020|BatteryVoltage| Volt
+|0x0001|0x0020|Battery_Voltage| Volt
 |0x0001|0x003e|BatteryAlarmState| 0=no alarm, 1=alarm
 |0x0006|0x0000|OnOff|	1=on, 0=off
 
