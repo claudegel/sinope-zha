@@ -36,27 +36,27 @@ SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
 class SinopeMultiControllerManufacturerCluster(CustomCluster):
-    """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
+    """SinopeMultiControllerManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Multi Controller Manufacturer specific"
     ep_attribute = "sinope_multi_controller_manufacturer_specific"
-    manufacturer_attributes = {
-        0x00A0: ("Timer", t.uint32_t),
+    attributes = {
+        0x00A0: ("Timer", t.uint32_t, True),
     }
 
 
 class SinopeLoadControllerManufacturerCluster(CustomCluster):
-    """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
+    """SinopeLoadControllerManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Load Controller Manufacturer specific"
     ep_attribute = "sinope_load_controller_manufacturer_specific"
-    manufacturer_attributes = {
-        0x0002: ("KeyboardLock", t.enum8),
-        0x0060: ("ConnectedLoad", t.uint16_t),
-        0x0070: ("CurrentLoad", t.bitmap8),
-        0x00A0: ("Timer", t.uint32_t),
+    attributes = {
+        0x0002: ("KeyboardLock", t.enum8, True),
+        0x0060: ("ConnectedLoad", t.uint16_t, True),
+        0x0070: ("CurrentLoad", t.bitmap8, True),
+        0x00A0: ("Timer", t.uint32_t, True),
     }
 
 
