@@ -16,6 +16,7 @@ from zigpy.zcl.clusters.general import (
 from zigpy.zcl.clusters.homeautomation import Diagnostic
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
+
 from zhaquirks.const import (
     DEVICE_TYPE,
     ENDPOINTS,
@@ -32,9 +33,12 @@ SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     """SinopeTechnologiesIasZoneCluster custom cluster."""
 
-    manufacturer_attributes = {
-        0x0030: ("zoneStatus", t.enum8),
-    }
+    attributes = IasZone.attributes.copy()
+    attributes.update(
+        {
+            0x0030: ("zoneStatus", t.enum8, True),
+        }
+    )
 
 
 class SinopeTechnologiesSensor(CustomDevice):
