@@ -10,7 +10,7 @@ zha:
   custom_quirks_path: /config/zhaquirks/
 ```
 # Copy the quirks
-In /config/zhaquirks copy the fourth files, light.py, switch.py and thermostat.py and sensor.py then restart Home Assistant
+In /config/zhaquirks copy the fourth files, light.py, switch.py, thermostat.py and sensor.py then restart Home Assistant
 
 # Logging
 In configuration.yaml you can add this to get logging info for the quirks:
