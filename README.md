@@ -66,8 +66,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0404|AuxCycleOutput| Number of second
 | --- | --- | --- | ---
 |0x0b04|0x050f|Apparent_Power|watt/hr			
-|0x0b04|0x050b|Active_Power|watt/hr			
-
+|0x0b04|0x050b|Active_Power|watt/hr
+| --- | --- | --- | ---
+|0x0204|0x0000|TemperatureDisplayMode|0=celcius, 1=farenheight
+|0x0204|0x0001|keypadLockout|0=no lock, 1=lock
+| --- | --- | --- | ---
+|0x0702|0x0000|CurrentSummationDelivered|watt/hr	
 
 - lights and dimmer:
 
