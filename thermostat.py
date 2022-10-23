@@ -264,6 +264,8 @@ class SinopeLineThermostats(SinopeTechnologiesThermostat):
             (SINOPE, "TH1124ZB"),
             (SINOPE, "TH1500ZB"),
             (SINOPE, "OTH3600-GA-ZB"),
+            (SINOPE, "TH1123ZB-G2"),
+            (SINOPE, "TH1124ZB-G2"),
         ],
         ENDPOINTS: {
             1: {
