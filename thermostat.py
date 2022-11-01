@@ -323,7 +323,7 @@ class SinopeG2Thermostats(SinopeTechnologiesThermostat):
     signature = {
         # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
         # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
-        # output_clusters=[3, 10, 25, 65281]>
+        # output_clusters=[3, 10, 25]>
         MODELS_INFO: [
             (SINOPE, "TH1123ZB-G2"),
             (SINOPE, "TH1124ZB-G2"),
@@ -349,7 +349,6 @@ class SinopeG2Thermostats(SinopeTechnologiesThermostat):
                     Identify.cluster_id,
                     Time.cluster_id,
                     Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
                 ],
             }
         },
@@ -375,7 +374,6 @@ class SinopeG2Thermostats(SinopeTechnologiesThermostat):
                     Identify.cluster_id,
                     Time.cluster_id,
                     Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
                 ],
             }
         }
