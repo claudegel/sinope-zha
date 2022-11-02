@@ -253,7 +253,7 @@ class SinopeTH1300ZB(SinopeTechnologiesThermostat):
 
 
 class SinopeLineThermostats(SinopeTechnologiesThermostat):
-    """TH1123ZB, TH1124ZB, TH1500ZB and OTH3600-GA-ZB thermostat."""
+    """TH1123ZB, TH1124ZB, TH1500ZB and OTH3600-GA-ZB thermostats."""
 
     signature = {
         # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
@@ -318,7 +318,7 @@ class SinopeLineThermostats(SinopeTechnologiesThermostat):
 
 
 class SinopeG2Thermostats(SinopeTechnologiesThermostat):
-    """TH1123ZB-G2 and TH1124ZB-G2 thermostat."""
+    """TH1123ZB-G2 and TH1124ZB-G2 thermostats."""
 
     signature = {
         # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
