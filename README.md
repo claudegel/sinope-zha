@@ -100,7 +100,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0b04|0x0604|ACPowerMultiplier|	1
 |0x0006|0x0000|OnOff| 0=off, 1=on
 
-- Switch RM3250ZB, RM3500ZB, Load Controller
+- Switch RM3250ZB, Load Controller
 
 |Cluster|Attributes|Fonction |Value
 | --- | --- | --- | ---
@@ -113,6 +113,24 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0b04|0x0605|AC_Power_Divisor| 1
 |0x0b04|0x0604|AC_Power_Multiplier|	1
 |0x0702|0x0000|CurrentSummationDelivered|	watt/hr
+
+- Switch RM3500ZB, Calypso water tank controller
+
+|Cluster|Attributes|Fonction |Value
+| --- | --- | --- | ---
+|0xff01|0x0060|ConnectedLoad|	watt/hr
+|0xff01|0x0070|CurrentLoad|	watt/hr
+|0xff01|0x0076|drConfigWaterTempMin|	45 or 0
+|0xff01|0x0077|drConfigWaterTempTime|	2
+|0xff01|0x0078|drWTTimeOn|	240
+|0xff01|0x0283|ColdLoadPickupStatus| 1
+|0x0500|0x0030|ZoneStatus| 0=no leak, 1=leak
+|0x0006|0x0000|OnOff|	1=on, 0=off
+|0x0b04|0x050B|Active_Power|	watt/hr
+|0x0b04|0x0605|AC_Power_Divisor| 1
+|0x0b04|0x0604|AC_Power_Multiplier|	1
+|0x0b05|0x011d|Rssi| value -45
+|0x0402|0x0000|WaterTemperature| temp oC
 
 - Switch MC3100ZB, multi controller
 
