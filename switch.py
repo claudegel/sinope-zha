@@ -63,6 +63,22 @@ class SinopeLoadControllerManufacturerCluster(CustomCluster):
     }
 
 
+class SinopeCalypsoControllerManufacturerCluster(CustomCluster):
+    """SinopeCalypsoControllerManufacturerCluster manufacturer cluster."""
+
+    cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
+    name = "Sinopé Calypso Controller Manufacturer specific"
+    ep_attribute = "sinope_Calypso_controller_manufacturer_specific"
+    attributes = {
+        0x0060: ("ConnectedLoad", t.uint16_t, True),
+        0x0070: ("CurrentLoad", t.bitmap8, True),
+        0x0076: ("drConfigWaterTempMin", t.uint8, True),
+        0x0077: ("drConfigWaterTempTime", t.uint8, True),
+        0x0078: ("drWTTimeOn", t.uint16_t, True),
+        0x0283: ("ColdLoadPickupStatus", t.uint8, True),
+    }
+
+
 class CustomMeteringCluster(CustomCluster, Metering):
     """Custom Metering Cluster."""
 
@@ -376,7 +392,7 @@ class SinopeTechnologiesCalypso(CustomDevice):
                     Metering.cluster_id,
                     ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeLoadControllerManufacturerCluster,
+                    SinopeCalypsoControllerManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Time.cluster_id,
