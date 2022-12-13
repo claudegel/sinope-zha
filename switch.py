@@ -72,10 +72,10 @@ class SinopeCalypsoControllerManufacturerCluster(CustomCluster):
     attributes = {
         0x0060: ("ConnectedLoad", t.uint16_t, True),
         0x0070: ("CurrentLoad", t.bitmap8, True),
-        0x0076: ("drConfigWaterTempMin", t.uint8, True),
-        0x0077: ("drConfigWaterTempTime", t.uint8, True),
+        0x0076: ("drConfigWaterTempMin", t.uint8_t, True),
+        0x0077: ("drConfigWaterTempTime", t.uint8_t, True),
         0x0078: ("drWTTimeOn", t.uint16_t, True),
-        0x0283: ("ColdLoadPickupStatus", t.uint8, True),
+        0x0283: ("ColdLoadPickupStatus", t.uint8_t, True),
     }
 
 
