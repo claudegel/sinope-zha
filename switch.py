@@ -22,8 +22,8 @@ from zigpy.zcl.clusters.general import (
 )
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.measurement import RelativeHumidity, TemperatureMeasurement
-from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.clusters.security import IasZone
+from zigpy.zcl.clusters.smartenergy import Metering
 
 from zhaquirks.const import (
     DEVICE_TYPE,
