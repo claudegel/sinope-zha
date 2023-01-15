@@ -39,12 +39,12 @@ from zhaquirks.sinope import SINOPE
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
-class SinopeControllerManufacturerCluster(CustomCluster):
-    """SinopeControllerManufacturerCluster manufacturer cluster."""
+class SinopeManufacturerCluster(CustomCluster):
+    """SinopeManufacturerCluster manufacturer cluster."""
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
-    name = "Sinopé Controller Manufacturer specific"
-    ep_attribute = "sinope_controller_manufacturer_specific"
+    name = "Sinopé Manufacturer specific"
+    ep_attribute = "sinope_manufacturer_specific"
     attributes = {
         0x0002: ("KeyboardLock", t.enum8, True),
         0x0060: ("ConnectedLoad", t.uint16_t, True),
@@ -157,7 +157,7 @@ class SinopeTechnologiesLoadController(CustomDevice):
                     Metering.cluster_id,
                     ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeControllerManufacturerCluster,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -289,7 +289,7 @@ class SinopeTechnologiesMultiController(CustomDevice):
                     TemperatureMeasurement.cluster_id,
                     RelativeHumidity.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeControllerManufacturerCluster,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [Ota.cluster_id],
             },
@@ -300,7 +300,7 @@ class SinopeTechnologiesMultiController(CustomDevice):
                     OnOff.cluster_id,
                     BinaryInput.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    SinopeControllerManufacturerCluster,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [],
             },
@@ -370,7 +370,7 @@ class SinopeTechnologiesCalypso(CustomDevice):
                     Metering.cluster_id,
                     ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeControllerManufacturerCluster,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Time.cluster_id,
