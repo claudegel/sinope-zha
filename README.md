@@ -60,6 +60,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0119|connectedLoad|None: 0xffff
 |0xff01|0x0128|pumpProtection| Off: 0xff, On: 0x1
 |0xff01|0x012D|reportLocalTemperature| Celcius * 100
+|0xff01|0x0200|Unknown| ?
 | --- | --- | --- | ---
 |0x0201|0x0400 |SetOccupancy| Home: 0, away:1
 |0x0201|0x0401 |MainCycleOutput| Number of second
@@ -83,9 +84,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0051|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
 |0xff01|0x0052|onLedIntensity| Percent
 |0xff01|0x0053|offLedIntensity| Percent
+|0xff01|0x0054|unknown| 1, 2, 4
 |0xff01|0x0055|minIntensity| 0 to 3000
 |0xff01|0x00A0|Timer| Number of seconds
 |0xff01|0x0119|ConnectedLoad| None: 0, watt
+|0xff01|0x0200|Unknown| ?
 | --- | --- | --- | ---
 |0x0702|0x0000|CurrentSummationDelivered| Sum of delivered watt/hr
 |0x0006|0x0000|OnOff| 1=on, 0=off
@@ -109,6 +112,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A0|Timer| Seconds
 |0xff01|0x0002|KeyboardLock| on=1, off=0
 |0xff01|0x0070|CurrentLoad|	watt/hr
+|0xff01|0x0200|Unknown| ?
 |0x0006|0x0000|OnOff|	1=on, 0=off
 |0x0b04|0x050B|Active_Power|	watt/hr
 |0x0b04|0x0605|AC_Power_Divisor| 1
@@ -124,6 +128,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0076|drConfigWaterTempMin|	45 or 0
 |0xff01|0x0077|drConfigWaterTempTime|	2
 |0xff01|0x0078|drWTTimeOn|	240
+|0xff01|0x0079|unknown| 0
+|0xff01|0x0200|unknown| 0
 |0xff01|0x0283|ColdLoadPickupStatus| 1
 |0x0500|0x0030|ZoneStatus| 0=no leak, 1=leak
 |0x0006|0x0000|OnOff|	1=on, 0=off
