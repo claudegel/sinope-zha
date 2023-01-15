@@ -43,6 +43,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     attributes = {
         0x0010: ("outdoor_temp", t.int16s, True),
         0x0011: ("outdoor_temp_timeout", t.uint16_t, True),
+        0x0012: ("config2ndDisplay", t.uint8_t, True),
         0x0020: ("secs_since_2k", t.uint32_t, True),
         0x0070: ("currentLoad", t.bitmap8, True),
         0x0105: ("airFloorMode", t.enum8, True),
