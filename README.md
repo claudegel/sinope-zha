@@ -40,7 +40,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Thermostats:
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | ---
+| --- | --- | --- | --- | ---
 |0xff01|0x0010|t.int16s|outdoor_temp|celcius*100
 |0xff01|0x0011|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
 |0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.
