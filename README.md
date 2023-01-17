@@ -39,128 +39,128 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
 - Thermostats:
 
-|Cluster|Attributes|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value
 | --- | --- | --- | ---
-|0xff01|0x0010|outdoor_temp|celcius*100
-|0xff01|0x0011|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
-|0xff01|0x0012|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.
-|0xff01|0x0020|secs_since_2k| second since year 2000
-|0xff01|0x0070|currentLoad| watt/hr
-|0xff01|0x0071|Unknown| ?
-|0xff01|0x0105|airFloorMode|Air: 1, floor: 2
-|0xff01|0x0106|auxOutputMode|0=off, 1=expantion module
-|0xff01|0x0108|airMaxLimit|temp: celcius*100, valid only if floor mode is selected
-|0xff01|0x0109|floorMinSetpoint| off: -32768, temp: temp*100
-|0xff01|0x010A|floorMaxSetpoint| off: -32768, temp: temp*100
-|0xff01|0x010B|tempSensorType| 0=10k, 1=12k
-|0xff01|0x010C|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached
-|0xff01|0x0114|timeFormat|0=24h, 1=12h
-|0xff01|0x0115|gfciStatus|0=ok, 1=error
-|0xff01|0x0118|auxConnectedLoad| watt/hr, 0xffff=off
-|0xff01|0x0119|connectedLoad|None: 0xffff
-|0xff01|0x0128|pumpProtection| Off: 0xff, On: 0x1
-|0xff01|0x012D|reportLocalTemperature| Celcius * 100
-|0xff01|0x0200|Unknown| ?
+|0xff01|0x0010|t.int16s|outdoor_temp|celcius*100
+|0xff01|0x0011|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
+|0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.
+|0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000
+|0xff01|0x0070|t.bitmap8|currentLoad| watt/hr
+|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%
+|0xff01|0x0105|t.enum8|airFloorMode|Air: 1, floor: 2
+|0xff01|0x0106|t.enum8|auxOutputMode|0=off, 1=expantion module
+|0xff01|0x0108|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected
+|0xff01|0x0109|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100
+|0xff01|0x010A|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100
+|0xff01|0x010B|t.enum8|tempSensorType| 0=10k, 1=12k
+|0xff01|0x010C|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached
+|0xff01|0x0114|t.enum8|timeFormat|0=24h, 1=12h
+|0xff01|0x0115|t.enum8|gfciStatus|0=ok, 1=error
+|0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off
+|0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff
+|0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1
+|0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100
+|0xff01|0x0200|t.bitmap32|Unknown| ?
+| --- | --- | --- | --- | ---
+|0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1
+|0x0201|0x0401|t.uint16_t|MainCycleOutput| Number of second
+|0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1
+|0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second
+| --- | --- | --- | --- | ---
+|0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr			
+|0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr
+| --- | --- | --- | --- | ---
+|0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight
+|0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock
 | --- | --- | --- | ---
-|0x0201|0x0400 |SetOccupancy| Home: 0, away:1
-|0x0201|0x0401 |MainCycleOutput| Number of second
-|0x0201|0x0402 |BacklightAutoDimParam| OnDemand: 0, Always: 1
-|0x0201|0x0404|AuxCycleOutput| Number of second
-| --- | --- | --- | ---
-|0x0b04|0x050f|Apparent_Power|watt/hr			
-|0x0b04|0x050b|Active_Power|watt/hr
-| --- | --- | --- | ---
-|0x0204|0x0000|TemperatureDisplayMode|0=celcius, 1=farenheight
-|0x0204|0x0001|keypadLockout|0=no lock, 1=lock
-| --- | --- | --- | ---
-|0x0702|0x0000|CurrentSummationDelivered|watt/hr	
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	
 
 - lights and dimmer:
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0xff01|0x0002|KeypadLock| Locked: 1, Unlocked: 0
-|0xff01|0x0050|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0051|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0052|onLedIntensity| Percent
-|0xff01|0x0053|offLedIntensity| Percent
-|0xff01|0x0054|unknown| 1, 2, 4
-|0xff01|0x0055|minIntensity| 0 to 3000
-|0xff01|0x00A0|Timer| Number of seconds
-|0xff01|0x0119|ConnectedLoad| None: 0, watt
-|0xff01|0x0200|Unknown| ?
-| --- | --- | --- | ---
-|0x0702|0x0000|CurrentSummationDelivered| Sum of delivered watt/hr
-|0x0006|0x0000|OnOff| 1=on, 0=off
-|0x0008|0x0000|CurrentLevel| 0=0%, 254=100%
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0xff01|0x0002|t.enum8|KeypadLock| Locked: 1, Unlocked: 0
+|0xff01|0x0050|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
+|0xff01|0x0051|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
+|0xff01|0x0052|t.uint8_t|onLedIntensity| Percent
+|0xff01|0x0053|t.uint8_t|offLedIntensity| Percent
+|0xff01|0x0054|t.uint8_t|unknown| 1, 2, 4
+|0xff01|0x0055|t.uint16_t|minIntensity| 0 to 3000
+|0xff01|0x00A0|t.uint32_t|Timer| Number of seconds
+|0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
+|0xff01|0x0200|t.bitmap32|Unknown| ?
+| --- | --- | --- | --- | ---
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr
+|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
+|0x0008|0x0000|t.uint8_t|CurrentLevel| 0=0%, 254=100%
 
 - Switch SP2600ZB, SP2610ZB, Outlet
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0x0702|0x0000|CurrentSummationDelivered|watt/hr
-|0x0b04|0x050B|Active_Power|watt/hr
-|0x0b04|0x0605|ACPowerDivisor| 10
-|0x0b04|0x0604|ACPowerMultiplier|	1
-|0x0006|0x0000|OnOff| 0=off, 1=on
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr
+|0x0b04|0x050B|t.uint16_t|Active_Power|watt/hr
+|0x0b04|0x0605|t.uint16_t|ACPowerDivisor| 10
+|0x0b04|0x0604|t.uint16_t|ACPowerMultiplier|	1
+|0x0006|0x0000|t.Bool|OnOff| 0=off, 1=on
 
 - Switch RM3250ZB, Load Controller
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0xff01|0x0060|ConnectedLoad|	watt/hr
-|0xff01|0x00A0|Timer| Seconds
-|0xff01|0x0002|KeyboardLock| on=1, off=0
-|0xff01|0x0070|CurrentLoad|	watt/hr
-|0xff01|0x0200|Unknown| ?
-|0x0006|0x0000|OnOff|	1=on, 0=off
-|0x0b04|0x050B|Active_Power|	watt/hr
-|0x0b04|0x0605|AC_Power_Divisor| 1
-|0x0b04|0x0604|AC_Power_Multiplier|	1
-|0x0702|0x0000|CurrentSummationDelivered|	watt/hr
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
+|0xff01|0x00A0|t.uint32_t|Timer| Seconds
+|0xff01|0x0002|t.enum8|KeyboardLock| on=1, off=0
+|0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
+|0xff01|0x0200|t.bitmap32|Unknown| ?
+|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
+|0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
+|0x0b04|0x0605|t.uint16_t|AC_Power_Divisor| 1
+|0x0b04|0x0604|t.uint16_t|AC_Power_Multiplier|	1
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|	watt/hr
 
 - Switch RM3500ZB, Calypso water tank controller
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0xff01|0x0060|ConnectedLoad|	watt/hr
-|0xff01|0x0070|CurrentLoad|	watt/hr
-|0xff01|0x0076|drConfigWaterTempMin|	45 or 0
-|0xff01|0x0077|drConfigWaterTempTime|	2
-|0xff01|0x0078|drWTTimeOn|	240
-|0xff01|0x0079|unknown| 0
-|0xff01|0x0200|unknown| 0
-|0xff01|0x0283|ColdLoadPickupStatus| 1
-|0x0500|0x0030|ZoneStatus| 0=no leak, 1=leak
-|0x0006|0x0000|OnOff|	1=on, 0=off
-|0x0b04|0x050B|Active_Power|	watt/hr
-|0x0b04|0x0605|AC_Power_Divisor| 1
-|0x0b04|0x0604|AC_Power_Multiplier|	1
-|0x0b05|0x011d|Rssi| value -45
-|0x0402|0x0000|WaterTemperature| temp oC
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
+|0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
+|0xff01|0x0076|t.uint8_t|drConfigWaterTempMin|	45 or 0
+|0xff01|0x0077|t.uint8_t|drConfigWaterTempTime|	2
+|0xff01|0x0078|t.uint16_t|drWTTimeOn|	240
+|0xff01|0x0079|t.bitmap8|unknown| 0
+|0xff01|0x0200|t.bitmap32|unknown| 0
+|0xff01|0x0283|t.uint8_t|ColdLoadPickupStatus| 1
+|0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
+|0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
+|0x0b04|0x0605|t.uint16_t|AC_Power_Divisor| 1
+|0x0b04|0x0604|t.uint16_t|AC_Power_Multiplier|	1
+|0x0b05|0x011d|t.int8s|Rssi| value -45
+|0x0402|0x0000|t.int16s|WaterTemperature| temp oC
 
 - Switch MC3100ZB, multi controller
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
 |0xff01|0x00A0|Timer|	second, on endpoint 1 and 2
 |0x0001|0x003E|BatteryAlarmState| 0=no alarm, 1=alarn
-|0x0006|0x0000|OnOff| 1=on, 0=off, on endpoint 1 and 2
+|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off, on endpoint 1 and 2
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0x0001|0x0020|Battery_Voltage| Volt
-|0x0001|0x003e|BatteryAlarmState| 0=no alarm, 1=alarm
-|0x0006|0x0000|OnOff|	1=on, 0=off
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
+|0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
+|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
 
 - Sensors WL4200 and WL4200S
 
-|Cluster|Attributes|Fonction |Value
-| --- | --- | --- | ---
-|0x0402|0x0000|MeasuredValueTemperature|	celcius*100	
-|0x0500|0x0030|ZoneStatus| 0=no leak, 1=leak
+|Cluster|Attributes|Data type|Fonction |Value
+| --- | --- | --- | --- | ---
+|0x0402|0x0000|t.uint16_tMeasuredValueTemperature|	celcius*100	
+|0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
 
 # Automation examples:
 - Sending outside temperature to thermostats:
