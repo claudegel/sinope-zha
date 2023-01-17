@@ -47,8 +47,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000
 |0xff01|0x0070|t.bitmap8|currentLoad| watt/hr
 |0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%
-|0xff01|0x0072|t.uint8_t|ecoMode1| default:255||0-99
-|0xff01|0x0073|t.uint8_t|ecoMode2| default 255||0-100
+|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99
+|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100
 |0xff01|0x0105|t.enum8|airFloorMode|Air: 1, floor: 2
 |0xff01|0x0106|t.enum8|auxOutputMode|0=off, 1=expantion module
 |0xff01|0x0108|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected
