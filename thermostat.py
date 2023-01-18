@@ -47,6 +47,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0020: ("secs_since_2k", t.uint32_t, True),
         0x0070: ("currentLoad", t.bitmap8, True),
         0x0071: ("ecoMode", t.int8s, True),
+        0x0072: ("ecoMode1", t.uint8_t, True),
+        0x0073: ("ecoMode3", t.uint8_t, True),
         0x0105: ("airFloorMode", t.enum8, True),
         0x0106: ("auxOutputMode", t.enum8, True),
         0x0108: ("airMaxLimit", t.int16s, True),
