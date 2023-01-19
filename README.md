@@ -161,7 +161,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Data type|Fonction |Value
 | --- | --- | --- | --- | ---
-|0x0402|0x0000|t.uint16_tMeasuredValueTemperature|	celcius*100	
+|0x0402|0x0000|t.uint16_t|MeasuredValueTemperature|	celcius*100	
 |0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
 
 # Automation examples:
