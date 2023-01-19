@@ -145,8 +145,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Data type|Fonction |Value
 | --- | --- | --- | --- | ---
-|0xff01|0x00A0|Timer|	second, on endpoint 1 and 2
-|0x0001|0x003E|BatteryAlarmState| 0=no alarm, 1=alarn
+|0xff01|0x00A0|t.uint32_t|Timer|	second, on endpoint 1 and 2
+|0x0001|0x003E|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarn
 |0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off, on endpoint 1 and 2
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
