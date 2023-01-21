@@ -61,6 +61,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0055: ("minIntensity", t.uint16_t, True),
         0x00A0: ("Timer", t.uint32_t, True),
         0x0119: ("ConnectedLoad", t.uint16_t, True),
+        0x0200: ("Unknown", t.bitmap32, True),
     }
 
 
