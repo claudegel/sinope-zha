@@ -21,8 +21,18 @@ from zigpy.zcl.clusters.general import (
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
 
+from zhaquirks import EventableCluster
 from zhaquirks.const import (
+    ARGS,
+    ATTRIBUTE_ID,
+    ATTRIBUTE_NAME,
+    BUTTON,
+    CLUSTER_ID,
+    COMMAND,
+    COMMAND_ATTRIBUTE_UPDATED,
+    COMMAND_DOUBLE,
     DEVICE_TYPE,
+    ENDPOINT_ID,
     ENDPOINTS,
     INPUT_CLUSTERS,
     MODELS_INFO,
@@ -31,6 +41,7 @@ from zhaquirks.const import (
 )
 from zhaquirks.sinope import SINOPE
 
+ATTRIBUTE_ACTION = "actionReport"
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
@@ -46,10 +57,15 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0051: ("offLedColor", t.uint24_t, True),
         0x0052: ("onLedIntensity", t.uint8_t, True),
         0x0053: ("offLedIntensity", t.uint8_t, True),
+        0x0054: ("actionReport", t.enum8, True),
         0x0055: ("minIntensity", t.uint16_t, True),
         0x00A0: ("Timer", t.uint32_t, True),
         0x0119: ("ConnectedLoad", t.uint16_t, True),
     }
+
+
+class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerCluster):
+    """LightManufacturerCluster: fire events corresponding to press type."""
 
 
 class SinopeTechnologieslight(CustomDevice):
@@ -98,7 +114,7 @@ class SinopeTechnologieslight(CustomDevice):
                     OnOff.cluster_id,
                     Metering.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeTechnologiesManufacturerCluster,
+                    LightManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -107,6 +123,22 @@ class SinopeTechnologieslight(CustomDevice):
                 ],
             }
         }
+    }
+
+
+    device_automation_triggers = {
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
+        },
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
+        },
     }
 
 
@@ -158,7 +190,7 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
                     LevelControl.cluster_id,
                     Metering.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeTechnologiesManufacturerCluster,
+                    LightManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -167,6 +199,22 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
                 ],
             }
         }
+    }
+
+
+    device_automation_triggers = {
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
+        },
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
+        },
     }
 
 
@@ -221,7 +269,7 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
                     Metering.cluster_id,
                     ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
-                    SinopeTechnologiesManufacturerCluster,
+                    LightManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -231,4 +279,20 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
                 ],
             }
         }
+    }
+
+
+    device_automation_triggers = {
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
+        },
+        (COMMAND_DOUBLE, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
+        },
     }
