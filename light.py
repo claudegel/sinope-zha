@@ -38,6 +38,7 @@ from zhaquirks.const import (
     MODELS_INFO,
     OUTPUT_CLUSTERS,
     PROFILE_ID,
+    VALUE,
 )
 from zhaquirks.sinope import SINOPE
 
