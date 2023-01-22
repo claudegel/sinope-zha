@@ -86,7 +86,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0051|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
 |0xff01|0x0052|t.uint8_t|onLedIntensity| Percent
 |0xff01|0x0053|t.uint8_t|offLedIntensity| Percent
-|0xff01|0x0054|t.enum8|actionReport| singleTapUp: 1,2, doubleTapUp: 1,4, singleTapDown: 17,18, doubleTapDown: 17,20
+|0xff01|0x0054|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20
 |0xff01|0x0055|t.uint16_t|minIntensity| 0 to 3000
 |0xff01|0x00A0|t.uint32_t|Timer| Number of seconds
 |0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
