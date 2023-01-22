@@ -53,6 +53,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0077: ("drConfigWaterTempTime", t.uint8_t, True),
         0x0078: ("drWTTimeOn", t.uint16_t, True),
         0x00A0: ("Timer", t.uint32_t, True),
+        0x0200: ("Unknown", t.bitmap32, True),
         0x0283: ("ColdLoadPickupStatus", t.uint8_t, True),
     }
 
