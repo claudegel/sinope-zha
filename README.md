@@ -172,12 +172,41 @@ Device reporting allow device to report any changes that occur on some cluster a
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
+|??|(0x0003|0x0400|0x10|1|65000|1| 
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
 |occupied heating setpoint|0x0201|0x0012|0x0029|8|302|40| 
 |report gfci status each hours|0xFF01|0x0115|0x30|10|3600|1|
 |floor limit status each hours|0xFF01|0x010C|0x30|10|3600|1| 
+
+- Light
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
+|onOff|0x0006|0x0000|0x10|0|599|null|
+|CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
+|double click|0xff01|0x0054|0x10|1|1|1|
+
+- load control
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
+| --- | --- | --- | --- | --- | --- | --- |
+|onOff|0x0006|0x0000|0x10|0|600|null|
+|ActivePower|0x0B04|0x050B|0x29|60|599|0x64|
+
+- Valve
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
+| --- | --- | --- | --- | --- | --- | --- |
+|Battery %|(CLUSTER_POWER|POWER_ATTR_BATTERY_PERCENTAGE_REMAINING|0x20|60|60*60|1|
+
+- Leak sensors
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
+| --- | --- | --- | --- | --- | --- | --- |
+|battery percentage|0x0001|0x0021|0x20|30|43200|1| 
+|temperature min|0x0402|0x0000|0x29|30|3600|300|  
+|battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
 
 # Automation examples:
 - Sending outside temperature to thermostats:
