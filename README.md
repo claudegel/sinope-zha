@@ -169,12 +169,15 @@ I'll list here all the custom cluster attribute with explanation about how to us
 Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting. except for light double tap services. If your device is bran new then it should be necessary to implement device reporting. Following are the cluster/attributes set for reproting in Neviweb:
 
 - Thermostat:
-|Data|Cluster|Attribute|format|min time|max time|minimum change
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
+| --- | --- | --- | --- | --- | --- | --- |
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
 |occupied heating setpoint|0x0201|0x0012|0x0029|8|302|40| 
 |report gfci status each hours|0xFF01|0x0115|0x30|10|3600|1|
 |floor limit status each hours|0xFF01|0x010C|0x30|10|3600|1| 
+| --- | --- | --- | --- | --- | --- | --- |
 
 # Automation examples:
 - Sending outside temperature to thermostats:
