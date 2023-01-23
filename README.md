@@ -176,8 +176,8 @@ Device reporting allow device to report any changes that occur on some cluster a
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
 |occupied heating setpoint|0x0201|0x0012|0x0029|8|302|40| 
-|report gfci status each hours|0xFF01|0x0115|0x30|10|3600|1|
-|floor limit status each hours|0xFF01|0x010C|0x30|10|3600|1| 
+|report gfci status|0xFF01|0x0115|0x30|10|3600|1|
+|floor limit status|0xFF01|0x010C|0x30|10|3600|1| 
 
 - Light
 
@@ -198,7 +198,7 @@ Device reporting allow device to report any changes that occur on some cluster a
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
-|Battery %|(CLUSTER_POWER|POWER_ATTR_BATTERY_PERCENTAGE_REMAINING|0x20|60|60*60|1|
+|Battery %|(0x0001|0x0020|0x20|60|60*60|1|
 
 - Leak sensors
 
