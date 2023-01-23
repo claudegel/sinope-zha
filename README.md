@@ -185,7 +185,7 @@ Device reporting allow device to report any changes that occur on some cluster a
 | --- | --- | --- | --- | --- | --- | --- |
 |onOff|0x0006|0x0000|0x10|0|599|null|
 |CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
-|double click|0xff01|0x0054|0x10|1|1|1|
+|double click|0xff01|0x0054|0x10|1|1|null|
 
 - load control
 
