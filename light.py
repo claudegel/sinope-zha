@@ -31,6 +31,7 @@ from zhaquirks.const import (
     COMMAND,
     COMMAND_ATTRIBUTE_UPDATED,
     COMMAND_DOUBLE,
+    COMMAND_HOLD,
     DEVICE_TYPE,
     ENDPOINT_ID,
     ENDPOINTS,
@@ -141,6 +142,18 @@ class SinopeTechnologieslight(CustomDevice):
             COMMAND: COMMAND_ATTRIBUTE_UPDATED,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 3},
+        },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 19},
+        },
     }
 
 
@@ -216,6 +229,18 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
             CLUSTER_ID: 65281,
             COMMAND: COMMAND_ATTRIBUTE_UPDATED,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
+        },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 3},
+        },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 19},
         },
     }
 
@@ -296,5 +321,17 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
             CLUSTER_ID: 65281,
             COMMAND: COMMAND_ATTRIBUTE_UPDATED,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
+        },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 3},
+        },
+        (COMMAND_HOLD, BUTTON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ON_OFF, VALUE: 19},
         },
     }
