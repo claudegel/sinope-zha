@@ -166,7 +166,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 # Devices reporting
 
-Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting. except for light double tap services. If your device is bran new then it should be necessary to implement device reporting. 
+Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting, except for light and dimmer double tap and long press services. If your device is bran new then it should be necessary to implement device reporting. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** or higher, and following example below:
 
 Following are the cluster/attributes set for reproting in Neviweb:
 
@@ -181,7 +181,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |report gfci status|0xFF01|0x0115|0x30|10|3600|1|
 |floor limit status|0xFF01|0x010C|0x30|10|3600|1| 
 
-- Light
+- Light and dimmer
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
@@ -210,11 +210,11 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |temperature min|0x0402|0x0000|0x29|30|3600|300|  
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
 
-## Light switch double tap : 
-Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** and upper and follow the example bellow : 
+## Light switch and dimmer double tap : 
+Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. to proceed use zha_toolkit services and follow the example bellow : 
 
-The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut:	0x0054.
-|Description|Attribute|Value|
+The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut: 0x0054.
+|Description|Attribute|Value received|
 | --- | --- | --- |
 |Single Tap UP|0x0054|2|
 |Single Tap DOWN|0x0054|18|
@@ -324,7 +324,7 @@ action:
         {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
     mode: single
 ```
-You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minte or thermostat display will go back to setpoint display.
+You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display.
 
 - setting the outside temperature sensor:
 
