@@ -187,7 +187,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 | --- | --- | --- | --- | --- | --- | --- |
 |onOff|0x0006|0x0000|0x10|0|599|null|
 |CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
-|double click|0xff01|0x0054|0x10|1|1|null|
+|double click|0xff01|0x0054|0x10|0|0|1|
 
 - load control
 
@@ -211,9 +211,9 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
 
 ## Light switch double tap : 
-Sinopé light switches (SW2500ZB) supports single, double and long click but requires to enable device reporting to get the action fired in ZHA. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** and upper and follow the example bellow : 
+Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** and upper and follow the example bellow : 
 
-The action done on the light switch is defined in the cluster: 0xff01 attribut:	0x0054.
+The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut:	0x0054.
 |Description|Attribute|Value|
 | --- | --- | --- |
 |Single Tap UP|0x0054|2|
@@ -237,7 +237,7 @@ data:
   attribute: 0x0054
   manf: 4508
   min_interval: 0
-  max_interval: 300
+  max_interval: 0
   reportable_change: 1
   tries: 3
   event_success: zha_report_success_trigger_event
@@ -252,7 +252,6 @@ data:
   ieee: 50:0b:91:40:00:03:db:c2
   command_data: 00:12:4b:00:24:c0:c1:e0
   cluster: 65281
-  attribute: 84
   event_done: zha_done
 ```
 
