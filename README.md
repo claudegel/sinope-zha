@@ -166,7 +166,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 # Devices reporting
 
-Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting. except for light double tap services. If your device is bran new then it should be necessary to implement device reporting. Following are the cluster/attributes set for reproting in Neviweb:
+Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting. except for light double tap services. If your device is bran new then it should be necessary to implement device reporting. 
+
+Following are the cluster/attributes set for reproting in Neviweb:
 
 - Thermostat:
 
@@ -207,6 +209,76 @@ Device reporting allow device to report any changes that occur on some cluster a
 |battery percentage|0x0001|0x0021|0x20|30|43200|1| 
 |temperature min|0x0402|0x0000|0x29|30|3600|300|  
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
+
+## Light switch double tap : 
+Sinopé light switches (SW2500ZB) supports single, double and long click but requires to enable device reporting to get the action fired in ZHA. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** and upper and follow the example bellow : 
+
+The action done on the light switch is defined in the cluster: 0xff01 attribut:	0x0054.
+|Description|Attribute|Value|
+| --- | --- | --- |
+|Single Tap UP|0x0054|2|
+|Single Tap DOWN|0x0054|18|
+|Double Tap UP|0x0054|4|
+|Double Tap DOWN|0x0054|20|
+|Long press UP|0x0054|3|
+|Long press DOWN|0x0054|19|
+
+### a) create the reporting :
+Here is an exemple of how to proceed.
+In this exemple : 
+- 50:0b:91:40:00:03:db:c2 is your light switch 
+- 00:12:4b:00:24:c0:c1:e0 is your Zigbee Coordinator
+
+```
+service: zha_toolkit.conf_report
+data:
+  ieee: 50:0b:91:40:00:03:db:c2
+  cluster: 0xff01
+  attribute: 0x0054
+  manf: 4508
+  min_interval: 0
+  max_interval: 300
+  reportable_change: 1
+  tries: 3
+  event_success: zha_report_success_trigger_event
+  event_fail: zha_report_fail_trigger_event
+  event_done: zha_done
+```
+
+### b) Specify the bind to your coordinator :
+```
+service: zha_toolkit.bind_ieee
+data:
+  ieee: 50:0b:91:40:00:03:db:c2
+  command_data: 00:12:4b:00:24:c0:c1:e0
+  cluster: 65281
+  attribute: 84
+  event_done: zha_done
+```
+
+### c) Automation example : 
+```
+alias: Enable desk light when double tap on light switch
+description: ""
+trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 50:0b:91:40:00:03:db:c2
+      cluster_id: 65281
+      args:
+        attribute_id: 84
+        attribute_name: actionReport
+        value: 4
+condition: []
+action:
+  - type: toggle
+    device_id: 8b11765575b04f899d9867165fa16069
+    entity_id: light.interrupteur_lumiere_bureau_light_2
+    domain: light
+mode: single
+```
+
 
 # Automation examples:
 - Sending outside temperature to thermostats:
