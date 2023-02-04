@@ -174,7 +174,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
-|??|(0x0003|0x0400|0x10|1|65000|1| 
+|??|0x0003|0x0400|0x10|1|65000|1| 
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
 |occupied heating setpoint|0x0201|0x0012|0x0029|8|302|40| 
