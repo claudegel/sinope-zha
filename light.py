@@ -26,19 +26,23 @@ from zhaquirks.const import (
     ARGS,
     ATTRIBUTE_ID,
     ATTRIBUTE_NAME,
-    BUTTON,
     CLUSTER_ID,
+    COMMAND_BUTTON_DOUBLE,
+    COMMAND_BUTTON_HOLD,
+    COMMAND_BUTTON_SINGLE,
     COMMAND,
-    COMMAND_ATTRIBUTE_UPDATED,
-    COMMAND_DOUBLE,
-    COMMAND_HOLD,
     DEVICE_TYPE,
+    DOUBLE_PRESS,
     ENDPOINT_ID,
     ENDPOINTS,
     INPUT_CLUSTERS,
+    LONG_PRESS,
     MODELS_INFO,
     OUTPUT_CLUSTERS,
     PROFILE_ID,
+    SHORT_PRESS,
+    TURN_OFF,
+    TURN_ON,
     VALUE,
 )
 from zhaquirks.sinope import SINOPE
@@ -130,28 +134,40 @@ class SinopeTechnologieslight(CustomDevice):
 
 
     device_automation_triggers = {
-        (COMMAND_DOUBLE, BUTTON): {
+        (SHORT_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 2},
+        },
+        (SHORT_PRESS, TURN_OFF): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 18},
+        },
+        (DOUBLE_PRESS, TURN_ON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
         },
-        (COMMAND_DOUBLE, BUTTON): {
+        (DOUBLE_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-        (COMMAND_HOLD, BUTTON): {
+	(LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 3},
         },
-        (COMMAND_HOLD, BUTTON): {
+        (LONG_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 19},
         },
     }
@@ -218,28 +234,40 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
 
 
     device_automation_triggers = {
-        (COMMAND_DOUBLE, BUTTON): {
+        (SHORT_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 2},
+        },
+        (SHORT_PRESS, TURN_OFF): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 18},
+        },
+        (DOUBLE_PRESS, TURN_ON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
         },
-        (COMMAND_DOUBLE, BUTTON): {
+        (DOUBLE_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-        (COMMAND_HOLD, BUTTON): {
+	(LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 3},
         },
-        (COMMAND_HOLD, BUTTON): {
+        (LONG_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 19},
         },
     }
@@ -310,28 +338,40 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
 
 
     device_automation_triggers = {
-        (COMMAND_DOUBLE, BUTTON): {
+        (SHORT_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 2},
+        },
+        (SHORT_PRESS, TURN_OFF): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_SINGLE,
+            ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 18},
+        },
+        (DOUBLE_PRESS, TURN_ON): {
+            ENDPOINT_ID: 1,
+            CLUSTER_ID: 65281,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 4},
         },
-        (COMMAND_DOUBLE, BUTTON): {
+        (DOUBLE_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-        (COMMAND_HOLD, BUTTON): {
+	(LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 3},
         },
-        (COMMAND_HOLD, BUTTON): {
+        (LONG_PRESS, TURN_OFF): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
-            COMMAND: COMMAND_ATTRIBUTE_UPDATED,
+            COMMAND: COMMAND_BUTTON_HOLD,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 19},
         },
     }
