@@ -158,7 +158,7 @@ class SinopeTechnologieslight(CustomDevice):
             COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-	(LONG_PRESS, TURN_ON): {
+        (LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
             COMMAND: COMMAND_BUTTON_HOLD,
@@ -258,7 +258,7 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
             COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-	(LONG_PRESS, TURN_ON): {
+        (LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
             COMMAND: COMMAND_BUTTON_HOLD,
@@ -362,7 +362,7 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
             COMMAND: COMMAND_BUTTON_DOUBLE,
             ARGS: {ATTRIBUTE_ID: 84, ATTRIBUTE_NAME: ATTRIBUTE_ACTION, VALUE: 20},
         },
-	(LONG_PRESS, TURN_ON): {
+        (LONG_PRESS, TURN_ON): {
             ENDPOINT_ID: 1,
             CLUSTER_ID: 65281,
             COMMAND: COMMAND_BUTTON_HOLD,
