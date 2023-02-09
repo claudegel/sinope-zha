@@ -211,7 +211,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
 
 ## Light switch and dimmer double tap, long press reporting : 
-Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. to proceed use zha_toolkit services and follow the example bellow : 
+Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
 
 The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut: 0x0054.
 |Description|Attribute|Value received|
@@ -277,6 +277,13 @@ action:
     domain: light
 mode: single
 ```
+For automations you will have acces to those events in the UI for device triggers:
+- "Turn on" pressed
+- "Turn off" pressed
+- "Turn on" double clicked
+- "Turn off" double clicked
+- "Turn on" continuously pressed
+- "Turn off" continuously pressed
 
 
 # Automation examples:
