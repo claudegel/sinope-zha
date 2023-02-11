@@ -39,48 +39,50 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
 - Thermostats:
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- |---
+|0xff01|0x0010|t.int16s|outdoor_temp|celcius*100|read/write
+|0xff01|0x0011|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write
+|0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write
+|0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000|read/write
+|0xff01|0x0070|t.bitmap8|currentLoad| watt/hr|
+|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%|
+|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99|
+|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100|
+|0xff01|0x0105|t.enum8|airFloorMode|Air: 1, floor: 2|read/write
+|0xff01|0x0106|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write
+|0xff01|0x0107|t.int16s|FloorTemperature|temp: celcius*100|read
+|0xff01|0x0108|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write
+|0xff01|0x0109|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100|read/write
+|0xff01|0x010A|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100|read/write
+|0xff01|0x010B|t.enum8|tempSensorType| 0=10k, 1=12k|read/write
+|0xff01|0x010C|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read
+|0xff01|0x010D|t.int16s|RoomTemperature|temp: celcius*100|read
+|0xff01|0x0114|t.enum8|timeFormat|0=24h, 1=12h|read/write
+|0xff01|0x0115|t.enum8|gfciStatus|0=ok, 1=error|report/read
+|0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write
+|0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff|
+|0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|
+|0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100|
+|0xff01|0x0200|t.bitmap32|Unknown| ?|
+| --- | --- | --- | --- | --- | ---
+|0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1|read/write
+|0x0201|0x0401|t.uint16_t|MainCycleOutput| Number of second|read/write
+|0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write
+|0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second|read/write
+| --- | --- | --- | --- | --- | ---
+|0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr|report/read	
+|0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr|report/read/write
 | --- | --- | --- | --- | ---
-|0xff01|0x0010|t.int16s|outdoor_temp|celcius*100
-|0xff01|0x0011|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received
-|0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.
-|0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000
-|0xff01|0x0070|t.bitmap8|currentLoad| watt/hr
-|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%
-|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99
-|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100
-|0xff01|0x0105|t.enum8|airFloorMode|Air: 1, floor: 2
-|0xff01|0x0106|t.enum8|auxOutputMode|0=off, 1=expantion module
-|0xff01|0x0108|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected
-|0xff01|0x0109|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100
-|0xff01|0x010A|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100
-|0xff01|0x010B|t.enum8|tempSensorType| 0=10k, 1=12k
-|0xff01|0x010C|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached
-|0xff01|0x0114|t.enum8|timeFormat|0=24h, 1=12h
-|0xff01|0x0115|t.enum8|gfciStatus|0=ok, 1=error
-|0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off
-|0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff
-|0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1
-|0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100
-|0xff01|0x0200|t.bitmap32|Unknown| ?
-| --- | --- | --- | --- | ---
-|0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1
-|0x0201|0x0401|t.uint16_t|MainCycleOutput| Number of second
-|0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1
-|0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second
-| --- | --- | --- | --- | ---
-|0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr			
-|0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr
-| --- | --- | --- | --- | ---
-|0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight
-|0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock
+|0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write
+|0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock|read/write
 | --- | --- | --- | ---
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read
 
 - lights and dimmer:
 
-|Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+|Cluster|Attributes|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | ---
 |0xff01|0x0002|t.enum8|KeypadLock| Locked: 1, Unlocked: 0
 |0xff01|0x0050|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
 |0xff01|0x0051|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
