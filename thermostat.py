@@ -51,11 +51,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0073: ("ecoMode2", t.uint8_t, True),
         0x0105: ("airFloorMode", t.enum8, True),
         0x0106: ("auxOutputMode", t.enum8, True),
+        0x0107: ("FloorTemperature", t.int16s, True),
         0x0108: ("airMaxLimit", t.int16s, True),
         0x0109: ("floorMinSetpoint", t.int16s, True),
         0x010A: ("floorMaxSetpoint", t.int16s, True),
         0x010B: ("tempSensorType", t.enum8, True),
         0x010C: ("floorLimitStatus", t.uint8_t, True),
+        0x010D: ("RoomTemperature", t.int16s, True),
         0x0114: ("timeFormat", t.enum8, True),
         0x0115: ("gfciStatus", t.enum8, True),
         0x0118: ("auxConnectedLoad", t.uint16_t, True),
@@ -63,6 +65,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0128: ("pumpProtection", t.uint8_t, True),
         0x012D: ("reportLocalTemperature", t.int16s, True),
         0x0200: ("Unknown", t.bitmap32, True),
+        0xFFFD: ("ClusterRevision", t.uint16_t, True),
     }
 
 
