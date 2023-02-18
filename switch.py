@@ -109,7 +109,7 @@ class SinopeTechnologiesSwitch(CustomDevice):
                     OnOff.cluster_id,
                     CustomMeteringCluster,
                     ElectricalMeasurement.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [Ota.cluster_id],
             }
@@ -227,7 +227,7 @@ class SinopeTechnologiesValve(CustomDevice):
                     OnOff.cluster_id,
                     LevelControl.cluster_id,
                     Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
@@ -439,7 +439,7 @@ class SinopeTechnologiesNewSwitch(CustomDevice):
                     CustomMeteringCluster,
                     ElectricalMeasurement.cluster_id,
                     LightLink.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
+                    SinopeManufacturerCluster,
                 ],
                 OUTPUT_CLUSTERS: [
                     Ota.cluster_id,
