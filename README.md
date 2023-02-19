@@ -40,7 +40,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Thermostats:
 
 |Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x0010|t.int16s|outdoor_temp|celcius*100|read/write
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
