@@ -106,7 +106,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch SP2600ZB, SP2610ZB, Outlet
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- |
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
@@ -118,7 +118,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch RM3250ZB, Load Controller
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- |
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
@@ -136,7 +136,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch RM3500ZB, Calypso water tank controller
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
@@ -161,7 +161,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch MC3100ZB, multi controller
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
 |0xff01|0x00A0|t.uint32_t|Timer|	second, on endpoint 1 and 2
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
@@ -170,7 +170,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
 |0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
 |0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
@@ -178,7 +178,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Sensors WL4200 and WL4200S
 
-|Cluster|Attributes|Data type|Fonction |Value
+|Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
 |0x0402|0x0000|t.uint16_t|MeasuredValueTemperature|	celcius*100	
 |0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
