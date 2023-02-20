@@ -69,24 +69,24 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100|read
 |0xff01|0x0200|t.bitmap32|Unknown| 0x00000000|
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1|read/write
 |0x0201|0x0401|t.uint16_t|MainCycleOutput| Number of second|read/write
 |0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write
 |0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second|read/write
-| --- | --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr|report/read	
 |0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr|report/read/write
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write
 |0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock|read/write
-| --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read
 
 - lights and dimmer:
 
 |Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x0002|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0050|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
@@ -99,7 +99,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
 |0xff01|0x0200|t.bitmap32|Unknown| ?
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr
 |0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
 |0x0008|0x0000|t.uint8_t|CurrentLevel| 0=0%, 254=100%
@@ -107,7 +107,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch SP2600ZB, SP2610ZB, Outlet
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr
@@ -119,7 +119,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch RM3250ZB, Load Controller
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
@@ -137,7 +137,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch RM3500ZB, Calypso water tank controller
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0010|t.int16s| |400|
@@ -162,7 +162,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch MC3100ZB, multi controller
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0xff01|0x00A0|t.uint32_t|Timer|	second, on endpoint 1 and 2
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0001|0x003E|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarn
@@ -171,7 +171,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
 |0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
@@ -179,7 +179,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Sensors WL4200 and WL4200S
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | ---
+| --- | --- | --- | --- | --- |---|
 |0x0402|0x0000|t.uint16_t|MeasuredValueTemperature|	celcius*100	
 |0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
 
@@ -192,7 +192,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 - Thermostat:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
-| --- | --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |---|
 |Occupancy|0x0003|0x0400|0x10|1|65000|1| 
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
