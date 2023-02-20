@@ -77,16 +77,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- |---|
 |0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr|report/read	
 |0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr|report/read/write
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write
 |0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock|read/write
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read
 
 - lights and dimmer:
 
 |Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0xff01|0x0002|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0050|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
@@ -99,7 +99,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
 |0xff01|0x0200|t.bitmap32|Unknown| ?
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr
 |0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
 |0x0008|0x0000|t.uint8_t|CurrentLevel| 0=0%, 254=100%
@@ -107,7 +107,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch SP2600ZB, SP2610ZB, Outlet
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr
@@ -119,7 +119,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Switch RM3250ZB, Load Controller
 
 |Cluster|Attributes|Data type|Fonction |Value
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- | --- |
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
