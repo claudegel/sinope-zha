@@ -48,12 +48,27 @@ class SinopeManufacturerCluster(CustomCluster):
         Unlocked = 0x00
         Locked = 0x01
 
+    class coldStatus(t.enum8):
+        """ColdLoadPickupStatus values."""
+
+        activ = 0x00
+        ok = 0x01
+
+    class tank(t.enum8):
+        """tankSize values."""
+
+        gal_40 = 0x01
+        gal_50 = 0x02
+        gal_60 = 0x03
+        gal_80 = 0x04
+
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
         0x0002: ("KeyboardLock", keypadLock, True),
         0x0004: ("firmware_version", t.CharacterString, True),
+        0x0013: ("tankSize", tank, True),
         0x0060: ("ConnectedLoad", t.uint16_t, True),
         0x0070: ("CurrentLoad", t.bitmap8, True),
         0x0076: ("drConfigWaterTempMin", t.uint8_t, True),
@@ -61,7 +76,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0078: ("drWTTimeOn", t.uint16_t, True),
         0x00A0: ("Timer", t.uint32_t, True),
         0x0200: ("Unknown", t.bitmap32, True),
-        0x0283: ("ColdLoadPickupStatus", t.uint8_t, True),
+        0x0283: ("ColdLoadPickupStatus", coldStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
