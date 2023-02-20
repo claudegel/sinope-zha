@@ -140,7 +140,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | ---
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
-|0xff01|0x0010|t.int16s| | |
+|0xff01|0x0010|t.int16s| |400|
 |0xff01|0x0013|t.enum8|tankSize|1,2,3,4|
 |0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
 |0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
