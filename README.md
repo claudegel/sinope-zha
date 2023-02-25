@@ -365,4 +365,4 @@ You can use any temperature source, local or remote.
 
 ## Buy me a coffee
 If you want to make donation as appreciation of my work, you can do so via PayPal (preferred), or Buy me a coffee. Thank you!
-- [![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/phytoressources/)
+[![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/phytoressources/)
