@@ -68,6 +68,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write
 |0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff|
 |0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write
+|0xff01|0x012A|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write
+|0xff01|0x012B|t.int16s|currentSetpoint| |read/write
 |0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100|read
 |0xff01|0x0200|t.bitmap32|Unknown| 0x00000000|
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
