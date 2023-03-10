@@ -42,41 +42,41 @@ SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
 
-    class keypadLock(t.enum8):
-        """keypadLockout values."""
+    class KeypadLock(t.enum8):
+        """keypad_lockout values."""
 
         Unlocked = 0x00
         Locked = 0x01
 
-    class coldStatus(t.enum8):
-        """ColdLoadPickupStatus values."""
+    class ColdStatus(t.enum8):
+        """cold_load_pickup_status values."""
 
-        activ = 0x00
-        ok = 0x01
+        Activ = 0x00
+        Off = 0x01
 
-    class tank(t.enum8):
-        """tankSize values."""
+    class TankSize(t.enum8):
+        """tank_size values."""
 
-        gal_40 = 0x01
-        gal_50 = 0x02
-        gal_60 = 0x03
-        gal_80 = 0x04
+        Gal_40 = 0x01
+        Gal_50 = 0x02
+        Gal_60 = 0x03
+        Gal_80 = 0x04
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
-        0x0002: ("KeyboardLock", keypadLock, True),
+        0x0002: ("keypad_lockout", KeypadLock, True),
         0x0004: ("firmware_version", t.CharacterString, True),
-        0x0013: ("tankSize", tank, True),
-        0x0060: ("ConnectedLoad", t.uint16_t, True),
-        0x0070: ("CurrentLoad", t.bitmap8, True),
-        0x0076: ("drConfigWaterTempMin", t.uint8_t, True),
-        0x0077: ("drConfigWaterTempTime", t.uint8_t, True),
-        0x0078: ("drWTTimeOn", t.uint16_t, True),
-        0x00A0: ("Timer", t.uint32_t, True),
-        0x0200: ("Unknown", t.bitmap32, True),
-        0x0283: ("ColdLoadPickupStatus", coldStatus, True),
+        0x0013: ("tank_size", TankSize, True),
+        0x0060: ("connected_load", t.uint16_t, True),
+        0x0070: ("currentLoad", t.bitmap8, True),
+        0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
+        0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
+        0x0078: ("dr_wt_time_on", t.uint16_t, True),
+        0x00A0: ("timer", t.uint32_t, True),
+        0x0200: ("unknown", t.bitmap32, True),
+        0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
