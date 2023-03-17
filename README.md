@@ -310,11 +310,11 @@ For automations you will have acces to those events in the UI for device trigger
 
 # Automation examples:
 - Sending outside temperature to thermostats:
-  - Celcius:
+- Celcius:
 ```
 - alias: Send-OutdoorTemp
   trigger:
-    - platform: state  # send temperature when there changes
+    - platform: state  # send temperature when there are changes
       entity_id: sensor.local_temp # sensor to get local temperature
   variables:
     thermostats:
