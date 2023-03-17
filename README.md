@@ -41,7 +41,6 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
-|0xff01|0x0010|t.int16s|outdoor_temp|celcius*100|read/write
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0010|t.int16s|outdoor_temp|temp*100|read/write
@@ -354,7 +353,7 @@ For automations you will have acces to those events in the UI for device trigger
           {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
   mode: single
 ```
-You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display.
+You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
 
 - setting the outside temperature sensor:
 
