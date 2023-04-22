@@ -365,6 +365,29 @@ You can use any temperature source, local or remote.
         friendly_name: "Outside_temperature"
         value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
 ```
+- Sending time to your thermostats. This should be done once a day to keep the time display accurate.
+```
+- alias: set_time
+  trigger:
+    - platform: time
+      at: "01:00:00" ## at 1:00 AM
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:26:6d ## add all your IEEE zigbee thermostats, one per line
+  action:
+    - repeat:
+        count: "{{thermostats|length}}"
+        sequence:
+          - service: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01
+              cluster_type: in
+              attribute: 0x0020
+              value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
+  mode: single
+```
 
 ## Buy me a coffee
 If you want to make donation as appreciation of my work, you can do so via PayPal. Thank you!
