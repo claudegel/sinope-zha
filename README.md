@@ -79,6 +79,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write
 |0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second|read/write
 | --- | --- | --- | --- | --- |---|
+|0x0b04|0x050b|t.int16s|active_power|watt/hr|report/read
+|0x0b04|0x050d|t.uint16_t|active_power_max|watt/hr|read
 |0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr|report/read	
 |0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr|report/read/write
 | --- | --- | --- | --- | --- | --- |
