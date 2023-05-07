@@ -41,6 +41,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- |---|
+|0xff01|0x0001|t.Bool|Unknown|0, 1|read/write
 |0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|t.CharacterString|firmware_version| |read
 |0xff01|0x0010|t.int16s|outdoor_temp|temp*100|read/write
