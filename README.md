@@ -392,6 +392,14 @@ You can use any temperature source, local or remote.
               value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
   mode: single
 ```
+# Device hard reset:
+- Thermostats:
+
+    - Raise the temperature until the display change.
+    - Push the two button until CLR appear on the screen.
+    - Push once the upper button to get YES on the display.
+    - Push both button simutanously and release immediately. DONE should appear on the screen.
+    - The thermostat will restart with factory setup.
 
 ## Buy me a coffee
 If you want to make donation as appreciation of my work, you can do so via PayPal. Thank you!
