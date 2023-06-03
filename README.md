@@ -49,9 +49,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write
 |0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000|read/write
 |0xff01|0x0070|t.bitmap8|currentLoad| watt/hr|
-|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%|
-|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99|
-|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100|
+|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%|read/write
+|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
+|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100|read/write
 |0xff01|0x0075|t.bitmap32|unknown testing| |read/write
 |0xff01|0x0100|t.uint8_t|unknown testing| |read
 |0xff01|0x0104|t.int16s|setpoint|temp*100|read/write
@@ -199,7 +199,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 - Thermostat:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
-| --- | --- | --- | --- | --- |---|
+| --- | --- | --- | --- | --- |---| --- |
 |Occupancy|0x0003|0x0400|0x10|1|65000|1| 
 |local temperature|0x0201|0x0000|0x29|19|300|25| 
 |heating demand|0x0201|0x0008|0x0020|11|301|10| 
