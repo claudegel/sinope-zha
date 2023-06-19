@@ -1,7 +1,7 @@
-"""Module to handle quirks of the  Sinopé Technologies light SW2500ZB, dimmer DM2500ZB and DM2550ZB.
+"""Module to handle quirks of the  Sinopé Technologies light.
 
-Manufacturer specific cluster implements attributes to control displaying
-setting occupancy on/off.
+Supported devices SW2500ZB, SW2500ZB-G2 dimmer DM2500ZB, DM2500ZB-G2, DM2550ZB,
+DM2550ZB-G2.
 """
 
 import zigpy.profiles.zha as zha_p
