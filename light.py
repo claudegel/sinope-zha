@@ -102,7 +102,10 @@ class SinopeTechnologieslight(CustomDevice):
         # <SimpleDescriptor endpoint=1 profile=260 device_type=259
         # device_version=0 input_clusters=[0, 2, 3, 4, 5, 6, 1794, 2821, 65281]
         # output_clusters=[3, 4, 25]>
-        MODELS_INFO: [(SINOPE, "SW2500ZB")],
+        MODELS_INFO: [
+            (SINOPE, "SW2500ZB"),
+            (SINOPE, "SW2500ZB-G2"),
+        ],
         ENDPOINTS: {
             1: {
                 PROFILE_ID: zha_p.PROFILE_ID,
@@ -200,7 +203,10 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
         # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
         # input_clusters=[0, 2, 3, 4, 5, 6, 8, 1794, 2821, 65281]
         # output_clusters=[3, 4, 25]>
-        MODELS_INFO: [(SINOPE, "DM2500ZB")],
+        MODELS_INFO: [
+            (SINOPE, "DM2500ZB"),
+            (SINOPE, "DM2500ZB-G2"),
+        ],
         ENDPOINTS: {
             1: {
                 PROFILE_ID: zha_p.PROFILE_ID,
@@ -300,7 +306,10 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
         # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
         # input_clusters=[0, 2, 3, 4, 5, 6, 8, 1794, 2820, 2821, 65281]
         # output_clusters=[3, 4, 10, 25]>
-        MODELS_INFO: [(SINOPE, "DM2550ZB")],
+        MODELS_INFO: [
+            (SINOPE, "DM2550ZB"),
+            (SINOPE, "DM2550ZB-G2"),
+        ],
         ENDPOINTS: {
             1: {
                 PROFILE_ID: zha_p.PROFILE_ID,
