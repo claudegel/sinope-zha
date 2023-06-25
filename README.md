@@ -182,6 +182,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
 |0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|	L/h (see below)
+|0x0702|0x0200|t.bitmap8|status|0=off, 1=off/armed, 2=on
+|0x0702|0x0300|t.enum8|unit_of_measure| 7=L/h
+|0x0702|0x0306|t.bitmap8|metering_device_type|2  = Water Metering
 
 - Sensors WL4200 and WL4200S
 
