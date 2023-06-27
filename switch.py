@@ -1,7 +1,8 @@
 """Module to handle quirks of the Sinopé Technologies switches.
 
 Supported devices, SP2600ZB, SP2610ZB, RM3250ZB, RM3500ZB,
-VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB.
+VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
+2nd gen VA4220ZB, VA4221ZB with flow meeter.
 """
 
 import zigpy.profiles.zha as zha_p
@@ -67,10 +68,11 @@ class SinopeManufacturerCluster(CustomCluster):
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
         0x0002: ("keypad_lockout", KeypadLock, True),
+        0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0013: ("tank_size", TankSize, True),
         0x0060: ("connected_load", t.uint16_t, True),
-        0x0070: ("currentLoad", t.bitmap8, True),
+        0x0070: ("current_load", t.bitmap8, True),
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
         0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
         0x0078: ("dr_wt_time_on", t.uint16_t, True),
@@ -84,8 +86,40 @@ class SinopeManufacturerCluster(CustomCluster):
 class CustomMeteringCluster(CustomCluster, Metering):
     """Custom Metering Cluster."""
 
+    class ValveStatus(t.bitmap8):
+        """valve_status."""
+
+        Off = 0x00
+        Off_armed = 0x01
+        On = 0x02
+
+    class UnitOfMeasure(t.enum8):
+        """unit_of_measure."""
+
+        L/h = 0x07
+
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
+
+    attributes = Metering.attributes.copy()
+    attributes.update(
+        {
+            0x0200: ("status", ValveStatus, True),
+            0x0300: ("unit_of_measure", UnitOfMeasure, True),
+        }
+    )
+
+
+class CustomBasicCluster(CustomCluster, Basic):
+    """Custom Basic Cluster."""
+
+    attributes = Basic.attributes.copy()
+    attributes.update(
+        {
+            0x0010: ("location_desc", t.CharacterString, True),
+            0x0011: ("physical_env", t.enum8, True),
+        }
+    )
 
 
 class SinopeTechnologiesSwitch(CustomDevice):
@@ -248,6 +282,72 @@ class SinopeTechnologiesValve(CustomDevice):
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
+                    Ota.cluster_id,
+                ],
+            }
+        }
+    }
+
+
+class SinopeTechnologiesValveG2(CustomDevice):
+    """SinopeTechnologiesValveG2 custom device."""
+
+    signature = {
+        # <SimpleDescriptor(endpoint=1, profile=260,
+        # device_type=3, device_version=0,
+        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
+        # output_clusters=[3, 6, 25]>
+        MODELS_INFO: [
+            (SINOPE, "VA4220ZB"),
+            (SINOPE, "VA4221ZB"),
+        ],
+        ENDPOINTS: {
+            1: {
+                PROFILE_ID: zha_p.PROFILE_ID,
+                DEVICE_TYPE: zha_p.DeviceType.LEVEL_CONTROLLABLE_OUTPUT,
+                INPUT_CLUSTERS: [
+                    Basic.cluster_id,
+                    PowerConfiguration.cluster_id,
+                    Identify.cluster_id,
+                    Groups.cluster_id,
+                    Scenes.cluster_id,
+                    OnOff.cluster_id,
+                    LevelControl.cluster_id,
+                    TemperatureMeasurement.cluster_id,
+                    IasZone.cluster_id,
+                    Metering.cluster_id,
+                    Diagnostic.cluster_id,
+                    SINOPE_MANUFACTURER_CLUSTER_ID,
+                ],
+                OUTPUT_CLUSTERS: [
+                    Identify.cluster_id,
+                    OnOff.cluster_id,
+                    Ota.cluster_id,
+                ],
+            }
+        },
+    }
+
+    replacement = {
+        ENDPOINTS: {
+            1: {
+                INPUT_CLUSTERS: [
+                    CustomBasicCluster,
+                    PowerConfiguration.cluster_id,
+                    Identify.cluster_id,
+                    Groups.cluster_id,
+                    Scenes.cluster_id,
+                    OnOff.cluster_id,
+                    LevelControl.cluster_id,
+                    TemperatureMeasurement.cluster_id,
+                    IasZone.cluster_id,
+                    CustomMeteringCluster,
+                    Diagnostic.cluster_id,
+                    SinopeManufacturerCluster,
+                ],
+                OUTPUT_CLUSTERS: [
+                    Identify.cluster_id,
+                    OnOff.cluster_id,
                     Ota.cluster_id,
                 ],
             }
