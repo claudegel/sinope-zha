@@ -96,7 +96,7 @@ class CustomMeteringCluster(CustomCluster, Metering):
     class UnitOfMeasure(t.enum8):
         """unit_of_measure."""
 
-        L/h = 0x07
+        Lh = 0x07
 
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
