@@ -96,6 +96,7 @@ class CustomMeteringCluster(CustomCluster, Metering):
     class UnitOfMeasure(t.enum8):
         """unit_of_measure."""
 
+        KWh = 0x00
         Lh = 0x07
 
     DIVISOR = 0x0302
@@ -106,18 +107,6 @@ class CustomMeteringCluster(CustomCluster, Metering):
         {
             0x0200: ("status", ValveStatus, True),
             0x0300: ("unit_of_measure", UnitOfMeasure, True),
-        }
-    )
-
-
-class CustomBasicCluster(CustomCluster, Basic):
-    """Custom Basic Cluster."""
-
-    attributes = Basic.attributes.copy()
-    attributes.update(
-        {
-            0x0010: ("location_desc", t.CharacterString, True),
-            0x0011: ("physical_env", t.enum8, True),
         }
     )
 
@@ -332,7 +321,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
         ENDPOINTS: {
             1: {
                 INPUT_CLUSTERS: [
-                    CustomBasicCluster,
+                    Basic.cluster_id,
                     PowerConfiguration.cluster_id,
                     Identify.cluster_id,
                     Groups.cluster_id,
