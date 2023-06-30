@@ -218,7 +218,7 @@ class SinopeTechnologiesLevelMonitor(CustomDevice):
         ENDPOINTS: {
             1: {
                 PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.LEVEL_CONTROLLABLE_OUTPUT,
+                DEVICE_TYPE: zha_p.DeviceType.METER_INTERFACE,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
                     PowerConfiguration.cluster_id,
