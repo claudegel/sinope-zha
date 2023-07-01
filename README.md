@@ -133,7 +133,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A0|t.uint32_t|Timer| Seconds
 |0xff01|0x0002|t.enum8|KeyboardLock| on=1, off=0
 |0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0200|t.bitmap32|Unknown| ?
+|0xff01|0x0200|t.bitmap32|Unknown| 0x00000000
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
 |0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
@@ -158,7 +158,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|t.bitmap32|unknown| 0| report/read
 |0xff01|0x0283|t.uint8_t|ColdLoadPickupStatus| 1, 2|read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+|0x0500|0x0002|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
 |0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
 |0x0b04|0x0605|t.uint16_t|AC_Power_Divisor| 1
@@ -193,6 +193,20 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- |---|
 |0x0402|0x0000|t.uint16_t|MeasuredValueTemperature|	celcius*100	
 |0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+
+- Sensors LM4110-ZB, tank level monitor
+
+|Cluster|Attributes|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- |---|
+|0x0001|0x0020|t.uint8_t|battery voltage|ex. 5.2v
+|0x0001|0x0021|t.uint8_t|remaining battey percentage|%
+|0x0001|0x003e|t.bitmap32|unknown|0x00000000
+|0x0402|0x0000|t.int16s|MeasuredValue, Temperature|	celcius*100	
+|0x000c|0x0055|t.uint16_t|Present value, angle| 323
+|0xff01|0x0030|t.uint8_t|Unknown| 60
+|0xff01|0x0200|t.bitmap32|Unknown| 0x00000000
+
+Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
 
 # Devices reporting
 
