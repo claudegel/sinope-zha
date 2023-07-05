@@ -258,11 +258,11 @@ Following are the cluster/attributes set for reproting in Neviweb:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
-|unknown|0x0001|0x003e| |60|43688|1| 
-|remaining battey percentage|0x0001|0x0021| |0|65535|1
-|battery voltage|0x0001|0x0020| |60|43646|1
-|present value, angle|0x000c|0x0055| |5|3757|1
-|device temperature|0x0402|0x0000| |60|3678|1 (only if temperature goes below 5oC)
+|unknown|0x0001|0x003e|0x1b|60|43688|1| 
+|remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
+|battery voltage|0x0001|0x0020|0x20|60|43646|1|
+|present value, angle|0x000c|0x0055|0x39|5|3757|1|
+|device temperature|0x0402|0x0000|0x29|60|3678|1|(only if temperature goes below 5oC)
 
 
 ## Light switch and dimmer double tap, long press reporting : 
