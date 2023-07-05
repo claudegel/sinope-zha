@@ -225,7 +225,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |report gfci status|0xFF01|0x0115|0x30|10|3600|1|
 |floor limit status|0xFF01|0x010C|0x30|10|3600|1| 
 
-- Light and dimmer
+- Light and dimmer:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
@@ -233,26 +233,37 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
 |double click|0xff01|0x0054|0x10|0|0|1|
 
-- load control
+- load control:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |onOff|0x0006|0x0000|0x10|0|600|null|
 |ActivePower|0x0B04|0x050B|0x29|60|599|0x64|
 
-- Valve
+- Valve:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |Battery %|(0x0001|0x0020|0x20|60|60*60|1|
 
-- Leak sensors
+- Leak sensors:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |battery percentage|0x0001|0x0021|0x20|30|43200|1| 
 |temperature min|0x0402|0x0000|0x29|30|3600|300|  
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
+
+- Tank monitor:
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|
+| --- | --- | --- | --- | --- | --- | --- |
+|unknown|0x0001|0x003e| |60|43688|1| 
+|remaining battey percentage|0x0001|0x0021| |0|65535|1
+|battery voltage|0x0001|0x0020| |60|43646|1
+|present value, angle|0x000c|0x0055| |5|3757|1
+|device temperature|0x0402|0x0000| |60|3678|1 (only if temperature goes below 5oC)
+
 
 ## Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
