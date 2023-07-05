@@ -256,8 +256,8 @@ Following are the cluster/attributes set for reproting in Neviweb:
 
 - Tank monitor:
 
-|Data|Cluster|Attribute|format|min time|max time|minimum change|
-| --- | --- | --- | --- | --- | --- | --- |
+|Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |unknown|0x0001|0x003e|0x1b|60|43688|1| 
 |remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
 |battery voltage|0x0001|0x0020|0x20|60|43646|1|
