@@ -178,8 +178,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |1|0xff01|0xFFFD|t.uint16_t|cluster_revision| |rea
 |1|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
 |2|0x0006|0x0000|t.Bool|OnOff2| 1=on, 0=off
-|1|0x0402|0x0000|t.int16s|Measured value, temperature int.| deg C
-|2|0x0402|0x0000|t.int16s|Measured value, temperature ext.| deg C
+|1|0x0402|0x0000|t.int16s|Measured value, indoor temperature| deg C
+|2|0x0402|0x0000|t.int16s|Measured value, outside temperature| deg C
 |1|0x0405|0x0000|t.uint16_t|measured value, relative humidity|%
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
