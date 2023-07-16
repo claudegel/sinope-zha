@@ -165,15 +165,22 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0b04|0x0604|t.uint16_t|AC_Power_Multiplier|	1
 |0x0b05|0x011d|t.int8s|Rssi| value -45
 |0x0402|0x0000|t.int16s|WaterTemperature| temp oC
+|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|W
 
 - Switch MC3100ZB, multi controller
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0xff01|0x00A0|t.uint32_t|Timer|	second, on endpoint 1 and 2
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0001|0x003E|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarn
-|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off, on endpoint 1 and 2
+|Endpoint|Cluster|Attributes|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- |---|
+|1|0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
+|1|0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
+|1|0xff01|0x00A0|t.uint32_t|Timer|	seconds
+|2|0xff01|0x00A0|t.uint32_t|Timer2|	seconds
+|1|0xff01|0xFFFD|t.uint16_t|cluster_revision| |rea
+|1|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
+|2|0x0006|0x0000|t.Bool|OnOff2| 1=on, 0=off
+|1|0x0402|0x0000|t.int16s|Measured value, temperature int.| deg C
+|2|0x0402|0x0000|t.int16s|Measured value, temperature ext.| deg C
+|1|0x0405|0x0000|t.uint16_t|measured value, relative humidity|%
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
