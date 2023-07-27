@@ -69,6 +69,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0013: ("tank_size", TankSize, True),
+        0x0030: ("unknown_attr_2", t.uint8_t, True),
         0x0060: ("connected_load", t.uint16_t, True),
         0x0070: ("currentLoad", t.bitmap8, True),
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
