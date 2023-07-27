@@ -112,12 +112,12 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x010D: ("room_temperature", t.int16s, True),
         0x0114: ("time_format", TimeFormat, True),
         0x0115: ("gfci_status", GfciStatus, True),
-        0x0116: ("unknown_3", Mode, True),
+        0x0116: ("unknown_attr_2", Mode, True),
         0x0118: ("aux_connected_load", t.uint16_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
         0x0128: ("pump_protection", t.uint8_t, True),
         0x012D: ("report_local_temperature", t.int16s, True),
-        0x0200: ("unknown", t.bitmap32, True),
+        0x0200: ("unknown_attr_1", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
