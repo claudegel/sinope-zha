@@ -117,7 +117,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0119: ("connected_load", t.uint16_t, True),
         0x0128: ("pump_protection", t.uint8_t, True),
         0x012D: ("report_local_temperature", t.int16s, True),
-        0x0200: ("unknown_attr_1", t.bitmap32, True),
+        0x0200: ("status", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
