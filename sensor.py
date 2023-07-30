@@ -49,7 +49,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0035: ("unknown_attr_7", t.uint16_t, True),
         0x0036: ("unknown_attr_8", t.uint16_t, True),
         0x0080: ("unknown_attr_9", t.uint32_t, True),
-        0x0200: ("unknown_attr_1", t.bitmap32, True),
+        0x0200: ("status", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
