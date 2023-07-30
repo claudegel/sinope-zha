@@ -76,7 +76,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
         0x0078: ("dr_wt_time_on", t.uint16_t, True),
         0x00A0: ("timer", t.uint32_t, True),
-        0x0200: ("unknown_attr_1", t.bitmap32, True),
+        0x0200: ("status", t.bitmap32, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
