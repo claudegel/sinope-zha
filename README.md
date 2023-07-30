@@ -72,7 +72,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012A|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write
 |0xff01|0x012B|t.int16s|currentSetpoint| |read/write
 |0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100|read
-|0xff01|0x0200|t.bitmap32|status| 0x00000000|
+|0xff01|0x0200|t.bitmap32|status| 0x00000000|report/read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 | --- | --- | --- | --- | --- |---|
 |0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1|read/write
@@ -104,7 +104,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0055|t.uint16_t|minIntensity| 0 to 3000
 |0xff01|0x00A0|t.uint32_t|Timer| Number of seconds
 |0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
-|0xff01|0x0200|t.bitmap32|status| ?
+|0xff01|0x0200|t.bitmap32|status| 0x00000000| report/read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 | --- | --- | --- | --- | --- | --- |
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr
@@ -133,7 +133,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A0|t.uint32_t|Timer| Seconds
 |0xff01|0x0002|t.enum8|KeyboardLock| on=1, off=0
 |0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0200|t.bitmap32|status| 0x00000000
+|0xff01|0x0200|t.bitmap32|status| 0x00000000 | report/read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
 |0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
@@ -155,7 +155,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0077|t.uint8_t|drConfigWaterTempTime|	2
 |0xff01|0x0078|t.uint16_t|drWTTimeOn|	240
 |0xff01|0x0079|t.bitmap8|unknown| 0| report/read
-|0xff01|0x0200|t.bitmap32|status| 0| report/read
+|0xff01|0x0200|t.bitmap32|status| 0x00000000| report/read
 |0xff01|0x0283|t.uint8_t|ColdLoadPickupStatus| 1, 2|read
 |0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
 |0x0500|0x0002|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
@@ -188,6 +188,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- |---|
 |0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
 |0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
+|0xff01|0x0200|t.bitmap32|status| 0x00000000| report/read
 |0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
 |0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|	L/h (see below)
 |0x0702|0x0200|t.bitmap8|status|0=off, 1=off/armed, 2=on
@@ -211,7 +212,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0402|0x0000|t.int16s|MeasuredValue, device Temperature|	celcius*100	
 |0x000c|0x0055|t.uint16_t|Present value, angle| angle of the gauge needle in degree
 |0xff01|0x0030|t.uint8_t|Unknown| 60
-|0xff01|0x0200|t.bitmap32|status| 0x00000000
+|0xff01|0x0200|t.bitmap32|status| 0x00000000| report/read
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
 
