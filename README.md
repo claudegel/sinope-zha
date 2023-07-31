@@ -241,12 +241,13 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
 |double click|0xff01|0x0054|0x10|0|0|1|
 
-- load control:
+- load control RM3250ZB:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |onOff|0x0006|0x0000|0x10|0|600|null|
 |ActivePower|0x0B04|0x050B|0x29|60|599|0x64|
+|Energy reading |0x0702|0x0000|0x29|59|1799|int|
 
 - Valve:
 
@@ -262,70 +263,26 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |temperature min|0x0402|0x0000|0x29|30|3600|300|  
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
 
-- Tank monitor:
+- Tank monitor LM4110-ZB:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|unknown|0x0001|0x003e|0x1b|60|43688|1| 
+|status|0x0001|0x003e|0x1b|60|43688|1| 
 |remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
 |battery voltage|0x0001|0x0020|0x20|60|43646|1|
 |present value, angle|0x000c|0x0055|0x39|5|3757|1|
 |device temperature|0x0402|0x0000|0x29|60|3678|1|(only if temperature goes below 5oC)
 
-## Cluster/attributes reporting configuration:
+- Calypso RM3500ZB:
 
-- load controller RM3250ZB
-  On/off state   (0x0006, 0x0000, 0x10, 0, 600)
-  Voltage        (0x0B04, 0x0505, 0x29, 30, 600)
-  Current        (0x0B04, 0x0508, 0x29, 30, 600)
-  Active power reporting  (0x0B04, 0x050B, 0x29, 30, 600, (int) powerReport)
-  Energy reading   (0x0702, 0x0000, DataType.UINT48, 59, 1799, (int) energyChange)
-
-- Calypso RM3500ZB
-  Water temperature  (0x0402, 0x0000, 0x29, 30, 580, (int) tempChange)
-  Water leak sensor state  (0x0500, 0x0002, DataType.BITMAP16, 0, Integer.parseInt(waterReportingSeconds))
-  Heater On/off state  (0x0006, 0x0000, 0x10, 0, Integer.parseInt(switchReportingSeconds))
-  Active power reporting  (0x0B04, 0x050B, 0x29, 30, 600, (int) powerReport)
-  Energy reading  (0x0702, 0x0000, DataType.UINT48, 299, 1799, (int) energyChange)
-  Safety water temp reporting every 24 hours   (0xFF01, 0x0076, DataType.UINT8, 0, 86400, null, [mfgCode: "0x119C"])
-
-- Switch SP2600SP, SP2610ZB
-  On off state   (0x0006, 0x0000, 0x10, 0, 600, null)
-  powerReport    (0x0B04, 0x050B, 0x29, 30, 600, (int) PowerReport)
-  Energy reading  (0x0702, 0x0000, DataType.UINT48, 59, 1799, (int) energyChange)
-
-- Thermostats TH112xZB
-  local temperature    (0x0201, 0x0000, 0x29, 30, 580, (int) tempChange)
-	PI heating demand    (0x0201, 0x0008, 0x0020, 59, 590, (int) HeatingChange)
-	Energy reading       (0x0702, 0x0000, DataType.UINT48, 59, 1799, (int) energyChange)
-	occupied heating setpoint	(0x0201, 0x0012, 0x0029, 15, 302, 40)
-	temperature display mode  (0x0204, 0x0000, 0x30, 1, 0)
-	keypad lockout      (0x0204, 0x0001, 0x30, 1, 0)
-
-- Thermostat TH1300ZB
-  local temperature   (0x0201, 0x0000, 0x29, 30, 580, (int) tempChange)
-	PI heating demand   (0x0201, 0x0008, 0x0020, 59, 590, (int) HeatingChange)
-	Energy reading      (0x0702, 0x0000, DataType.UINT48, 59, 1799, (int) energyChange)
-	occupied heating setpoint  (0x0201, 0x0012, 0x0029, 15, 302, 40)
-	temperature display mode   (0x0204, 0x0000, 0x30, 1, 0)
-	keypad lockout      (0x0204, 0x0001, 0x30, 1, 0)
-	report gfci status each hours  (0xFF01, 0x0115, 0x30, 10, 3600, 1)
-	floor limit status each hours  (0xFF01, 0x010C, 0x30, 10, 3600, 1)
-
-- Thermostat TH1400ZB
-  local temperature    (0x0201, 0x0000, 0x29, 30, 580, (int) tempChange)
-	PI heating demand    (0x0201, 0x0008, 0x0020, 59, 590, (int) HeatingChange)
-	temperature display mode (0x0201, 0x0012, 0x0029, 15, 302, 40)
-	TemperatureDisplayMode  (0x0204, 0x0000, 0x30, 1, 0)
-	keypad lockout       (0x0204, 0x0001, 0x30, 1, 0)
-	floor limit status each hours  (0xFF01, 0x010C, 0x30, 10, 3600, 1)
-
-- Tank monitor LM4110-ZB
-  Status              (0x0001, 0x003e, 0x1b, 60, 43688, (int) status)
-  Remaining battery % (0x0001, 0x0021, 0x20, 0, 65535, %)
-  Battery voltage     (0x0001, 0x0020, 0x20, 60, 43646, (v) battery voltage)
-  angle value         (0x000c, 0x0055, 0x39, 5, 3757, (int) gaige needle angle)
-  device temperature  (0x0402, 0x0000, 0x29, 60, 3678, (int) temperature oC)
+|Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|water temperature|0x0402|0x0000|0x29|30|580|100|
+|Water leak sensor state|0x0500|0x0002|DataType.BITMAP16|0|
+|Heater On/off|0x0006|0x0000|0x10|0|600|null|
+|ActivePower|0x0B04|0x050B|0x29|30|600|0x64|
+|Energy reading|0x0702|0x0000|0x29|299|1799|int|
+|Safety water temp reporting|0xFF01|0x0076|DataType.UINT8|0|86400|null|
   
 ## Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
