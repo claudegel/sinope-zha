@@ -278,7 +278,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |water temperature|0x0402|0x0000|0x29|30|580|100|
-|Water leak sensor state|0x0500|0x0002|DataType.BITMAP16|0|
+|Water leak sensor state|0x0500|0x0002|0x19|0|
 |Heater On/off|0x0006|0x0000|0x10|0|600|null|
 |ActivePower|0x0B04|0x050B|0x29|30|600|0x64|
 |Energy reading|0x0702|0x0000|0x29|299|1799|int|
