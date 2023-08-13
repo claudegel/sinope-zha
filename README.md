@@ -53,7 +53,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write
 |0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
 |0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write
-|0xff01|0x0075|117t.bitmap32|unknown testing| |read/write
+|0xff01|0x0075|117|t.bitmap32|unknown testing| |read/write
 |0xff01|0x0100|256|t.uint8_t|unknown testing| |read
 |0xff01|0x0104|260|t.int16s|setpoint|temp*100|read/write
 |0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write
