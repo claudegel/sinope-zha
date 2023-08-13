@@ -97,14 +97,14 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read
-|0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0051|81|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0052|82|t.uint8_t|onLedIntensity| Percent
-|0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent
+|0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write
+|0xff01|0x0051|81|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write
+|0xff01|0x0052|82|t.uint8_t|onLedIntensity| Percent|read/write
+|0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write
 |0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport
-|0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000
-|0xff01|0x00A0|160|t.uint32_t|Timer| Number of seconds
-|0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt
+|0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write
+|0xff01|0x00A0|160|t.uint32_t|Timer| Number of seconds|read/write
+|0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
 | --- | --- | --- | --- | --- | --- | ---|
