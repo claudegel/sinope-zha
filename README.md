@@ -183,21 +183,21 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch MC3100ZB, multi controller
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- | --- | ---|
+|Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt
 |1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
-| --- | --- | --- | --- | --- | --- | ---|
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0xff01|0x00A0|160|t.uint32_t|Timer|	seconds
 |2|0xff01|0x00A0|160|t.uint32_t|Timer2|	seconds
 |1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | --- | --- | ---|
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off
 |2|0x0006|0x0000|0|t.Bool|OnOff2| 1=on, 0=off
-| --- | --- | --- | --- | --- | --- | ---|
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature| deg C
 |2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature| deg C
-| --- | --- | --- | --- | --- | --- | ---|
+| --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
