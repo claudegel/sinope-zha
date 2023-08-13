@@ -66,6 +66,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x010D|t.int16s|RoomTemperature|temp: celcius*100|read
 |0xff01|0x0114|t.enum8|timeFormat|0=24h, 1=12h|read/write
 |0xff01|0x0115|t.enum8|gfciStatus|0=ok, 1=error|report/read
+|0xff01|0x0116|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat
 |0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write
 |0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff|
 |0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write
