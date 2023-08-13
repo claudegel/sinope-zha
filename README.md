@@ -212,7 +212,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x003e|t.bitmap32|unknown|0x00000000
 |0x0402|0x0000|t.int16s|MeasuredValue, device Temperature|	celcius*100	
 |0x000c|0x0055|t.uint16_t|Present value, angle| angle of the gauge needle in degree
-|0xff01|0x0030|t.uint8_t|Unknown| 60
+|0xff01|0x0003|t.CharacterString|firmware_version| |read
+|0xff01|0x0030|t.uint8_t|Unknown| 60|report/read/write
+|0xff01|0x0080|t.uint32_t|Unknown|0|report/read
 |0xff01|0x0200|t.bitmap32|status| 0x00000000| report/read
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
