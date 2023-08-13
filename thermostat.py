@@ -128,8 +128,8 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     class Occupancy(t.enum8):
         """set_occupancy values."""
 
+        Home = 0x00
         Away = 0x01
-        Home = 0x02
 
     class Backlight(t.enum8):
         """backlight_auto_dim_param values."""
