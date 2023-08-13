@@ -80,10 +80,12 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Ok = 0x00
         Error = 0x01
 
-    class AuxMode(t.enum8):
+    class SystemMode(t.enum8):
         """aux_mode values."""
 
         Off = 0x00
+        Auto = 0x01
+        Cool = 0x03
         Heat = 0x04
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
@@ -112,7 +114,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x010D: ("room_temperature", t.int16s, True),
         0x0114: ("time_format", TimeFormat, True),
         0x0115: ("gfci_status", GfciStatus, True),
-        0x0116: ("aux_mode", AuxMode, True),
+        0x0116: ("aux_mode", SystemMode, True),
         0x0118: ("aux_connected_load", t.uint16_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
         0x0128: ("pump_protection", t.uint8_t, True),
@@ -137,13 +139,24 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
         On_demand = 0x00
         Always_on = 0x01
 
+    class CycleOutput(t.uint16_t):
+        """main and aux cycle period values."""
+
+        Sec_15 = 0x000F
+        Min_5 = 0x012C
+        Min_10 = 0x0258
+        Min_15 = 0x0384
+        Min_20 = 0x04B0
+        Min_25 = 0x05DC
+        Min_30 = 0x0708
+
     attributes = Thermostat.attributes.copy()
     attributes.update(
         {
             0x0400: ("set_occupancy", Occupancy, True),
-            0x0401: ("main_cycle_output", t.uint16_t, True),
+            0x0401: ("main_cycle_output", CycleOutput, True),
             0x0402: ("backlight_auto_dim_param", Backlight, True),
-            0x0404: ("aux_cycle_output", t.uint16_t, True),
+            0x0404: ("aux_cycle_output", CycleOutput, True),
             0xFFFD: ("cluster_revision", t.uint16_t, True),
         }
     )
