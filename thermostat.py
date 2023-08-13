@@ -80,8 +80,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Ok = 0x00
         Error = 0x01
 
-    class Mode(t.enum8):
-        """unknown_3 values."""
+    class AuxMode(t.enum8):
+        """aux_mode values."""
 
         Off = 0x00
         Heat = 0x04
@@ -112,7 +112,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x010D: ("room_temperature", t.int16s, True),
         0x0114: ("time_format", TimeFormat, True),
         0x0115: ("gfci_status", GfciStatus, True),
-        0x0116: ("unknown_attr_2", Mode, True),
+        0x0116: ("aux_mode", AuxMode, True),
         0x0118: ("aux_connected_load", t.uint16_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
         0x0128: ("pump_protection", t.uint8_t, True),
