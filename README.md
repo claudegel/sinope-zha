@@ -73,6 +73,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write
 |0xff01|0x012A|298|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write
+|0xff01|0x012C|300| | | |read
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
@@ -95,6 +96,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0001|1|t.bool|Unknown|0, 1|read/write
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read
 |0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write
@@ -103,7 +105,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write
 |0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write
+|0xff01|0x0080|128|t.uint32_t|Unknown| |read
+|0xff01|0x0090|144|t.uint32_t|Unknown| |report/read
 |0xff01|0x00A0|160|t.uint32_t|Timer| Number of seconds|read/write
+|0xff01|0x00A1|161|t.uint32_t|unknown|0|read
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
@@ -133,13 +138,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0001|1|t.bool|unknown|0, 1|read/write
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read
-|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr
-|0xff01|0x00A0|160|t.uint32_t|Timer| Seconds
+|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read
+|0xff01|0x00A0|160|t.uint32_t|Timer| Seconds|read/write
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|	watt/hr
+|0xff01|0x0080|128|t.uint32_t|Unknown| |read
+|0xff01|0x0090|144|t.uint32_t|Unknown| |report/read
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000 | report/read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off
 | --- | --- | --- | --- | --- | --- | ---|
@@ -190,7 +198,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0xff01|0x00A0|160|t.uint32_t|Timer|	seconds
 |2|0xff01|0x00A0|160|t.uint32_t|Timer2|	seconds
-|1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off
 |2|0x0006|0x0000|0|t.Bool|OnOff2| 1=on, 0=off
@@ -240,6 +248,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0030|48|t.uint8_t|Unknown| 60|report/read/write
 |0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
+|0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
 
