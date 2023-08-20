@@ -215,9 +215,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt
 |0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on
@@ -228,7 +230,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius*100	
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0030|48|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
 
@@ -240,7 +242,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%
 |0x0001|0x003e|62|t.bitmap32|unknown|0x00000000
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|	celcius*100	
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|	celcius float with two decimal
 | --- | --- | --- | --- | --- | --- | ---|
 |0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree
 | --- | --- | --- | --- | --- | --- | ---|
