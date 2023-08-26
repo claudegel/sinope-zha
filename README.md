@@ -482,7 +482,7 @@ This automation will create the sensor.current_angle or any other name you want.
   - service: zha_toolkit.execute
     data:
       command: attr_read
-      ieee: "your LM4110 ieee "
+      ieee: "«your LM4110 ieee »"
       cluster: 12
       attribute: 85
       state_id: sensor.current_angle
@@ -492,7 +492,26 @@ This automation will create the sensor.current_angle or any other name you want.
 ```
 
 ### Do the calculation to transfert angle to %:
-
+There are two different tank gauge. scale from 10 to 80 or scale from 5 to 95 . calculation is different for each one.
+- Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge)
+```
+template:
+  - trigger:
+    - platform: time_pattern
+      hours: "/5"
+  - sensor:
+    - name: "Tank remaining level"
+      unit_of_measurement: "%"
+      icon: mdi:propane-tank
+      state: >
+          {% if ((46 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (70 >= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+            {{ (((46-110)/(406-110)*(80-10))+10) | round(0) }}
+          {% elif ((0 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (46 > states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+            {{ (((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/(406-110)*(80-10)+10) | round(0) }}
+          {% else %}
+            {{ (((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/(406-110)*(80-10)+10) | round(0) }}
+          {% endif %}
+```
 
 # Automation examples:
 - Sending outside temperature to thermostats:
