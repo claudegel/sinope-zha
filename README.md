@@ -408,7 +408,7 @@ the steps to configure your LM4110-ZB sensor is as follow:
 
 ```service: zha_toolkit.execute
 data:
-  ieee: «your LM4110 ieee»
+  ieee: «your LM4110 ieee »
   command: conf_report
   endpoint: 1
   cluster: 0x000c
@@ -423,7 +423,10 @@ data:
 Check your log until you get :
 
 'success': True, 'result_conf': [[ConfigureReportingResponseRecord(status=0)]]
+
 zha-toolkit will submit the command until it reach 100 retry or zha_done event.
+
+### bind reporting:
 
 Once you have it correctly, you need to bind your LM410ZB to your
 zigbee gateway so the report is sent to the correct place:
@@ -431,7 +434,7 @@ zigbee gateway so the report is sent to the correct place:
 ```
 service: zha_toolkit.bind_ieee
 data:
-  ieee: «your LM4110 ieee»
+  ieee: «your LM4110 ieee »
   command_data: «your zigbee gateway iee»
   cluster: 0x000c
   endpoint: 1
@@ -439,10 +442,57 @@ data:
   tries: 100
   event_done: zha_done
 ```
+service: zha_toolkit.execute can be replaced by service: zha_toolkit.conf_report. In that case remove the «command: conf_report line».
+The most important is to retry many time to catch the moment the LM4110 is awake.
 
-- setup automation to catch angle reporting:
+### setup automation to catch angle reporting:
 
-- Do the calculation to transfert angle to %:
+To get the angle value you can try this method:
+```
+- platform: sql
+  db_url: sqlite:////config/zigbee.db
+  scan_interval: 10
+  queries:
+    - name: current_angle
+      query: "SELECT value FROM attributes_cache_v7 where ieee = 'your LM4110 ieee' and cluster = 12 and attrid = 85"
+      column: "value"
+```
+or you can use this method if you don't want to setup the sql platform:
+```
+service: zha_toolkit.execute
+data:
+  command: attr_read
+  ieee: «your LM4110 ieee »
+  cluster: 0x000c
+  attribute: 0x0055
+  state_id: sensor.current_angle
+  allow_create: True
+  tries: 100
+```
+This automation will create the sensor.current_angle or any other name you want. 
+```
+- id: '1692841759194'
+  alias: Lecture niveau propane
+  description: Lecture du niveau de réservoir à chaque heure
+  trigger:
+  - platform: time_pattern
+    hours: /1
+  condition: []
+  action:
+  - service: zha_toolkit.execute
+    data:
+      command: attr_read
+      ieee: "your LM4110 ieee "
+      cluster: 12
+      attribute: 85
+      state_id: sensor.current_angle
+      allow_create: true
+      tries: 100
+  mode: single
+```
+
+### Do the calculation to transfert angle to %:
+
 
 # Automation examples:
 - Sending outside temperature to thermostats:
