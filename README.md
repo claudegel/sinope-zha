@@ -397,6 +397,47 @@ For automations you will have acces to those events in the UI for device trigger
 - "Turn on" continuously pressed
 - "Turn off" continuously pressed
 
+# LM4110-ZB setup for angle and level % reporting :
+This sensor is a sleepy device. That mean the device is sleeping and wake up at specific interval to report his state. When it is sleeping it is impossible to reach hit.
+We can't send any command to that devive except when it is awake.
+To be able to configure the device you need to install ZHA-TOOLKIT component. This will allow to do all operations to setup the device.
+
+the steps to configure your LM4110-ZB sensor is as follow:
+- setup reporting:
+```service: zha_toolkit.execute
+data:
+  ieee: «your LM4110 ieee»
+  command: conf_report
+  endpoint: 1
+  cluster: 0x000c
+  attribute: 0x0055
+  min_interval: 5
+  max_interval: 3757
+  reportable_change: 1
+  tries: 100
+  event_done: zha_done```
+
+Check your log until you get :
+
+'success': True, 'result_conf': [[ConfigureReportingResponseRecord(status=0)]]
+zha-toolkit will submit the command until it reach 100 retry or zha_done event.
+
+Once you have it correctly, you need to bind your LM410ZB to your
+zigbee gateway so the report is sent to the correct place:
+```
+service: zha_toolkit.bind_ieee
+data:
+  ieee: «your LM4110 ieee»
+  command_data: «your zigbee gateway iee»
+  cluster: 0x000c
+  endpoint: 1
+  dst_endpoint: 1
+  tries: 100
+  event_done: zha_done
+  ```
+- setup automation to catch angle reporting:
+
+- Do the calculation to transfert angle to %:
 
 # Automation examples:
 - Sending outside temperature to thermostats:
