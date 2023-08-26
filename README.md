@@ -403,7 +403,7 @@ We can't send any command to that devive except when it is awake.
 To be able to configure the device you need to install ZHA-TOOLKIT component. This will allow to do all operations to setup the device.
 
 the steps to configure your LM4110-ZB sensor is as follow:
-- setup reporting:
+### setup reporting:
 ```service: zha_toolkit.execute
 data:
   ieee: «your LM4110 ieee»
@@ -415,7 +415,8 @@ data:
   max_interval: 3757
   reportable_change: 1
   tries: 100
-  event_done: zha_done```
+  event_done: zha_done
+```
 
 Check your log until you get :
 
@@ -434,7 +435,8 @@ data:
   dst_endpoint: 1
   tries: 100
   event_done: zha_done
-  ```
+```
+
 - setup automation to catch angle reporting:
 
 - Do the calculation to transfert angle to %:
