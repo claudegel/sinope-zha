@@ -403,7 +403,9 @@ We can't send any command to that devive except when it is awake.
 To be able to configure the device you need to install ZHA-TOOLKIT component. This will allow to do all operations to setup the device.
 
 the steps to configure your LM4110-ZB sensor is as follow:
+
 ### setup reporting:
+
 ```service: zha_toolkit.execute
 data:
   ieee: «your LM4110 ieee»
@@ -425,6 +427,7 @@ zha-toolkit will submit the command until it reach 100 retry or zha_done event.
 
 Once you have it correctly, you need to bind your LM410ZB to your
 zigbee gateway so the report is sent to the correct place:
+
 ```
 service: zha_toolkit.bind_ieee
 data:
