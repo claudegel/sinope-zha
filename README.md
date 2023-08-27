@@ -502,17 +502,38 @@ template:
   - sensor:
     - name: "Tank remaining level"
       unit_of_measurement: "%"
+      unique_id: sensor.tank_remaining_level
       icon: mdi:propane-tank
       state: >
           {% if ((46 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (70 >= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
-            {{ (((46-110)/(406-110)*(80-10))+10) | round(0) }}
+            {{ ((((46-110)/296)*70)+10) | round(0) }}
           {% elif ((0 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (46 > states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
-            {{ (((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/(406-110)*(80-10)+10) | round(0) }}
+            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/296)*70)+10) | round(0) }}
           {% else %}
-            {{ (((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/(406-110)*(80-10)+10) | round(0) }}
+            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/296)*70)+10) | round(0) }}
           {% endif %}
 ```
 
+- Calculates propane tank % according to value returned by Sinope device (for R3D 5-95 gauge)
+```
+template:
+  - trigger:
+    - platform: time_pattern
+      hours: "/5"
+  - sensor:
+    - name: "Tank remaining level"
+      unit_of_measurement: "%"
+      unique_id: sensor.tank_remaining_level
+      icon: mdi:propane-tank
+      state: >
+          {% if ((55 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (70 >= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+            {{ ((((55-110)/305)*90)+5) | round(0) }}
+          {% elif ((0 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (55 > states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/305)*90)+5) | round(0) }}
+          {% else %}
+            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/305)*90)+5) | round(0) }}
+          {% endif %}
+```
 # Automation examples:
 - Sending outside temperature to thermostats:
 - Celcius:
