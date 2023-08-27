@@ -436,19 +436,21 @@ zigbee gateway so the report is sent to the correct place:
 service: zha_toolkit.bind_ieee
 data:
   ieee: «your LM4110 ieee »
-  command_data: «your zigbee gateway iee»
+  command_data: «your zigbee gateway ieee »
   cluster: 0x000c
   endpoint: 1
   dst_endpoint: 1
   tries: 100
   event_done: zha_done
 ```
+
 service: zha_toolkit.execute can be replaced by service: zha_toolkit.conf_report. In that case remove the «command: conf_report line».
 The most important is to retry many time to catch the moment the LM4110 is awake.
 
 ### setup automation to catch angle reporting:
 
 To get the angle value you can try this method:
+
 ```
 - platform: sql
   db_url: sqlite:////config/zigbee.db
@@ -458,7 +460,9 @@ To get the angle value you can try this method:
       query: "SELECT value FROM attributes_cache_v7 where ieee = 'your LM4110 ieee' and cluster = 12 and attrid = 85"
       column: "value"
 ```
+
 or you can use this method if you don't want to setup the sql platform:
+
 ```
 service: zha_toolkit.execute
 data:
@@ -470,7 +474,9 @@ data:
   allow_create: True
   tries: 100
 ```
-This automation will create the sensor.current_angle or any other name you want. 
+
+This automation will create the sensor.current_angle or any other name you want.
+
 ```
 - id: '1692841759194'
   alias: Lecture niveau propane
@@ -495,6 +501,7 @@ This automation will create the sensor.current_angle or any other name you want.
 ### Do the calculation to transfert angle to %:
 There are two different tank gauge. scale from 10 to 80 or scale from 5 to 95 . calculation is different for each one.
 - Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge)
+
 ```
 template:
   - trigger:
@@ -516,6 +523,7 @@ template:
 ```
 
 - Calculates propane tank % according to value returned by Sinope device (for R3D 5-95 gauge)
+
 ```
 template:
   - trigger:
@@ -535,6 +543,7 @@ template:
             {{ (((((states('sensor.current_angle') | float(0))-110)/305)*90)+5) | round(0) }}
           {% endif %}
 ```
+
 # Automation examples:
 - Sending outside temperature to thermostats:
 - Celcius:
