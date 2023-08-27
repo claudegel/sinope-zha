@@ -499,7 +499,7 @@ This automation will create the sensor.current_angle or any other name you want.
 ```
 
 ### Do the calculation to transfert angle to %:
-There are two different tank gauge. scale from 10 to 80 or scale from 5 to 95 . calculation is different for each one.
+There are two different tank gauge, scale from 10 to 80 or scale from 5 to 95 . Calculation is different for each one.
 - Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge)
 
 ```
