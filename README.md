@@ -505,12 +505,12 @@ template:
       unique_id: sensor.tank_remaining_level
       icon: mdi:propane-tank
       state: >
-          {% if ((46 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (70 >= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+          {% if ((46 <= states('sensor.current_angle') | float(0)) and (70 >= states('sensor.current_angle') | float(0))) %}
             {{ ((((46-110)/296)*70)+10) | round(0) }}
-          {% elif ((0 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (46 > states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
-            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/296)*70)+10) | round(0) }}
+          {% elif ((0 <= states('sensor.current_angle') | float(0)) and (46 > states('sensor.current_angle') | float(0))) %}
+            {{ (((((states('sensor.current_angle') | float(0))+360-110)/296)*70)+10) | round(0) }}
           {% else %}
-            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/296)*70)+10) | round(0) }}
+            {{ (((((states('sensor.current_angle') | float(0))-110)/296)*70)+10) | round(0) }}
           {% endif %}
 ```
 
@@ -526,12 +526,12 @@ template:
       unique_id: sensor.tank_remaining_level
       icon: mdi:propane-tank
       state: >
-          {% if ((55 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (70 >= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
+          {% if ((55 <= states('sensor.current_angle') | float(0)) and (70 >= states('sensor.current_angle') | float(0))) %}
             {{ ((((55-110)/305)*90)+5) | round(0) }}
-          {% elif ((0 <= states('sensor.sinope_technologies_lm4110_zb_angle') | float(0)) and (55 > states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))) %}
-            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))+360-110)/305)*90)+5) | round(0) }}
+          {% elif ((0 <= states('sensor.current_angle') | float(0)) and (55 > states('sensor.current_angle') | float(0))) %}
+            {{ (((((states('sensor.current_angle') | float(0))+360-110)/305)*90)+5) | round(0) }}
           {% else %}
-            {{ (((((states('sensor.sinope_technologies_lm4110_zb_angle') | float(0))-110)/305)*90)+5) | round(0) }}
+            {{ (((((states('sensor.current_angle') | float(0))-110)/305)*90)+5) | round(0) }}
           {% endif %}
 ```
 # Automation examples:
