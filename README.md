@@ -406,7 +406,8 @@ the steps to configure your LM4110-ZB sensor is as follow:
 
 ### setup reporting:
 
-```service: zha_toolkit.execute
+```
+service: zha_toolkit.execute
 data:
   ieee: «your LM4110 ieee »
   command: conf_report
