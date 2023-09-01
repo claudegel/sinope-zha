@@ -498,7 +498,7 @@ This automation will create the sensor.current_angle or any other name you want.
   mode: single
 ```
 
-### Do the calculation to transfert angle to %:
+### Do the calculation to transfert angle to % level:
 There are two different tank gauge, scale from 10 to 80 (R3D 10-80) or scale from 5 to 95 (R3D 5-95). Calculation is different for each one.
 
 - First set gauge type and value offset. For this you need to create input_number and input_text to set those value in configuration.yaml
@@ -518,7 +518,7 @@ input_text:
     name: "gauge"
     initial: "10-80" # or "5-95"
 ```
-- Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge and R3D 5-95 gauge)
+- Calculates propane tank % level according to value returned by Sinope device (for R3D 10-80 gauge or R3D 5-95 gauge)
 ```
 template:
   - trigger:
