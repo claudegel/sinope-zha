@@ -499,9 +499,26 @@ This automation will create the sensor.current_angle or any other name you want.
 ```
 
 ### Do the calculation to transfert angle to %:
-There are two different tank gauge, scale from 10 to 80 or scale from 5 to 95 . Calculation is different for each one.
-- Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge)
+There are two different tank gauge, scale from 10 to 80 (R3D 10-80) or scale from 5 to 95 (R3D 5-95). Calculation is different for each one.
 
+- First set gauge type and value offset. For this you need to create input_number and input_text to set those value in configuration.yaml
+```
+input_number:
+  gauge_offset:
+    name: "gauge offset"
+    initial: 2
+    min: 1
+    max: 4
+    step: 1
+```
+
+```
+input_text:
+  gauge:
+    name: "gauge"
+    initial: "10-80" # or "5-95"
+```
+- Calculates propane tank % according to value returned by Sinope device (for R3D 10-80 gauge and R3D 5-95 gauge)
 ```
 template:
   - trigger:
@@ -512,36 +529,31 @@ template:
       unit_of_measurement: "%"
       unique_id: sensor.tank_remaining_level
       icon: mdi:propane-tank
+      state_class: measurement
       state: >
-          {% if ((46 <= states('sensor.current_angle') | float(0)) and (70 >= states('sensor.current_angle') | float(0))) %}
-            {{ ((((46-110)/296)*70)+10) | round(0) }}
-          {% elif ((0 <= states('sensor.current_angle') | float(0)) and (46 > states('sensor.current_angle') | float(0))) %}
-            {{ (((((states('sensor.current_angle') | float(0))+360-110)/296)*70)+10) | round(0) }}
-          {% else %}
-            {{ (((((states('sensor.current_angle') | float(0))-110)/296)*70)+10) | round(0) }}
-          {% endif %}
-```
+        {% set gauge = states('input_text.gauge') %}
+        {% set angle = states('sensor.current_angle') | float %}
+        {% set offset = states('input_number.gauge_offset') | float %}
+        {% set x_min = 110 | float %}
+        {% if (gauge == "10-80") %}
+          {% set x_max = 406 | float %}
+          {% set delta = 46 | float %}
+          {% set low = 10 | float %}
+          {% set high = 80 | float %}
+        {% else %}
+          {% set x_max = 415 | float %}
+          {% set delta = 55 | float %}
+          {% set low = 5 | float %}
+          {% set high = 95 | float %}
+        {% endif %}
 
-- Calculates propane tank % according to value returned by Sinope device (for R3D 5-95 gauge)
-
-```
-template:
-  - trigger:
-    - platform: time_pattern
-      hours: "/5"
-  - sensor:
-    - name: "Tank remaining level"
-      unit_of_measurement: "%"
-      unique_id: sensor.tank_remaining_level
-      icon: mdi:propane-tank
-      state: >
-          {% if ((55 <= states('sensor.current_angle') | float(0)) and (70 >= states('sensor.current_angle') | float(0))) %}
-            {{ ((((55-110)/305)*90)+5) | round(0) }}
-          {% elif ((0 <= states('sensor.current_angle') | float(0)) and (55 > states('sensor.current_angle') | float(0))) %}
-            {{ (((((states('sensor.current_angle') | float(0))+360-110)/305)*90)+5) | round(0) }}
-          {% else %}
-            {{ (((((states('sensor.current_angle') | float(0))-110)/305)*90)+5) | round(0) }}
-          {% endif %}
+        {% if ((delta <= angle) and (70 >= angle)) %}
+          {{ (((delta-x_min)/(x_max-x_min)*(high-low))+low+offset) | round(0) }}
+        {% elif ((0 <= angle) and (delta > angle)) %}
+          {{ (((angle)+360-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+        {% else %}
+          {{ (((angle)-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+        {% endif %}
 ```
 
 # Automation examples:
