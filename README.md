@@ -501,7 +501,7 @@ This automation will create the sensor.current_angle or any other name you want.
 ### Do the calculation to transfert angle to % level:
 There are two different tank gauge, scale from 10 to 80 (R3D 10-80) or scale from 5 to 95 (R3D 5-95). Calculation is different for each one.
 
-- First set gauge type and value offset. For this you need to create input_number and input_text to set those value in configuration.yaml
+- First set gauge type and value offset. For this you need to create input_number and input_text to set those value in <b>configuration.yaml</b>
 ```
 input_number:
   gauge_offset:
@@ -531,9 +531,9 @@ template:
       icon: mdi:propane-tank
       state_class: measurement
       state: >
-        {% set gauge = states('input_text.gauge') %}
+        {% set gauge = states('input_text.gauge') %} # must match the above input_text name
         {% set angle = states('sensor.current_angle') | float %}
-        {% set offset = states('input_number.gauge_offset') | float %}
+        {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
         {% set x_min = 110 | float %}
         {% if (gauge == "10-80") %}
           {% set x_max = 406 | float %}
