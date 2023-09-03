@@ -514,8 +514,8 @@ input_number:
 
 ```
 input_text:
-  gauge:
-    name: "gauge"
+  tank_gauge:
+    name: "tank gauge"
     initial: "10-80" # or "5-95"
 ```
 - Calculates propane tank % level according to value returned by Sinope device (for R3D 10-80 gauge or R3D 5-95 gauge)
@@ -531,7 +531,7 @@ template:
       icon: mdi:propane-tank
       state_class: measurement
       state: >
-        {% set gauge = states('input_text.gauge') %} # must match the above input_text name
+        {% set gauge = states('input_text.tank_gauge') %} # must match the above input_text name
         {% set angle = states('sensor.current_angle') | float %}
         {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
         {% set x_min = 110 | float %}
