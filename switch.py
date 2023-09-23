@@ -67,6 +67,7 @@ class SinopeManufacturerCluster(CustomCluster):
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
         0x0002: ("keypad_lockout", KeypadLock, True),
+        0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0013: ("tank_size", TankSize, True),
         0x0030: ("unknown_attr_2", t.uint8_t, True),
