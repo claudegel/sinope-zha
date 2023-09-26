@@ -226,7 +226,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering
 
-- Sensors WL4200 and WL4200S
+- Sensors WL4200, WL4200S, WL4200C, WL4210
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
