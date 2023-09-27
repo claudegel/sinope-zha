@@ -76,15 +76,21 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     name = "Sinopé Technologies Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
+        0x0001: ("unknown_attr_4", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
+        0x0010: ("unknown", t.int16s, True),
+        0x0012: ("unknown_attr_2", t.enum8, True),
+        0x0013: ("unknown_attr_3", t.enum8, True),
         0x0050: ("on_led_color", t.uint24_t, True),
         0x0051: ("off_led_color", t.uint24_t, True),
         0x0052: ("on_led_intensity", t.uint8_t, True),
         0x0053: ("off_led_intensity", t.uint8_t, True),
         0x0054: ("action_report", Action, True),
         0x0055: ("min_intensity", t.uint16_t, True),
+        0x0080: ("unknown_attr_5", t.uint32_t, True),
+        0x0090: ("unknown_attr_6", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
         0x00A1: ("timer_countdown", t.uint32_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
