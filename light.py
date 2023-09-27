@@ -86,6 +86,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0054: ("action_report", Action, True),
         0x0055: ("min_intensity", t.uint16_t, True),
         0x00A0: ("timer", t.uint32_t, True),
+        0x00A1: ("timer_countdown", t.uint32_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
         0x0200: ("status", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
