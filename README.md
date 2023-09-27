@@ -41,11 +41,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0003|3|t.uint16_t|firmware_number| |read
-|0xff01|0x0004|4|t.CharacterString|firmware_version| |read
-|0xff01|0x0010|16|t.int16s|outdoor_temp|temp*100|read/write
+|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|temp*100|read/write|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write
@@ -53,44 +53,45 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write
 |0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
 |0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write
-|0xff01|0x0075|117|t.bitmap32|unknown testing| |read/write
-|0xff01|0x0100|256|t.uint8_t|unknown testing| |read
-|0xff01|0x0104|260|t.int16s|setpoint|temp*100|read/write
-|0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write
-|0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write
-|0xff01|0x0107|263|t.int16s|FloorTemperature|temp: celcius*100|read
-|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write
-|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100|read/write
-|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100|read/write
-|0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write
-|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read
-|0xff01|0x010D|269|t.int16s|RoomTemperature|temp: celcius*100|read
-|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write
-|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read
-|0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read
-|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write
-|0xff01|0x0119|281|t.uint16_t|connectedLoad|None: 0xffff|read/write
-|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write
-|0xff01|0x012A|298|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write
-|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write
-|0xff01|0x012C|300| | | |read
-|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|0xff01|0x0075|117|t.bitmap32|unknown testing| |read/write|
+|0xff01|0x0100|256|t.uint8_t|unknown testing|0|read|
+|0xff01|0x0102|258|t.uint8_t|unknown|0|read|
+|0xff01|0x0104|260|t.int16s|setpoint|temp*100|read/write#
+|0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
+|0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
+|0xff01|0x0107|263|t.int16s|FloorTemperature|temp: celcius*100|read|
+|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write|
+|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100|read/write|
+|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100|read/write|
+|0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
+|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
+|0xff01|0x010D|269|t.int16s|RoomTemperature|temp: celcius*100|read|
+|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write|
+|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
+|0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
+|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write|
+|0xff01|0x0119|281|t.uint16_t|connectedLoad|None: 0xffff|read/write|
+|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write|
+|0xff01|0x012A|298|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write|
+|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write|
+|0xff01|0x012C|300| | | |read|
+|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write
-|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write
-|0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write
-|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second|read/write
+|0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
+|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
+|0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write|
+|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write
-|0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read
-|0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|report/read	
+|0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write|
+|0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
+|0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write
-|0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write
+|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write|
+|0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
 
 - lights and dimmer:
 
@@ -111,11 +112,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
 |0xff01|0x0090|144|t.uint32_t|Unknown| |report/read|
-|0xff01|0x00A0|160|t.uint32_t|Timer| Number of seconds|read/write|
-|0xff01|0x00A1|161|t.uint32_t|unknown|0|read
-|0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
+|0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
+|0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -127,8 +128,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0004|4|t.CharacterString|firmware_version| |read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0220|544|t.bitmap16|Unknown|0|report/read/write|
+|0xff01|0x0221|545|t.bitmap16|Unknown|1|report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr
 | --- | --- | --- | --- | --- | --- | ---|
@@ -144,9 +147,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|unknown|0, 1|read/write
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0004|4|t.CharacterString|firmware_version| |read
-|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read
-|0xff01|0x00A0|160|t.uint32_t|Timer| Seconds|read/write
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read|
+|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write
+|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|	watt/hr
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read
 |0xff01|0x0090|144|t.uint32_t|Unknown| |report/read
@@ -200,8 +205,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt
 |1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0xff01|0x00A0|160|t.uint32_t|Timer|	seconds
-|2|0xff01|0x00A0|160|t.uint32_t|Timer2|	seconds
+|1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write
+|2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write
 |1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off
@@ -234,9 +239,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0500|0x0030|48|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+|0x0500|0x0030|48|t.uint16_t|ZoneStatus| 0=no leak, 1=leak|
 
 - Sensors LM4110-ZB, tank level monitor
 
@@ -246,15 +251,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%
 |0x0001|0x003e|62|t.bitmap32|unknown|0x00000000
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|	celcius float with two decimal
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|	celcius float with two decimal| |
 | --- | --- | --- | --- | --- | --- | ---|
-|0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree
+|0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0003|3|t.CharacterString|firmware_version| |read
-|0xff01|0x0030|48|t.uint8_t|Unknown| 60|report/read/write
-|0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
-|0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0030|48|t.uint8_t|Unknown| 60|report/read/write|
+|0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read|
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
 
