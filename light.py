@@ -60,6 +60,18 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Unlocked = 0x00
         Locked = 0x01
 
+    class PhaseControl((t.enum8):
+        """Phase control value, reverse / forward"""
+
+        Forward = 0x00
+        Reverse = 0x01
+
+    class DoubleFull((t.enum8):
+        """Double click up set full intensity"""
+
+        Off = 0x00
+        On = 0x01
+
     class Action(t.enum8):
         """action_report values."""
 
@@ -89,6 +101,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0053: ("off_led_intensity", t.uint8_t, True),
         0x0054: ("action_report", Action, True),
         0x0055: ("min_intensity", t.uint16_t, True),
+        0x0056: ("phase_control", PhaseControl, True),
+        0x0058: ("double_up_action", DoubleFull, True),
         0x0080: ("unknown_attr_5", t.uint32_t, True),
         0x0090: ("unknown_attr_6", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
