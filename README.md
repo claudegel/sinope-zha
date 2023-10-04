@@ -110,6 +110,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write|
 |0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport|
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
+|0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
+|0xff01|0x0058|88|t.enum8|double_up_action|0=off, 1=on|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
 |0xff01|0x0090|144|t.uint32_t|Unknown| |report/read|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
