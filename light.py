@@ -60,13 +60,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Unlocked = 0x00
         Locked = 0x01
 
-    class PhaseControl((t.enum8):
+    class PhaseControl(t.enum8):
         """Phase control value, reverse / forward"""
 
         Forward = 0x00
         Reverse = 0x01
 
-    class DoubleFull((t.enum8):
+    class DoubleFull(t.enum8):
         """Double click up set full intensity"""
 
         Off = 0x00
