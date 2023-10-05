@@ -92,7 +92,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
-        0x0010: ("unknown", t.int16s, True),
+        0x0010: ("on_intensity", t.int16s, True),
         0x0012: ("unknown_attr_2", t.enum8, True),
         0x0013: ("unknown_attr_3", t.enum8, True),
         0x0050: ("on_led_color", t.uint24_t, True),
