@@ -101,7 +101,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0010|16|t.int16s|Unknown|400| |
+|0xff01|0x0010|16|t.int16s|on_intensity|400|read/write |
 |0xff01|0x0012|18|t.enum8|Unknown|0, 1| |
 |0xff01|0x0013|19|t.enum8|unknown|0, 1, 2| |
 |0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
