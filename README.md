@@ -101,7 +101,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0010|16|t.int16s|Unknown|400| |
+|0xff01|0x0010|16|t.int16s|on_intensity|0 - 3000|read/write |
 |0xff01|0x0012|18|t.enum8|Unknown|0, 1| |
 |0xff01|0x0013|19|t.enum8|unknown|0, 1, 2| |
 |0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
@@ -110,6 +110,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write|
 |0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport|
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
+|0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
+|0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
 |0xff01|0x0090|144|t.uint32_t|Unknown| |report/read|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
