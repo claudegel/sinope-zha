@@ -42,43 +42,44 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write|
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|temp*100|read/write|
-|0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write
-|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write
-|0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write
-|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|
-|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celcius * 100|read/write|
+|0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write|
+|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write|
+|0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write|
+|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr| |
+|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write|
 |0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
 |0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write
 |0xff01|0x0075|117|t.bitmap32|unknown testing| |read/write|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
-|0xff01|0x0104|260|t.int16s|setpoint|temp*100|read/write#
+|0xff01|0x0104|260|t.int16s|setpoint|celcius * 100|read/write|
 |0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
 |0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
-|0xff01|0x0107|263|t.int16s|FloorTemperature|temp: celcius*100|read|
+|0xff01|0x0107|263|t.int16s|FloorTemperature|celcius*100|read|
 |0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write|
-|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100|read/write|
-|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100|read/write|
+|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celcius*100|read/write|
+|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celcius*100|read/write|
 |0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
 |0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
-|0xff01|0x010D|269|t.int16s|RoomTemperature|temp: celcius*100|read|
+|0xff01|0x010D|269|t.int16s|RoomTemperature|celcius*100|read|
 |0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write|
 |0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
 |0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
-|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write|
-|0xff01|0x0119|281|t.uint16_t|connectedLoad|None: 0xffff|read/write|
-|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write|
+|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off|read/write|
+|0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr, 0xffff=off|read/write|
+|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0x00, On: 0x01|read/write|
 |0xff01|0x012A|298|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write|
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write|
 |0xff01|0x012C|300| | | |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
+|0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write|
@@ -93,7 +94,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
 
-- lights and dimmer:
+- lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
@@ -101,7 +102,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0010|16|t.int16s|on_intensity|0 - 3000|read/write |
+|0xff01|0x0010|16|t.int16s|on_intensity|minIntensity - 3000|read/write |
 |0xff01|0x0012|18|t.enum8|Unknown|0, 1| |
 |0xff01|0x0013|19|t.enum8|unknown|0, 1, 2| |
 |0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
