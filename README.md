@@ -72,7 +72,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off|read/write|
 |0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr, 0xffff=off|read/write|
 |0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0x00, On: 0x01|read/write|
-|0xff01|0x012A|298|t.enum8|cycleLength|default:60, 5,10,15,20,30,60|read/write|
+|0xff01|0x012A|298|t.enum8|unknown|default:60, 5,10,15,20,30,60|read/write|
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write|
 |0xff01|0x012C|300| | | |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read|
