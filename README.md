@@ -125,7 +125,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off|report/read/write|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|read|
+|0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|report/read|
+|0x0008|0x0011|17|t.uint8_t|OnLevel| 0=0%, 254=100%|read/write|
 
 - Switch SP2600ZB, SP2610ZB, Outlet
 
