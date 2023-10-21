@@ -164,6 +164,19 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     )
 
 
+class SinopeTechnologiesElectricalMeasurementCluster(CustomCluster, ElectricalMeasurement):
+    """SinopeTechnologiesElectricalMeasurementCluster custom cluster."""
+
+    attributes = ElectricalMeasurement.attributes.copy()
+    attributes.update(
+        {
+            0x0551: ("current_summation_delivered", t.uint32_t, True),
+            0x0552: ("aux_setpoint_min", t.uint32_t, True),
+            0x0553: ("aux_setpoint_max", t.uint32_t, True),
+        }
+    )
+
+
 class SinopeTechnologiesThermostat(CustomDevice):
     """SinopeTechnologiesThermostat custom device."""
 
@@ -215,8 +228,8 @@ class SinopeTechnologiesThermostat(CustomDevice):
                     Scenes.cluster_id,
                     UserInterface.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
+                    SinopeTechnologiesElectricalMeasurementCluster,
                     SinopeTechnologiesThermostatCluster,
                     SinopeTechnologiesManufacturerCluster,
                 ],
@@ -333,8 +346,8 @@ class SinopeTH1300ZB(SinopeTechnologiesThermostat):
                     UserInterface.cluster_id,
                     TemperatureMeasurement.cluster_id,
                     Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
+                    SinopeTechnologiesElectricalMeasurementCluster,
                     SinopeTechnologiesThermostatCluster,
                     SinopeTechnologiesManufacturerCluster,
                 ],
@@ -398,8 +411,8 @@ class SinopeLineThermostats(SinopeTechnologiesThermostat):
                     UserInterface.cluster_id,
                     TemperatureMeasurement.cluster_id,
                     Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
+                    SinopeTechnologiesElectricalMeasurementCluster,
                     SinopeTechnologiesThermostatCluster,
                     SinopeTechnologiesManufacturerCluster,
                 ],
@@ -461,8 +474,8 @@ class SinopeG2Thermostats(SinopeTechnologiesThermostat):
                     UserInterface.cluster_id,
                     TemperatureMeasurement.cluster_id,
                     Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
                     Diagnostic.cluster_id,
+                    SinopeTechnologiesElectricalMeasurementCluster,
                     SinopeTechnologiesThermostatCluster,
                     SinopeTechnologiesManufacturerCluster,
                 ],
