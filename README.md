@@ -114,7 +114,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
 |0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
-|0xff01|0x0090|144|t.uint32_t|Unknown| |report/read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt|report/read|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
@@ -158,7 +158,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|	watt/hr
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read
-|0xff01|0x0090|144|t.uint32_t|Unknown| |report/read
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt|report/read
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000 | report/read
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
 | --- | --- | --- | --- | --- | --- | ---|
