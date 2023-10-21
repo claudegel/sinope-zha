@@ -114,7 +114,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
 |0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
-|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt|report/read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
@@ -137,131 +137,134 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0221|545|t.bitmap16|Unknown|1|report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr
-|0x0b04|0x0604|1540|t.uint16_t|ACPowerMultiplier|	1
-|0x0b04|0x0605|1541|t.uint16_t|ACPowerDivisor| 10
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0604|1540|t.uint16_t|ACPowerMultiplier|1|read|
+|0x0b04|0x0605|1541|t.uint16_t|ACPowerDivisor|10|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff| 0=off, 1=on
+|0x0006|0x0000|0|t.Bool|OnOff| 0=off, 1=on|report/read|
 
 - Switch RM3250ZB, Load Controller
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0001|1|t.bool|unknown|0, 1|read/write
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
+|0xff01|0x0001|1|t.bool|unknown|0, 1|read/write|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read|
-|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write
-|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read
-|0xff01|0x0070|112|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0080|128|t.uint32_t|Unknown| |read
-|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt|report/read
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 | report/read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
+|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write|
+|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
+|0xff01|0x0080|128|t.uint32_t|Unknown| |read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 |report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off
+|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|	watt/hr
-|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|	1
-|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor| 1
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	watt/hr
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
 
 - Switch RM3500ZB, Calypso water tank controller
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0004|4|t.CharacterString|firmware_version|1|read
-|0xff01|0x0010|16|t.int16s|unknown|400|
-|0xff01|0x0013|19|t.enum8|tankSize|1,2,3,4|
-|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr
-|0xff01|0x0070|112|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|	45 or 0
-|0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|	2
-|0xff01|0x0078|120|t.uint16_t|drWTTimeOn|	240
-|0xff01|0x0079|121|t.bitmap8|unknown| 0| report/read
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read
-|0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
+|0xff01|0x0010|16|t.int16s|unknown|400| |
+|0xff01|0x0013|19|t.enum8|tankSize|1,2,3,4|read/write|
+|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
+|0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|45 or 0| |
+|0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2| |
+|0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240| |
+|0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0500|0x0002|2|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+|0x0500|0x0002|2|t.uint16_t|ZoneStatus|0=no leak, 1=leak|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|	watt/hr
-|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor| 1
-|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|	1
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
+|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b05|0x011d|285|t.int8s|Rssi| value -45
+|0x0b05|0x011d|285|t.int8s|Rssi| value -45||report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|WaterTemperature| temp oC
+|0x0402|0x0000|0|t.int16s|WaterTemperature| temp oC||report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|W
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|Watt/hr|report/read|
 
 - Switch MC3100ZB, multi controller
 
 |Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt
-|1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
+|1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|report/read|
+|1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write
-|2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write
-|1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read
+|1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
+|2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write|
+|1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off
-|2|0x0006|0x0000|0|t.Bool|OnOff2| 1=on, 0=off
+|1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+|2|0x0006|0x0000|0|t.Bool|OnOff2|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature| deg C
-|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature| deg C
+|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celcius*100|report/read|
+|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celcius*100|report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%
+|1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|report/read|
 
 - Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt
-|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)
-|0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on
-|0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h
-|0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)|report/read|
+|0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
+|0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
+|0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
 
 - Sensors WL4200, WL4200S, WL4200C, WL4210
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|	celcius|
+|0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0500|0x0030|48|t.uint16_t|ZoneStatus| 0=no leak, 1=leak|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius * 100|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
 
 - Sensors LM4110-ZB, tank level monitor
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|battery voltage|ex. 5.2v
-|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%
-|0x0001|0x003e|62|t.bitmap32|unknown|0x00000000
+|0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|report/read
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|	celcius float with two decimal| |
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celcius * 100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0030|48|t.uint8_t|Unknown| 60|report/read/write|
+|0xff01|0x0030|48|t.uint8_t|Unknown|60|report/read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read|
