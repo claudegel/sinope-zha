@@ -37,6 +37,7 @@ from zhaquirks.const import (
 from zhaquirks.sinope import SINOPE
 
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+CURTEMP = 0x0000
 
 
 class SinopeManufacturerCluster(CustomCluster):
@@ -66,6 +67,7 @@ class SinopeManufacturerCluster(CustomCluster):
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
+        0x0001: ("unknown_attr", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
@@ -89,6 +91,14 @@ class CustomMeteringCluster(CustomCluster, Metering):
 
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
+
+
+class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
+    """Custom DeviceTemperature Cluster."""
+
+    def _update_attribute(self, attrid, value):
+        if attrid == CURTEMP:
+            super()._update_attribute(attrid, value*100)
 
 
 class SinopeTechnologiesSwitch(CustomDevice):
@@ -387,7 +397,7 @@ class SinopeTechnologiesCalypso(CustomDevice):
                 DEVICE_TYPE: zha_p.DeviceType.ON_OFF_OUTPUT,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
-                    DeviceTemperature.cluster_id,
+                    CustomDeviceTemperatureCluster,
                     Identify.cluster_id,
                     Groups.cluster_id,
                     Scenes.cluster_id,
