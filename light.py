@@ -49,6 +49,7 @@ from zhaquirks.sinope import SINOPE
 
 ATTRIBUTE_ACTION = "actionReport"
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+CURTEMP = 0x0000
 
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
@@ -59,6 +60,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
 
         Unlocked = 0x00
         Locked = 0x01
+        Partial_lock = 0x02
 
     class PhaseControl(t.enum8):
         """Phase control value, reverse / forward"""
@@ -117,6 +119,14 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     """LightManufacturerCluster: fire events corresponding to press type."""
 
 
+class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
+    """Custom DeviceTemperature Cluster."""
+
+    def _update_attribute(self, attrid, value):
+        if attrid == CURTEMP:
+            super()._update_attribute(attrid, value*100)
+
+
 class SinopeTechnologieslight(CustomDevice):
     """SinopeTechnologiesLight custom device."""
 
@@ -159,7 +169,7 @@ class SinopeTechnologieslight(CustomDevice):
                 DEVICE_TYPE: zha_p.DeviceType.ON_OFF_LIGHT,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
-                    DeviceTemperature.cluster_id,
+                    CustomDeviceTemperatureCluster,
                     Identify.cluster_id,
                     Groups.cluster_id,
                     Scenes.cluster_id,
@@ -261,7 +271,7 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
                 DEVICE_TYPE: zha_p.DeviceType.DIMMABLE_LIGHT,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
-                    DeviceTemperature.cluster_id,
+                    CustomDeviceTemperatureCluster,
                     Identify.cluster_id,
                     Groups.cluster_id,
                     Scenes.cluster_id,
@@ -366,7 +376,7 @@ class SinopeDM2550ZB(SinopeTechnologieslight):
                 DEVICE_TYPE: zha_p.DeviceType.DIMMABLE_LIGHT,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
-                    DeviceTemperature.cluster_id,
+                    CustomDeviceTemperatureCluster,
                     Identify.cluster_id,
                     Groups.cluster_id,
                     Scenes.cluster_id,
