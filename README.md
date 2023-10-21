@@ -221,7 +221,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|report/read|
 
-- Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
+- Switch valve VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
@@ -239,6 +239,38 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
 |0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
+
+- Switch valve VA4220ZB G2, VA4221ZB G2
+
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
+|0xff01|0x0230|560|t.enum8|0,1|read/write|
+|0xff01|0x0231|561|t.enum8|0,1,2,3,4|read|
+|0xff01|0x0241|577|t.uint32_t|0|read/write|
+|0xff01|0x0250|592|t.uint32_t|120000|read/write|
+|0xff01|0x0251|593|t.uint32_t|60|read/write|
+|0xff01|0x0252|594|t.uint32_t|3600|read/write|
+|0xff01|0x0253|595|t.bitmap16|3|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0000|0|t.enum8|zone_state|1=enrolled, 0=not enrolled|read|
+|0x0500|0x0002|2|t.bitmap16|zone_status|56=flow?|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|L/h|report/read|
+|0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
+|0x0702|0x0300|768|t.enum8|unit_of_measure|7=L/h|read|
+|0x0702|0x0301|769|t.uint24_t|multiplier|1|read|
+|0x0702|0x0302|770|t.uint24_t|divisor|1000|read|
+|0x0702|0x0306|774|t.bitmap8|metering_device_type|2 = Water Metering|read|
+|0x0702|0x0400|1024|t.int24s|instantaneous_demand|0|report/read|
 
 - Sensors WL4200, WL4200S, WL4200C, WL4210
 
