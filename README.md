@@ -79,7 +79,14 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
+|0x0201|0x0000|0|t.int16s|LocalTemperature|celcius*100|report/read|
+|0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
 |0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
+|0x0201|0x0012|21|t.int16s|occupied_heating_setpoint|celcius*100|report/read/write|
+|0x0201|0x0014|21|t.int16s|unoccupied_heating_setpoint|celcius*100|read/write|
+|0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celcius*100|read/write|
+|0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celcius*100|read/write|
+|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write|
@@ -165,6 +172,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 |0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
 |0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -193,6 +202,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
 |0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 |0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -341,6 +351,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |Battery %|(0x0001|0x0020|0x20|60|60*60|1|
+|on/off|0x0006|0x0000|0x10|0|600|null|
 
 - Leak sensors:
 
