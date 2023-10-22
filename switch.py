@@ -23,7 +23,7 @@ from zigpy.zcl.clusters.general import (
 )
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.lightlink import LightLink
-from zigpy.zcl.clusters.measurement import RelativeHumidity, TemperatureMeasurement
+from zigpy.zcl.clusters.measurement import RelativeHumidity, TemperatureMeasurement, FlowMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 
