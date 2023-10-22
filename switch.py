@@ -338,6 +338,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
                     OnOff.cluster_id,
                     LevelControl.cluster_id,
                     TemperatureMeasurement.cluster_id,
+                    FlowMeasurement.cluster_id,
                     IasZone.cluster_id,
                     CustomMeteringCluster,
                     Diagnostic.cluster_id,
