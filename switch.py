@@ -101,8 +101,8 @@ class CustomBasicCluster(CustomCluster, Basic):
         Unknown = 0x00
         Battery = 0x03
         DC_source = 0x04
-        ACUPS_01 = 0x0081
-        ACUPS01 = 0x0082
+        ACUPS_01 = 0x81
+        ACUPS01 = 0x82
 
     attributes = Basic.attributes.copy()
     attributes.update(
