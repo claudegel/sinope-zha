@@ -92,6 +92,26 @@ class SinopeManufacturerCluster(CustomCluster):
     }
 
 
+class CustomBasicCluster(CustomCluster, Basic):
+    """Custom Basic Cluster."""
+
+    class PowerSource(t.enum8):
+        """Power source."""
+
+        Unknown = 0x00
+        Battery = 0x03
+        DC_source = 0x04
+        ACUPS_01 = 0x0081
+        ACUPS01 = 0x0082
+
+    attributes = Basic.attributes.copy()
+    attributes.update(
+        {
+            0x0007: ("power_source", PowerSource, True),
+        }
+    )
+
+    
 class CustomMeteringCluster(CustomCluster, Metering):
     """Custom Metering Cluster."""
 
@@ -276,7 +296,7 @@ class SinopeTechnologiesValve(CustomDevice):
         ENDPOINTS: {
             1: {
                 INPUT_CLUSTERS: [
-                    Basic.cluster_id,
+                    CustomBasicCluster,
                     PowerConfiguration.cluster_id,
                     Identify.cluster_id,
                     Groups.cluster_id,
@@ -338,7 +358,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
         ENDPOINTS: {
             1: {
                 INPUT_CLUSTERS: [
-                    Basic.cluster_id,
+                    CustomBasicCluster,
                     PowerConfiguration.cluster_id,
                     Identify.cluster_id,
                     Groups.cluster_id,
