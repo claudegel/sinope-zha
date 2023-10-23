@@ -250,9 +250,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
 
-- Switch valve VA4220ZB G2, VA4221ZB G2
+- Switch valve VA4220ZB G2, VA4221ZB G2 with flow meter
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0000|0x0007|7|t.enum8|power_source|129,130=mains, 3=battery, 4=dc|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
 |0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
@@ -271,10 +273,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
+|0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0000|0|t.enum8|zone_state|1=enrolled, 0=not enrolled|read|
 |0x0500|0x0002|2|t.bitmap16|zone_status|56=flow?|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|L/h|report/read|
+|0x0702|0x0000|0|t.uint48_t|flowVolume|L/h|report/read|
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
 |0x0702|0x0300|768|t.enum8|unit_of_measure|7=L/h|read|
 |0x0702|0x0301|769|t.uint24_t|multiplier|1|read|
@@ -350,8 +354,10 @@ Following are the cluster/attributes set for reproting in Neviweb:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
-|Battery %|(0x0001|0x0020|0x20|60|60*60|1|
+|Battery %|(0x0001|0x0020|0x20|60|3600|1|
 |on/off|0x0006|0x0000|0x10|0|600|null|
+|Flowrate|0x0404|0x0000|T.uint16_t|30|600|flow change|
+|water volume|0x0702|0x0000|t.uint48_t|59|1799|volume change|
 
 - Leak sensors:
 
