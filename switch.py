@@ -38,7 +38,7 @@ from zhaquirks.const import (
 from zhaquirks.sinope import SINOPE
 
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
-
+FLOWMETER = 0x0000
 
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
@@ -118,6 +118,14 @@ class CustomMeteringCluster(CustomCluster, Metering):
             0x0300: ("unit_of_measure", UnitOfMeasure, True),
         }
     )
+
+
+class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
+    """Custom FlowMeasurement Cluster."""
+
+    def _update_attribute(self, attrid, value):
+        if attrid == FLOWMETER:
+            super()._update_attribute(attrid, value/10)
 
 
 class SinopeTechnologiesSwitch(CustomDevice):
@@ -338,7 +346,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
                     OnOff.cluster_id,
                     LevelControl.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    FlowMeasurement.cluster_id,
+                    CustomFlowMeasurementCluster,
                     IasZone.cluster_id,
                     CustomMeteringCluster,
                     Diagnostic.cluster_id,
