@@ -274,11 +274,14 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
+|0x0404|0x0001|1|t.uint16_t|min_measured_value|0|read|
+|0x0404|0x0002|2|t.uint16_t|max_measured_value|?|read|
+|0x0404|0x0003|3|t.uint16_t|tolerance|?|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0000|0|t.enum8|zone_state|1=enrolled, 0=not enrolled|read|
 |0x0500|0x0002|2|t.bitmap16|zone_status|56=flow?|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|flowVolume|L/h|report/read|
+|0x0702|0x0000|0|t.uint48_t|flowVolumeDelivered|L/h|report/read|
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
 |0x0702|0x0300|768|t.enum8|unit_of_measure|7=L/h|read|
 |0x0702|0x0301|769|t.uint24_t|multiplier|1|read|
