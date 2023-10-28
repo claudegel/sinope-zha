@@ -2,7 +2,7 @@
 
 Supported devices, SP2600ZB, SP2610ZB, RM3250ZB, RM3500ZB,
 VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
-2nd gen VA4220ZB, VA4221ZB with flow meeter.
+2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
 
 import zigpy.profiles.zha as zha_p
@@ -83,10 +83,10 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0230: ("unknown_230", t.enum8, True),
         0x0231: ("unknown_231", t.enum8, True),
         0x0241: ("unknown_241", t.uint32_t, True),
-        0x0250: ("unknown_250", t.uint32_t, True),
-        0x0251: ("unknown_251", t.uint32_t, True),
-        0x0252: ("unknown_252", t.uint32_t, True),
-        0x0253: ("unknown_253", t.bitmap16, True),
+        0x0250: ("power_source", t.uint32_t, True),
+        0x0251: ("emergency_power_source", t.uint32_t, True),
+        0x0252: ("abnormal_flow_duration", t.uint32_t, True),
+        0x0253: ("abnormal_flow_action", t.bitmap16, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
