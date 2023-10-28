@@ -65,6 +65,28 @@ class SinopeManufacturerCluster(CustomCluster):
         Gal_60 = 0x03
         Gal_80 = 0x04
 
+    class FlowAlert(t.bitmap16):
+        """tank_size values."""
+
+        Do_nothing = 0x01
+        Send_alert = 0x02
+        Close_valve = 0x03
+        Send_and_close = 0x04
+
+    class FlowDuration(t.bitmap16):
+        """tank_size values."""
+
+        M_15 = 0x0384
+        M_30 = 0x0708
+        M_45 = 0x0A8C
+        M_60 = 0x0E10
+        M_75 = 0x1194
+        M_90 = 0x1518
+        H_3 = 0x2A30
+        H_6 = 0x5460
+        H_12 = 0xA8C0
+        H_24 = 0x15180
+
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
@@ -88,8 +110,8 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0241: ("unknown_241", t.uint32_t, True),
         0x0250: ("power_source", t.uint32_t, True),
         0x0251: ("emergency_power_source", t.uint32_t, True),
-        0x0252: ("abnormal_flow_duration", t.uint32_t, True),
-        0x0253: ("abnormal_flow_action", t.bitmap16, True),
+        0x0252: ("abnormal_flow_duration", FlowDuration, True),
+        0x0253: ("abnormal_flow_action", FlowAlert, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
