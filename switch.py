@@ -27,6 +27,8 @@ from zigpy.zcl.clusters.measurement import RelativeHumidity, TemperatureMeasurem
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 
+from zigpy.zcl.foundation import Array
+
 from zhaquirks.const import (
     DEVICE_TYPE,
     ENDPOINTS,
@@ -82,6 +84,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0221: ("unknown_3", t.bitmap16, True),
         0x0230: ("unknown_230", t.enum8, True),
         0x0231: ("unknown_231", t.enum8, True),
+        0x0240: ("flow_meter_config", Array, True),
         0x0241: ("unknown_241", t.uint32_t, True),
         0x0250: ("power_source", t.uint32_t, True),
         0x0251: ("emergency_power_source", t.uint32_t, True),
