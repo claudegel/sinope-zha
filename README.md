@@ -263,11 +263,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
 |0xff01|0x0230|560|t.enum8|unknown|0,1|read/write|
 |0xff01|0x0231|561|t.enum8|unknown|0,1,2,3,4|read|
+|0xff01|0x0240|576|Array|flow_meter_config| 12 elements, uint8|read/write|
 |0xff01|0x0241|577|t.uint32_t|unknown|0|read/write|
-|0xff01|0x0250|592|t.uint32_t|unknown|120000|read/write|
-|0xff01|0x0251|593|t.uint32_t|unknown|60|read/write|
-|0xff01|0x0252|594|t.uint32_t|unknown|3600|read/write|
-|0xff01|0x0253|595|t.bitmap16|unknown|3|read/write|
+|0xff01|0x0250|592|t.uint32_t|power_source|120000= DC power, 0=ACUPS, 1=Battery|read/write|
+|0xff01|0x0251|593|t.uint32_t|emergency_power_source|60=battery + ACUPS, 0=ACUPS|read/write|
+|0xff01|0x0252|594|t.uint32_t|abnormal_flow_duration|seconds ,900 to 86400|read/write|
+|0xff01|0x0253|595|t.bitmap16|abnormal_flow_action|0= do nothing, 2=close valve, 3= close and send notification|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
