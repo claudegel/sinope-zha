@@ -243,6 +243,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 # Setting the flow meter model for your VA422xZB valve 2n gen.
 To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter:
 - FS4220: (3/4 inch)
+```
 service: zha_toolkit.attr_write
 data:
   ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
@@ -254,8 +255,9 @@ data:
   read_before_write: true
   read_after_write: true
   use_cache: false
-
+```
 - FS4221: (one inch)
+```
 service: zha_toolkit.attr_write
 data:
   ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
@@ -267,8 +269,9 @@ data:
   read_before_write: true
   read_after_write: true
   use_cache: false
-
+```
 - FS4222: (1.5 inch)
+```
 service: zha_toolkit.attr_write
 data:
   ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
@@ -280,8 +283,9 @@ data:
   read_before_write: true
   read_after_write: true
   use_cache: false
-
+```
 - No flow meter:
+```
 service: zha_toolkit.attr_write
 data:
   ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
@@ -293,7 +297,7 @@ data:
   read_before_write: true
   read_after_write: true
   use_cache: false
-
+```
 # Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
 
