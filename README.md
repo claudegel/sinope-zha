@@ -135,7 +135,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|report/read|
 |0x0008|0x0011|17|t.uint8_t|OnLevel| 0=0%, 254=100%|read/write|
 
-- Switch SP2600ZB, SP2610ZB, Outlet
+- Switch SP2600ZB, SP2610ZB
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
@@ -268,7 +268,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0250|592|t.uint32_t|power_source|120000= DC power, 0=ACUPS, 1=Battery|read/write|
 |0xff01|0x0251|593|t.uint32_t|emergency_power_source|60=battery + ACUPS, 0=ACUPS|read/write|
 |0xff01|0x0252|594|t.uint32_t|abnormal_flow_duration|seconds ,900 (15 min) to 86400 (24kr)|read/write|
-|0xff01|0x0253|595|t.bitmap16|abnormal_flow_action|0= do nothing, 1=send alert, 2=close valve, 3= close and send alert|read/write|
+|0xff01|0x0253|595|t.bitmap16|abnormal_flow_action|0= do nothing, 1=send alert, 3= close and send alert|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
