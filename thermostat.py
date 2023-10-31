@@ -47,8 +47,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         """config_2nd_display values."""
 
         Auto = 0x00
-        Outside_temperature = 0x01
-        Setpoint = 0x02
+        Setpoint = 0x01
+        Outside_temperature = 0x02
 
     class FloorMode(t.enum8):
         """air_floor_mode values."""
