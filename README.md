@@ -263,6 +263,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|report/read|
 |0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
 |0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
 |0xff01|0x0230|560|t.enum8|unknown|0,1|read/write|
 |0xff01|0x0231|561|t.enum8|unknown|0,1,2,3,4|read|
