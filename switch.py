@@ -40,6 +40,7 @@ from zhaquirks.const import (
 from zhaquirks.sinope import SINOPE
 
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+CURTEMP = 0x0000
 FLOWMETER = 0x0000
 
 class SinopeManufacturerCluster(CustomCluster):
@@ -50,6 +51,26 @@ class SinopeManufacturerCluster(CustomCluster):
 
         Unlocked = 0x00
         Locked = 0x01
+
+    class PowerSource(t.uint32_t):
+        """Valve power souce types values."""
+
+        Battery = 0x00000000
+        ACUPS_01 = 0x00000001
+        DC_power = 0x0001d4c0
+
+    class EmergencyPower(t.uint32_t):
+        """Valve emergency power souce types."""
+
+        ACUPS_01 = 0x00000000
+        Battery_ACUPS_01 = 0x0000003c
+
+    class AbnormalAction(t.bitmap16):
+        """Action in case of abnormal flow detected."""
+
+        Nothing = 0x00
+        Close_valve = 0x01
+        Close_notify = 0x03
 
     class ColdStatus(t.enum8):
         """cold_load_pickup_status values."""
@@ -65,15 +86,7 @@ class SinopeManufacturerCluster(CustomCluster):
         Gal_60 = 0x03
         Gal_80 = 0x04
 
-    class FlowAlert(t.bitmap16):
-        """tank_size values."""
-
-        Do_nothing = 0x01
-        Send_alert = 0x02
-        Close_valve = 0x03
-        Send_and_close = 0x04
-
-    class FlowDuration(t.bitmap16):
+    class FlowDuration(t.uint32_t):
         """tank_size values."""
 
         M_15 = 0x0384
@@ -100,18 +113,20 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
         0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
         0x0078: ("dr_wt_time_on", t.uint16_t, True),
-        0x0080: ("unknown_80", t.uint32_t, True),
+        0x0080: ("unknown_attr_4", t.uint32_t, True),
+        0x0090: ("current_summation_delivered", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
+        0x00A1: ("timer_countdown", t.uint32_t, True),
         0x0200: ("status", t.bitmap32, True),
-        0x0221: ("unknown_3", t.bitmap16, True),
-        0x0230: ("unknown_230", t.enum8, True),
-        0x0231: ("unknown_231", t.enum8, True),
+        0x0221: ("unknown_attr_3", t.bitmap16, True),
+        0x0230: ("unknown_attr_6", t.enum8, True),
+        0x0231: ("unknown_attr_7", t.enum8, True),
         0x0240: ("flow_meter_config", Array, True),
-        0x0241: ("unknown_241", t.uint32_t, True),
-        0x0250: ("power_source", t.uint32_t, True),
-        0x0251: ("emergency_power_source", t.uint32_t, True),
+        0x0241: ("unknown_attr_8", t.uint32_t, True),
+        0x0250: ("power_source", PowerSource, True),
+        0x0251: ("emergency_power_source", EmergencyPower, True),
         0x0252: ("abnormal_flow_duration", FlowDuration, True),
-        0x0253: ("abnormal_flow_action", FlowAlert, True),
+        0x0253: ("abnormal_flow_action", AbnormalAction, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
@@ -123,11 +138,11 @@ class CustomBasicCluster(CustomCluster, Basic):
     class PowerSource(t.enum8):
         """Power source."""
 
-        Unknown = 0x00
-        Battery = 0x03
-        DC_source = 0x04
-        ACUPS_01 = 0x81
-        ACUPS01 = 0x82
+        Unknown = 0x0000
+        Battery = 0x0003
+        DC_source = 0x0004
+        ACUPS_01 = 0x0081
+        ACUPS01 = 0x0082
 
     attributes = Basic.attributes.copy()
     attributes.update(
@@ -163,6 +178,14 @@ class CustomMeteringCluster(CustomCluster, Metering):
             0x0300: ("unit_of_measure", UnitOfMeasure, True),
         }
     )
+
+
+class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
+    """Custom DeviceTemperature Cluster."""
+
+    def _update_attribute(self, attrid, value):
+        if attrid == CURTEMP:
+            super()._update_attribute(attrid, value*100)
 
 
 class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
@@ -346,7 +369,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
         # device_type=3, device_version=0,
-        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
+        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1028, 1280, 1794, 2821, 65281]
         # output_clusters=[3, 6, 25]>
         MODELS_INFO: [
             (SINOPE, "VA4220ZB"),
@@ -536,7 +559,7 @@ class SinopeTechnologiesCalypso(CustomDevice):
                 DEVICE_TYPE: zha_p.DeviceType.ON_OFF_OUTPUT,
                 INPUT_CLUSTERS: [
                     Basic.cluster_id,
-                    DeviceTemperature.cluster_id,
+                    CustomDeviceTemperatureCluster,
                     Identify.cluster_id,
                     Groups.cluster_id,
                     Scenes.cluster_id,
