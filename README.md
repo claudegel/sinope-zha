@@ -271,7 +271,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | | | | | |FS4220 = Array(type=AnonymousLVList, value=[194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]) | |
 | | | | | |FS4221 = Array(type=AnonymousLVList, value=[159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]) | |
 | | | | | |FS4222 = Array(type=AnonymousLVList, value=[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) | |
-|0xff01|0x0241|577|t.uint32_t|unknown|0,1|read/write|
+|0xff01|0x0241|577|t.uint32_t|valve_countdown|seconds|read/write|
 |0xff01|0x0250|592|t.uint32_t|power_source|120000= DC power, 0=ACUPS, 1=Battery|read/write|
 |0xff01|0x0251|593|t.uint32_t|emergency_power_source|60=battery + ACUPS, 0=ACUPS|read/write|
 |0xff01|0x0252|594|t.uint32_t|abnormal_flow_duration|seconds ,900 (15 min) to 86400 (24hr)|read/write|
