@@ -260,6 +260,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
 |0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
+|0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|report/read|
+|0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
 |0xff01|0x0230|560|t.enum8|unknown|0,1|read/write|
 |0xff01|0x0231|561|t.enum8|unknown|0,1,2,3,4|read|
@@ -276,7 +279,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
 |0x0404|0x0001|1|t.uint16_t|min_measured_value|0|read|
