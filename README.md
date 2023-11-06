@@ -265,7 +265,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
 |0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
-|0xff01|0x0230|560|t.enum8|unknown|0,1|read/write|
+|0xff01|0x0230|560|t.enum8|unknown|0,1,2|read/write|
 |0xff01|0x0231|561|t.enum8|unknown|0,1,2,3,4|read|
 |0xff01|0x0240|576|Array|flow_meter_config|12 elements (uint8)|read/write|
 | | | | | |no flow meter = Array(type=AnonymousLVList, value=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) | |
