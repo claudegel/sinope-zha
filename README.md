@@ -251,10 +251,9 @@ data:
   cluster: 0xff01
   attribute: 0x0240
   attr_type: 0x48
-  attr_val: [0x20, 0x0c, 0x00, 0xc2, 0x11, 0x00, 0x00, 0x88, 0x77, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]
+  attr_val: [32, 12, 0, 194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
   read_before_write: true
   read_after_write: true
-  use_cache: false
 ```
 - FS4221: (one inch)
 ```
@@ -265,10 +264,9 @@ data:
   cluster: 0xff01
   attribute: 0x0240
   attr_type: 0x48
-  attr_val: [0x20, 0x0c, 0x00, 0x9f, 0x26, 0x00, 0x00, 0x4c, 0x55, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00]
+  attr_val: [32, 12, 0, 159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
   read_before_write: true
   read_after_write: true
-  use_cache: false
 ```
 - FS4222: (1.5 inch)
 ```
@@ -279,10 +277,9 @@ data:
   cluster: 0xff01
   attribute: 0x0240
   attr_type: 0x48
-  attr_val: [0x20, 0x0c, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]
+  attr_val: [32, 12, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
   read_before_write: true
   read_after_write: true
-  use_cache: false
 ```
 - No flow meter:
 ```
@@ -293,10 +290,9 @@ data:
   cluster: 0xff01
   attribute: 0x0240
   attr_type: 0x48
-  attr_val: [0x20, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]
+  attr_val: [32, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
   read_before_write: true
   read_after_write: true
-  use_cache: false
 ```
 # Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
