@@ -369,7 +369,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
         # device_type=3, device_version=0,
-        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1028, 1280, 1794, 2821, 65281]
+        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
         # output_clusters=[3, 6, 25]>
         MODELS_INFO: [
             (SINOPE, "VA4220ZB"),
