@@ -41,20 +41,22 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write|
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write|
-|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
-|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|celcius * 100|read/write|
-|0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write|
-|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write|
-|0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write|
-|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr| |
-|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write|
-|0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
-|0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write
-|0xff01|0x0075|117|t.bitmap32|unknown testing| |read/write|
-|0xff01|0x0100|256|t.uint8_t|unknown testing|0|read|
+|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celcius * 100|read/write/report|
+|0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
+|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
+|0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
+|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
+|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write/report|
+|0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write/report|
+|0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write/report|
+|0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
+|0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
+|0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
+|0xff01|0x0101|257|Array| |read/report|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celcius * 100|read/write|
 |0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
@@ -66,17 +68,18 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
 |0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
 |0xff01|0x010D|269|t.int16s|RoomTemperature|celcius*100|read|
-|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write|
+|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
 |0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
 |0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
 |0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
 |0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
 |0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0x00, On: 0x01|read/write|
-|0xff01|0x012A|298|t.enum8|unknown|default:60, 5,10,15,20,30,60|read/write|
-|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius * 100|read/write|
-|0xff01|0x012C|300| | | |read|
-|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius * 100|read|
+|0xff01|0x012A|298|t.enum8|unknown|default:60, 5,10,15,20,30,60|read/write/report|
+|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius*100|read/write/report|
+|0xff01|0x012C|300|Array|unknown| |read|
+|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius*100|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
+|0xff01|0x0202|514|t.enum8|unknown|2|read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celcius*100|report/read|
