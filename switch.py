@@ -52,8 +52,22 @@ class SinopeManufacturerCluster(CustomCluster):
         Unlocked = 0x00
         Locked = 0x01
 
+    class FlowAlarm(t.enum8):
+        """Alarm abnormal flow."""
+
+        Off = 0x00
+        On = 0x01
+
+    class AlarmAction(t.enum8):
+        """Flow alarm action."""
+
+        Nothing = 0x00
+        Notify = 0x01
+        Close = 0x02
+        Close_notify = 0x03
+
     class PowerSource(t.uint32_t):
-        """Valve power souce types values."""
+        """Valve power souce types."""
 
         Battery = 0x00000000
         ACUPS_01 = 0x00000001
@@ -62,15 +76,16 @@ class SinopeManufacturerCluster(CustomCluster):
     class EmergencyPower(t.uint32_t):
         """Valve emergency power souce types."""
 
-        ACUPS_01 = 0x00000000
+        Battery = 0x00000000
+        ACUPS_01 = 0x00000001
         Battery_ACUPS_01 = 0x0000003c
 
     class AbnormalAction(t.bitmap16):
         """Action in case of abnormal flow detected."""
 
-        Nothing = 0x00
-        Close_valve = 0x01
-        Close_notify = 0x03
+        Nothing = 0x0000
+        Notify = 0x0001
+        Close_notify = 0x0003
 
     class ColdStatus(t.enum8):
         """cold_load_pickup_status values."""
@@ -107,6 +122,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
+        0x0010: ("outdoor_temp", t.int16s, True),
         0x0013: ("tank_size", TankSize, True),
         0x0060: ("connected_load", t.uint16_t, True),
         0x0070: ("current_load", t.bitmap8, True),
@@ -117,12 +133,13 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0090: ("current_summation_delivered", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
         0x00A1: ("timer_countdown", t.uint32_t, True),
+        0x0101: ("unknown_attr_9", Array, True),
         0x0200: ("status", t.bitmap32, True),
         0x0221: ("unknown_attr_3", t.bitmap16, True),
-        0x0230: ("unknown_attr_6", t.enum8, True),
-        0x0231: ("unknown_attr_7", t.enum8, True),
+        0x0230: ("alarm_flow_threshold", FlowAlarm, True),
+        0x0231: ("alarm_options", AlarmAction, True),
         0x0240: ("flow_meter_config", Array, True),
-        0x0241: ("unknown_attr_8", t.uint32_t, True),
+        0x0241: ("countdown", t.uint32_t, True),
         0x0250: ("power_source", PowerSource, True),
         0x0251: ("emergency_power_source", EmergencyPower, True),
         0x0252: ("abnormal_flow_duration", FlowDuration, True),
