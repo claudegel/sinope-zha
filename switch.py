@@ -43,6 +43,7 @@ SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 CURTEMP = 0x0000
 FLOWMETER = 0x0000
 
+
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
 
@@ -119,11 +120,13 @@ class SinopeManufacturerCluster(CustomCluster):
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
+        0x0001: ("unknown_attr", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0010: ("outdoor_temp", t.int16s, True),
         0x0013: ("tank_size", TankSize, True),
+        0x0030: ("unknown_attr_2", t.uint8_t, True),
         0x0060: ("connected_load", t.uint16_t, True),
         0x0070: ("current_load", t.bitmap8, True),
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
@@ -211,6 +214,14 @@ class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     def _update_attribute(self, attrid, value):
         if attrid == FLOWMETER:
             super()._update_attribute(attrid, value/10)
+
+
+class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
+    """Custom DeviceTemperature Cluster."""
+
+    def _update_attribute(self, attrid, value):
+        if attrid == CURTEMP:
+            super()._update_attribute(attrid, value*100)
 
 
 class SinopeTechnologiesSwitch(CustomDevice):

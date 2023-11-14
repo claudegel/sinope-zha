@@ -1,12 +1,14 @@
-"""Module to handle quirks of the  Sinopé Technologies water leak sensor WL4200 and WL4200S.
+"""Module to handle quirks of the  Sinopé Technologies water leak sensor and level monitor.
 
 It add manufacturer attributes for IasZone cluster for the water leak alarm.
+Supported devices are WL4200, WL4200S and LM4110-ZB
 """
 
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
 from zigpy.zcl.clusters.general import (
+    AnalogInput,
     Basic,
     Identify,
     Ota,
@@ -37,7 +39,17 @@ class SinopeManufacturerCluster(CustomCluster):
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
+        0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
+        0x0030: ("unknown_attr_2", t.uint8_t, True),
+        0x0031: ("unknown_attr_3", t.uint16_t, True),
+        0x0032: ("unknown_attr_4", t.int16s, True),
+        0x0033: ("unknown_attr_5", t.int16s, True),
+        0x0034: ("unknown_attr_6", t.bitmap8, True),
+        0x0035: ("unknown_attr_7", t.uint16_t, True),
+        0x0036: ("unknown_attr_8", t.uint16_t, True),
+        0x0080: ("unknown_attr_9", t.uint32_t, True),
+        0x0200: ("status", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
@@ -164,6 +176,60 @@ class SinopeTechnologiesSensor2(CustomDevice):
                 ],
                 OUTPUT_CLUSTERS: [
                     Identify.cluster_id,
+                    Ota.cluster_id,
+                ],
+            }
+        }
+    }
+
+
+class SinopeTechnologiesLevelMonitor(CustomDevice):
+    """SinopeTechnologiesLevelMonitor custom device."""
+
+    signature = {
+        # <SimpleDescriptor endpoint=1 profile=260 device_type=0
+        # device_version=0 input_clusters=[0, 1, 3, 12, 32, 1026, 2821, 65281]
+        # output_clusters=[25]>
+        MODELS_INFO: [
+            (SINOPE, "LM4110-ZB"),
+        ],
+        ENDPOINTS: {
+            1: {
+                PROFILE_ID: zha_p.PROFILE_ID,
+                DEVICE_TYPE: zha_p.DeviceType.ON_OFF_SWITCH,
+                INPUT_CLUSTERS: [
+                    Basic.cluster_id,
+                    PowerConfiguration.cluster_id,
+                    Identify.cluster_id,
+                    AnalogInput.cluster_id,
+                    PollControl.cluster_id,
+                    TemperatureMeasurement.cluster_id,
+                    Diagnostic.cluster_id,
+                    SINOPE_MANUFACTURER_CLUSTER_ID,
+                ],
+                OUTPUT_CLUSTERS: [
+                    Ota.cluster_id,
+                ],
+            }
+        },
+    }
+
+    replacement = {
+        ENDPOINTS: {
+            1: {
+                PROFILE_ID: zha_p.PROFILE_ID,
+                DEVICE_TYPE: zha_p.DeviceType.METER_INTERFACE,
+                INPUT_CLUSTERS: [
+                    Basic.cluster_id,
+                    PowerConfiguration.cluster_id,
+                    Identify.cluster_id,
+                    AnalogInput.cluster_id,
+                    PollControl.cluster_id,
+                    TemperatureMeasurement.cluster_id,
+                    Diagnostic.cluster_id,
+                    SinopeManufacturerCluster,
+                ],
+                OUTPUT_CLUSTERS: [
                     Ota.cluster_id,
                 ],
             }

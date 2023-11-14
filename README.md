@@ -39,160 +39,298 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
 - Thermostats:
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0xff01|0x0001|t.Bool|Unknown|0, 1|read/write
-|0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0004|t.CharacterString|firmware_version| |read
-|0xff01|0x0010|t.int16s|outdoor_temp|temp*100|read/write
-|0xff01|0x0011|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write
-|0xff01|0x0012|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write
-|0xff01|0x0020|t.uint32_t|secs_since_2k| second since year 2000|read/write
-|0xff01|0x0070|t.bitmap8|currentLoad| watt/hr|
-|0xff01|0x0071|t.int8s|ecoMode| default:-128, -100-0-100%|read/write
-|0xff01|0x0072|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write
-|0xff01|0x0073|t.uint8_t|ecoMode2| default 255, 0-100|read/write
-|0xff01|0x0075|t.bitmap32|unknown testing| |read/write
-|0xff01|0x0100|t.uint8_t|unknown testing| |read
-|0xff01|0x0104|t.int16s|setpoint|temp*100|read/write
-|0xff01|0x0105|t.enum8|airFloorMode|Air: 1, floor: 2|read/write
-|0xff01|0x0106|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write
-|0xff01|0x0107|t.int16s|FloorTemperature|temp: celcius*100|read
-|0xff01|0x0108|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write
-|0xff01|0x0109|t.int16s|floorMinSetpoint| off: -32768, temp: temp*100|read/write
-|0xff01|0x010A|t.int16s|floorMaxSetpoint| off: -32768, temp: temp*100|read/write
-|0xff01|0x010B|t.enum8|tempSensorType| 0=10k, 1=12k|read/write
-|0xff01|0x010C|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read
-|0xff01|0x010D|t.int16s|RoomTemperature|temp: celcius*100|read
-|0xff01|0x0114|t.enum8|timeFormat|0=24h, 1=12h|read/write
-|0xff01|0x0115|t.enum8|gfciStatus|0=ok, 1=error|report/read
-|0xff01|0x0118|t.uint16_t|auxConnectedLoad| watt/hr, 0xffff=off|read/write
-|0xff01|0x0119|t.uint16_t|connectedLoad|None: 0xffff|
-|0xff01|0x0128|t.uint8_t|pumpProtection| Off: 0xff, On: 0x1|read/write
-|0xff01|0x012A|t.uint8_t|unknown|default:60||5,10,15,20,30,60|read/write
-|0xff01|0x012B|t.int16s|currentSetpoint| |read/write
-|0xff01|0x012D|t.int16s|reportLocalTemperature| Celcius * 100|read
-|0xff01|0x0200|t.bitmap32|Unknown| 0x00000000|
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | --- |---|
-|0x0201|0x0400|t.enum8|SetOccupancy| Home: 0, away:1|read/write
-|0x0201|0x0401|t.uint16_t|MainCycleOutput| Number of second|read/write
-|0x0201|0x0402|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write
-|0x0201|0x0404|t.uint16_t|AuxCycleOutput| Number of second|read/write
-| --- | --- | --- | --- | --- |---|
-|0x0b04|0x050b|t.int16s|active_power|watt/hr|report/read
-|0x0b04|0x050d|t.uint16_t|active_power_max|watt/hr|read
-|0x0b04|0x050f|t.uint16_t|Apparent_Power|watt/hr|report/read	
-|0x0b04|0x050b|t.uint16_t|Active_Power|watt/hr|report/read/write
-| --- | --- | --- | --- | --- | --- |
-|0x0204|0x0000|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write
-|0x0204|0x0001|t.enum8|keypadLockout|0=no lock, 1=lock|read/write
-| --- | --- | --- | --- | --- | --- |
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celcius * 100|read/write/report|
+|0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
+|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
+|0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
+|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
+|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write/report|
+|0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write/report|
+|0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write/report|
+|0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
+|0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
+|0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
+|0xff01|0x0101|257|Array|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read/report|
+|0xff01|0x0102|258|t.uint8_t|unknown|0|read|
+|0xff01|0x0104|260|t.int16s|setpoint|celcius * 100|read/write|
+|0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
+|0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
+|0xff01|0x0107|263|t.int16s|FloorTemperature|celcius*100|read|
+|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write|
+|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celcius*100|read/write|
+|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celcius*100|read/write|
+|0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
+|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
+|0xff01|0x010D|269|t.int16s|RoomTemperature|celcius*100|read|
+|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
+|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
+|0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
+|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
+|0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
+|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0x00, On: 0x01|read/write|
+|0xff01|0x012A|298|t.enum8|unknown|default:60, 5,10,15,20,30,60|read/write/report|
+|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius*100|read/write/report|
+|0xff01|0x012C|300|Array|unknown| |read|
+|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius*100|read/report|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
+|0xff01|0x0202|514|t.enum8|unknown|2|read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0201|0x0000|0|t.int16s|LocalTemperature|celcius*100|report/read|
+|0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
+|0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
+|0x0201|0x0012|21|t.int16s|occupied_heating_setpoint|celcius*100|report/read/write|
+|0x0201|0x0014|21|t.int16s|unoccupied_heating_setpoint|celcius*100|read/write|
+|0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celcius*100|read/write|
+|0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celcius*100|read/write|
+|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
+|0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
+|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
+|0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write|
+|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write|
+|0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
+|0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write|
+|0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
 
-- lights and dimmer:
+- lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- | --- |
-|0xff01|0x0002|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write
-|0xff01|0x0004|t.CharacterString|firmware_version| |read
-|0xff01|0x0050|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0051|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue
-|0xff01|0x0052|t.uint8_t|onLedIntensity| Percent
-|0xff01|0x0053|t.uint8_t|offLedIntensity| Percent
-|0xff01|0x0054|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport
-|0xff01|0x0055|t.uint16_t|minIntensity| 0 to 3000
-|0xff01|0x00A0|t.uint32_t|Timer| Number of seconds
-|0xff01|0x0119|t.uint16_t|ConnectedLoad| None: 0, watt
-|0xff01|0x0200|t.bitmap32|Unknown| ?
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-| --- | --- | --- | --- | --- | --- |
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr
-|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off
-|0x0008|0x0000|t.uint8_t|CurrentLevel| 0=0%, 254=100%
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0001|1|t.bool|Unknown|0, 1|read/write|
+|0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0010|16|t.int16s|on_intensity|minIntensity - 3000|read/write|
+|0xff01|0x0012|18|t.enum8|Unknown|0, 1|read/write|
+|0xff01|0x0013|19|t.enum8|unknown|0, 1, 2|read/write|
+|0xff01|0x0050|80|t.uint24_t|onLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
+|0xff01|0x0051|81|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
+|0xff01|0x0052|82|t.uint8_t|onLedIntensity| Percent|read/write|
+|0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write|
+|0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport|
+|0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
+|0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
+|0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
+|0xff01|0x0080|128|t.uint32_t|Unknown| |read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
+|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
+|0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
+|0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off|report/read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|report/read|
+|0x0008|0x0011|17|t.uint8_t|OnLevel| 0=0%, 254=100%|read/write|
 
-- Switch SP2600ZB, SP2610ZB, Outlet
+- Switch SP2600ZB, SP2610ZB
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- | --- |
-|0xff01|0x0004|t.CharacterString|firmware_version| |read
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|watt/hr
-|0x0b04|0x050B|t.uint16_t|Active_Power|watt/hr
-|0x0b04|0x0605|t.uint16_t|ACPowerDivisor| 10
-|0x0b04|0x0604|t.uint16_t|ACPowerMultiplier|	1
-|0x0006|0x0000|t.Bool|OnOff| 0=off, 1=on
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0220|544|t.bitmap16|Unknown|0|report/read/write|
+|0xff01|0x0221|545|t.bitmap16|Unknown|1|report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0604|1540|t.uint16_t|ACPowerMultiplier|1|read|
+|0x0b04|0x0605|1541|t.uint16_t|ACPowerDivisor|10|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff| 0=off, 1=on|report/read|
 
 - Switch RM3250ZB, Load Controller
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- | --- |
-|0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0004|t.CharacterString|firmware_version| |read
-|0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
-|0xff01|0x00A0|t.uint32_t|Timer| Seconds
-|0xff01|0x0002|t.enum8|KeyboardLock| on=1, off=0
-|0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0200|t.bitmap32|Unknown| ?
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
-|0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
-|0x0b04|0x0605|t.uint16_t|AC_Power_Divisor| 1
-|0x0b04|0x0604|t.uint16_t|AC_Power_Multiplier|	1
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|	watt/hr
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0001|1|t.bool|unknown|0, 1|read/write|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read|
+|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write|
+|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
+|0xff01|0x0080|128|t.uint32_t|Unknown| |read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 |report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
+|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
 
 - Switch RM3500ZB, Calypso water tank controller
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0xff01|0x0002|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write
-|0xff01|0x0004|t.CharacterString|firmware_version|1|read
-|0xff01|0x0010|t.int16s|unknown|400|
-|0xff01|0x0013|t.enum8|tankSize|1,2,3,4|
-|0xff01|0x0060|t.uint16_t|ConnectedLoad|	watt/hr
-|0xff01|0x0070|t.bitmap8|CurrentLoad|	watt/hr
-|0xff01|0x0076|t.uint8_t|drConfigWaterTempMin|	45 or 0
-|0xff01|0x0077|t.uint8_t|drConfigWaterTempTime|	2
-|0xff01|0x0078|t.uint16_t|drWTTimeOn|	240
-|0xff01|0x0079|t.bitmap8|unknown| 0| report/read
-|0xff01|0x0200|t.bitmap32|unknown| 0| report/read
-|0xff01|0x0283|t.uint8_t|ColdLoadPickupStatus| 1, 2|read
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
-|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
-|0x0b04|0x050B|t.uint16_t|Active_Power|	watt/hr
-|0x0b04|0x0605|t.uint16_t|AC_Power_Divisor| 1
-|0x0b04|0x0604|t.uint16_t|AC_Power_Multiplier|	1
-|0x0b05|0x011d|t.int8s|Rssi| value -45
-|0x0402|0x0000|t.int16s|WaterTemperature| temp oC
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
+|0xff01|0x0010|16|t.int16s|unknown|400| |
+|0xff01|0x0013|19|t.enum8|tankSize|1,2,3,4|read/write|
+|0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
+|0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|45 or 0| |
+|0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2| |
+|0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240| |
+|0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0002|2|t.uint16_t|ZoneStatus|0=no leak, 1=leak|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
+|0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
+|0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0b05|0x011d|285|t.int8s|Rssi| value -45||report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.int16s|WaterTemperature| temp oC||report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|Watt/hr|report/read|
 
 - Switch MC3100ZB, multi controller
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0xff01|0x00A0|t.uint32_t|Timer|	second, on endpoint 1 and 2
-|0xff01|0xFFFD|t.uint16_t|cluster_revision| |read
-|0x0001|0x003E|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarn
-|0x0006|0x0000|t.Bool|OnOff| 1=on, 0=off, on endpoint 1 and 2
+|Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|report/read|
+|1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|report/read|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
+|2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write|
+|1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+|2|0x0006|0x0000|0|t.Bool|OnOff2|1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celcius*100|report/read|
+|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celcius*100|report/read|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|report/read|
 
-- Switch valve VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
+- Switch valve VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0x0001|0x0020|t.uint8_t|Battery_Voltage| Volt
-|0x0001|0x003e|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm
-|0x0006|0x0000|t.Bool|OnOff|	1=on, 0=off
-|0x0702|0x0000|t.uint48_t|CurrentSummationDelivered|	L/h (see below)
-|0x0702|0x0200|t.bitmap8|status|0=off, 1=off/armed, 2=on
-|0x0702|0x0300|t.enum8|unit_of_measure| 7=L/h
-|0x0702|0x0306|t.bitmap8|metering_device_type|2  = Water Metering
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)|report/read|
+|0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
+|0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
+|0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
 
-- Sensors WL4200 and WL4200S
+- Switch valve VA4220ZB G2, VA4221ZB G2 with flow meter
 
-|Cluster|Attributes|Data type|Fonction |Value|Access
-| --- | --- | --- | --- | --- |---|
-|0x0402|0x0000|t.uint16_t|MeasuredValueTemperature|	celcius*100	
-|0x0500|0x0030|t.uint16_t|ZoneStatus| 0=no leak, 1=leak
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0000|0x0007|7|t.enum8|power_source|129,130=mains, 3=battery, 4=dc|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|report/read|
+|0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
+|0xff01|0x0230|560|t.enum8|alarm_flow_threshold|0=off,1=on|read/write|
+|0xff01|0x0231|561|t.enum8|alarm_options|0=nothing,1=alarm,2=close,3=close and alarm|read|
+|0xff01|0x0240|576|Array|flow_meter_config|12 elements (uint8)|read/write|
+| | | | | |no flow meter = Array(type=AnonymousLVList, value=[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) | |
+| | | | | |FS4220 = Array(type=AnonymousLVList, value=[194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]) | |
+| | | | | |FS4221 = Array(type=AnonymousLVList, value=[159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]) | |
+| | | | | |FS4222 = Array(type=AnonymousLVList, value=[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) | |
+|0xff01|0x0241|577|t.uint32_t|valve_countdown|seconds|read/write|
+|0xff01|0x0250|592|t.uint32_t|power_source|0x0001d4c0 (120000)= DC power, 0x00000001 (1)=ACUPS, 0x00000000 (0)=Battery|read/write|
+|0xff01|0x0251|593|t.uint32_t|emergency_power_source|0x0000003c (60)=battery + ACUPS, 0x00000001=ACUPS, 0x00000000=battery|read/write|
+|0xff01|0x0252|594|t.uint32_t|abnormal_flow_duration|seconds ,900 (15 min) to 86400 (24hr)|read/write|
+|0xff01|0x0253|595|t.bitmap16|abnormal_flow_action|0x0000= do nothing, 0x0001=send alert, 0x0003= close and send alert|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
+|0x0404|0x0001|1|t.uint16_t|min_measured_value|0|read|
+|0x0404|0x0002|2|t.uint16_t|max_measured_value|?|read|
+|0x0404|0x0003|3|t.uint16_t|tolerance|?|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0000|0|t.enum8|zone_state|1=enrolled, 0=not enrolled|read|
+|0x0500|0x0002|2|t.bitmap16|zone_status|56=flow?|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0702|0x0000|0|t.uint48_t|flowVolumeDelivered|L/h|report/read|
+|0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
+|0x0702|0x0300|768|t.enum8|unit_of_measure|7=L/h|read|
+|0x0702|0x0301|769|t.uint24_t|multiplier|1|read|
+|0x0702|0x0302|770|t.uint24_t|divisor|1000|read|
+|0x0702|0x0306|774|t.bitmap8|metering_device_type|2 = Water Metering|read|
+|0x0702|0x0400|1024|t.int24s|instantaneous_demand|0|report/read|
+
+- Sensors WL4200, WL4200S, WL4200C, WL4210
+
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius * 100|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
+
+- Sensors LM4110-ZB, tank level monitor
+
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|report/read|
+|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|report/read|
+|0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|report/read
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celcius * 100|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|report/read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0030|48|t.uint8_t|Unknown|60|report/read/write|
+|0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read|
+
+Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
 
 # Devices reporting
 
@@ -211,7 +349,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |report gfci status|0xFF01|0x0115|0x30|10|3600|1|
 |floor limit status|0xFF01|0x010C|0x30|10|3600|1| 
 
-- Light and dimmer
+- Light and dimmer:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
@@ -219,26 +357,51 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |CurrentLevel|0x0008|0x0000|0x20|3|602|0x01|
 |double click|0xff01|0x0054|0x10|0|0|1|
 
-- load control
+- load control RM3250ZB:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |onOff|0x0006|0x0000|0x10|0|600|null|
 |ActivePower|0x0B04|0x050B|0x29|60|599|0x64|
+|Energy reading |0x0702|0x0000|0x29|59|1799|int|
 
-- Valve
+- Valve:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
-|Battery %|(0x0001|0x0020|0x20|60|60*60|1|
+|Battery %|(0x0001|0x0020|0x20|60|3600|1|
+|on/off|0x0006|0x0000|0x10|0|600|null|
+|Flowrate|0x0404|0x0000|T.uint16_t|30|600|flow change|
+|water volume|0x0702|0x0000|t.uint48_t|59|1799|volume change|
 
-- Leak sensors
+- Leak sensors:
 
 |Data|Cluster|Attribute|format|min time|max time|minimum change|
 | --- | --- | --- | --- | --- | --- | --- |
 |battery percentage|0x0001|0x0021|0x20|30|43200|1| 
 |temperature min|0x0402|0x0000|0x29|30|3600|300|  
 |battery Alarm State|0x0001|0x003E|0x1b|30|3600|1|
+
+- Tank monitor LM4110-ZB:
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|status|0x0001|0x003e|0x1b|60|43688|1| 
+|remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
+|battery voltage|0x0001|0x0020|0x20|60|43646|1|
+|present value, angle|0x000c|0x0055|0x39|5|3757|1|
+|device temperature|0x0402|0x0000|0x29|60|3678|1|(only if temperature goes below 5oC)
+
+- Calypso RM3500ZB:
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|water temperature|0x0402|0x0000|0x29|30|580|100|
+|Water leak sensor state|0x0500|0x0002|0x19|0|
+|Heater On/off|0x0006|0x0000|0x10|0|600|null|
+|ActivePower|0x0B04|0x050B|0x29|30|600|0x64|
+|Energy reading|0x0702|0x0000|0x29|299|1799|int|
+|Safety water temp reporting|0xFF01|0x0076|DataType.UINT8|0|86400|null|
 
 # Setting the flow meter model for your VA422xZB valve 2n gen.
 To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter:
@@ -294,7 +457,8 @@ data:
   read_before_write: true
   read_after_write: true
 ```
-# Light switch and dimmer double tap, long press reporting : 
+
+## Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
 
 The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut: 0x0054.
@@ -369,6 +533,164 @@ For automations you will have acces to those events in the UI for device trigger
 - "Turn on" continuously pressed
 - "Turn off" continuously pressed
 
+# LM4110-ZB setup for angle and level % reporting :
+This sensor is a sleepy device. That mean the device is sleeping and wake up at specific interval to report his state. When it is sleeping it is impossible to reach hit.
+We can't send any command to that devive except when it is awake.
+To be able to configure the device you need to install ZHA-TOOLKIT component. This will allow to do all operations to setup the device.
+
+the steps to configure your LM4110-ZB sensor is as follow:
+
+### setup reporting:
+
+```
+service: zha_toolkit.execute
+data:
+  ieee: «your LM4110 ieee »
+  command: conf_report
+  endpoint: 1
+  cluster: 0x000c
+  attribute: 0x0055
+  min_interval: 5
+  max_interval: 3757
+  reportable_change: 1
+  tries: 100
+  event_done: zha_done
+```
+
+Check your log until you get :
+
+'success': True, 'result_conf': [[ConfigureReportingResponseRecord(status=0)]]
+
+zha-toolkit will submit the command until it reach 100 retry or zha_done event.
+
+### bind reporting:
+
+Once you have it correctly, you need to bind your LM410ZB to your
+zigbee gateway so the report is sent to the correct place:
+
+```
+service: zha_toolkit.bind_ieee
+data:
+  ieee: «your LM4110 ieee »
+  command_data: «your zigbee gateway ieee »
+  cluster: 0x000c
+  endpoint: 1
+  dst_endpoint: 1
+  tries: 100
+  event_done: zha_done
+```
+
+service: zha_toolkit.execute can be replaced by service: zha_toolkit.conf_report. In that case remove the «command: conf_report line».
+The most important is to retry many time to catch the moment the LM4110 is awake.
+
+### setup automation to catch angle reporting:
+
+To get the angle value you can try this method:
+
+```
+- platform: sql
+  db_url: sqlite:////config/zigbee.db
+  scan_interval: 10
+  queries:
+    - name: current_angle
+      query: "SELECT value FROM attributes_cache_v7 where ieee = 'your LM4110 ieee' and cluster = 12 and attrid = 85"
+      column: "value"
+```
+
+or you can use this method if you don't want to setup the sql platform:
+
+```
+service: zha_toolkit.execute
+data:
+  command: attr_read
+  ieee: «your LM4110 ieee »
+  cluster: 0x000c
+  attribute: 0x0055
+  state_id: sensor.current_angle
+  allow_create: True
+  tries: 100
+```
+
+This automation will create the sensor.current_angle or any other name you want.
+
+```
+- id: '1692841759194'
+  alias: Lecture niveau propane
+  description: Lecture du niveau de réservoir à chaque heure
+  trigger:
+  - platform: time_pattern
+    hours: /1
+  condition: []
+  action:
+  - service: zha_toolkit.execute
+    data:
+      command: attr_read
+      ieee: "«your LM4110 ieee »"
+      cluster: 12
+      attribute: 85
+      state_id: sensor.current_angle
+      allow_create: true
+      tries: 100
+  mode: single
+```
+
+### Do the calculation to transfert angle to % level:
+There are two different tank gauge, scale from 10 to 80 (R3D 10-80) or scale from 5 to 95 (R3D 5-95). Calculation is different for each one.
+
+- First set gauge type and value offset. For this you need to create input_number and input_text to set those value in <b>configuration.yaml</b>
+```
+input_number:
+  gauge_offset:
+    name: "gauge offset"
+    initial: 2
+    min: 1
+    max: 4
+    step: 1
+```
+
+```
+input_text:
+  tank_gauge:
+    name: "tank gauge"
+    initial: "10-80" # or "5-95"
+```
+- Calculates propane tank % level according to value returned by Sinope device (for R3D 10-80 gauge or R3D 5-95 gauge)
+```
+template:
+  - trigger:
+    - platform: time_pattern
+      hours: "/5"
+  - sensor:
+    - name: "Tank remaining level"
+      unit_of_measurement: "%"
+      unique_id: sensor.tank_remaining_level
+      icon: mdi:propane-tank
+      state_class: measurement
+      state: >
+        {% set gauge = states('input_text.tank_gauge') %} # must match the above input_text name
+        {% set angle = states('sensor.current_angle') | float %}
+        {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
+        {% set x_min = 110 | float %}
+        {% if (gauge == "10-80") %}
+          {% set x_max = 406 | float %}
+          {% set delta = 46 | float %}
+          {% set low = 10 | float %}
+          {% set high = 80 | float %}
+        {% else %}
+          {% set x_max = 415 | float %}
+          {% set delta = 55 | float %}
+          {% set low = 5 | float %}
+          {% set high = 95 | float %}
+        {% endif %}
+
+        {% if ((delta <= angle) and (70 >= angle)) %}
+          {{ (((delta-x_min)/(x_max-x_min)*(high-low))+low+offset) | round(0) }}
+        {% elif ((0 <= angle) and (delta > angle)) %}
+          {{ (((angle)+360-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+        {% else %}
+          {{ (((angle)-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+        {% endif %}
+```
 
 # Automation examples:
 - Sending outside temperature to thermostats:
