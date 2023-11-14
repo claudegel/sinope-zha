@@ -402,7 +402,62 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |ActivePower|0x0B04|0x050B|0x29|30|600|0x64|
 |Energy reading|0x0702|0x0000|0x29|299|1799|int|
 |Safety water temp reporting|0xFF01|0x0076|DataType.UINT8|0|86400|null|
-  
+
+# Setting the flow meter model for your VA422xZB valve 2n gen.
+To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter:
+- FS4220: (3/4 inch)
+```
+service: zha_toolkit.attr_write
+data:
+  ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
+  endpoint: 1
+  cluster: 0xff01
+  attribute: 0x0240
+  attr_type: 0x48
+  attr_val: [32, 12, 0, 194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
+  read_before_write: true
+  read_after_write: true
+```
+- FS4221: (one inch)
+```
+service: zha_toolkit.attr_write
+data:
+  ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
+  endpoint: 1
+  cluster: 0xff01
+  attribute: 0x0240
+  attr_type: 0x48
+  attr_val: [32, 12, 0, 159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
+  read_before_write: true
+  read_after_write: true
+```
+- FS4222: (1.5 inch)
+```
+service: zha_toolkit.attr_write
+data:
+  ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
+  endpoint: 1
+  cluster: 0xff01
+  attribute: 0x0240
+  attr_type: 0x48
+  attr_val: [32, 12, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+  read_before_write: true
+  read_after_write: true
+```
+- No flow meter:
+```
+service: zha_toolkit.attr_write
+data:
+  ieee: 50:0b:91:40:00:03:ed:b0 <-- your valve ieee
+  endpoint: 1
+  cluster: 0xff01
+  attribute: 0x0240
+  attr_type: 0x48
+  attr_val: [32, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+  read_before_write: true
+  read_after_write: true
+```
+
 ## Light switch and dimmer double tap, long press reporting : 
 Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
 
