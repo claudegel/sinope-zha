@@ -229,7 +229,7 @@ class SinopeTechnologieslight(CustomDevice):
 
 
 class SinopeDM2500ZB(SinopeTechnologieslight):
-    """DM2500ZB Dimmer."""
+    """DM2500ZB, DM2500ZB-G2 Dimmers."""
 
     signature = {
         # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
@@ -332,7 +332,7 @@ class SinopeDM2500ZB(SinopeTechnologieslight):
 
 
 class SinopeDM2550ZB(SinopeTechnologieslight):
-    """DM2550ZB Dimmer."""
+    """DM2550ZB, DM2550ZB-G2 Dimmers."""
 
     signature = {
         # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
