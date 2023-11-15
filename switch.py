@@ -54,7 +54,7 @@ class SinopeManufacturerCluster(CustomCluster):
         Locked = 0x01
 
     class FlowAlarm(t.enum8):
-        """Alarm abnormal flow."""
+        """Abnormal flow alarm."""
 
         Off = 0x00
         On = 0x01
@@ -142,7 +142,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0230: ("alarm_flow_threshold", FlowAlarm, True),
         0x0231: ("alarm_options", AlarmAction, True),
         0x0240: ("flow_meter_config", Array, True),
-        0x0241: ("countdown", t.uint32_t, True),
+        0x0241: ("valve_countdown", t.uint32_t, True),
         0x0250: ("power_source", PowerSource, True),
         0x0251: ("emergency_power_source", EmergencyPower, True),
         0x0252: ("abnormal_flow_duration", FlowDuration, True),
