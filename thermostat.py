@@ -81,7 +81,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Error = 0x01
 
     class SystemMode(t.enum8):
-        """aux_mode values."""
+        """system mode values."""
 
         Off = 0x00
         Auto = 0x01
