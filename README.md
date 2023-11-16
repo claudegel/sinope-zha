@@ -73,8 +73,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
 |0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
 |0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
-|0xff01|0x0128|296|t.uint8_t|pumpProtection| Off: 0x00, On: 0x01|read/write|
-|0xff01|0x012A|298|t.enum8|unknown|default:60, 5,10,15,20,30,60|read/write/report|
+|0xff01|0x0128|296|t.uint8_t|pumpProtectionStatus| Off: 0x00, On: 0x01|read/write|
+|0xff01|0x012A|298|t.enum8|pumpProtectionDuration|default:60, 5,10,15,20,30,60|read/write/report|
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius*100|read/report|
