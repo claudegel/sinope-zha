@@ -58,6 +58,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read/report|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
+|0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celcius * 100|read/write|
 |0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
 |0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
