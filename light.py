@@ -49,7 +49,6 @@ from zhaquirks.sinope import SINOPE
 
 ATTRIBUTE_ACTION = "actionReport"
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
-CURTEMP = 0x0000
 
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
@@ -123,7 +122,7 @@ class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
     """Custom DeviceTemperature Cluster."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == CURTEMP:
+        if attrid == 0x0000:
             super()._update_attribute(attrid, value*100)
 
 
