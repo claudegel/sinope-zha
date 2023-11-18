@@ -23,10 +23,13 @@ from zigpy.zcl.clusters.general import (
 )
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.lightlink import LightLink
-from zigpy.zcl.clusters.measurement import RelativeHumidity, TemperatureMeasurement, FlowMeasurement
+from zigpy.zcl.clusters.measurement import (
+    RelativeHumidity,
+    TemperatureMeasurement,
+    FlowMeasurement,
+)
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-
 from zigpy.zcl.foundation import Array
 
 from zhaquirks.const import (
@@ -66,18 +69,18 @@ class SinopeManufacturerCluster(CustomCluster):
         Close_notify = 0x03
 
     class PowerSource(t.uint32_t):
-        """Valve power souce types."""
+        """Valve power source types."""
 
         Battery = 0x00000000
         ACUPS_01 = 0x00000001
-        DC_power = 0x0001d4c0
+        DC_power = 0x0001d4C0
 
     class EmergencyPower(t.uint32_t):
-        """Valve emergency power souce types."""
+        """Valve emergency power source types."""
 
         Battery = 0x00000000
         ACUPS_01 = 0x00000001
-        Battery_ACUPS_01 = 0x0000003c
+        Battery_ACUPS_01 = 0x0000003C
 
     class AbnormalAction(t.bitmap16):
         """Action in case of abnormal flow detected."""
@@ -203,7 +206,7 @@ class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
 
     def _update_attribute(self, attrid, value):
         if attrid == 0x0000:
-            super()._update_attribute(attrid, value*100)
+            super()._update_attribute(attrid, value * 100)
 
 
 class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
@@ -211,7 +214,7 @@ class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
 
     def _update_attribute(self, attrid, value):
         if attrid == 0x0000:
-            super()._update_attribute(attrid, value/10)
+            super()._update_attribute(attrid, value / 10)
 
 
 class SinopeTechnologiesSwitch(CustomDevice):
