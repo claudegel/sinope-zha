@@ -40,8 +40,6 @@ from zhaquirks.const import (
 from zhaquirks.sinope import SINOPE
 
 SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
-CURTEMP = 0x0000
-FLOWMETER = 0x0000
 
 
 class SinopeManufacturerCluster(CustomCluster):
@@ -204,7 +202,7 @@ class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
     """Custom DeviceTemperature Cluster."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == CURTEMP:
+        if attrid == 0x0000:
             super()._update_attribute(attrid, value*100)
 
 
@@ -212,7 +210,7 @@ class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     """Custom FlowMeasurement Cluster."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == FLOWMETER:
+        if attrid == 0x0000:
             super()._update_attribute(attrid, value/10)
 
 
