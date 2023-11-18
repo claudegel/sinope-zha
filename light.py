@@ -123,7 +123,7 @@ class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
 
     def _update_attribute(self, attrid, value):
         if attrid == 0x0000:
-            super()._update_attribute(attrid, value*100)
+            super()._update_attribute(attrid, value * 100)
 
 
 class SinopeTechnologieslight(CustomDevice):
