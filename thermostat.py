@@ -20,6 +20,7 @@ from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
+from zigpy.zcl.foundation import Array
 
 from zhaquirks.const import (
     DEVICE_TYPE,
@@ -116,6 +117,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     name = "Sinopé Technologies Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
+        0x0001: ("unknown_attr_0", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
@@ -127,6 +129,10 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0071: ("eco_mode", t.int8s, True),
         0x0072: ("eco_mode_1", t.uint8_t, True),
         0x0073: ("eco_mode_2", t.uint8_t, True),
+        0x0100: ("unknown_attr_2", t.uint8_t, True),
+        0x0101: ("unknown_attr_1", Array, True),
+        0x0102: ("unknown_attr_3", t.uint8_t, True),
+        0x0103: ("unknown_attr_7", Array, True),
         0x0104: ("setpoint", t.int16s, True),
         0x0105: ("air_floor_mode", FloorMode, True),
         0x0106: ("aux_output_mode", AuxMode, True),
@@ -140,13 +146,16 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0114: ("time_format", TimeFormat, True),
         0x0115: ("gfci_status", GfciStatus, True),
         0x0116: ("aux_mode", SystemMode, True),
+        0x0117: ("unknown_attr_8", Array, True),
         0x0118: ("aux_connected_load", t.uint16_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
         0x0128: ("pump_protection_status", PumpStatus, True),
         0x012A: ("pump_protection_duration", PumpDuration, True),
         0x012B: ("current_setpoint", t.int16s, True),
+        0x012C: ("unknown_attr_4", Array, True),
         0x012D: ("report_local_temperature", t.int16s, True),
         0x0200: ("status", t.bitmap32, True),
+        0x0202: ("unknown_attr_6", t.enum8, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
@@ -184,6 +193,23 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
             0x0401: ("main_cycle_output", CycleOutput, True),
             0x0402: ("backlight_auto_dim_param", Backlight, True),
             0x0404: ("aux_cycle_output", CycleOutput, True),
+            0x0421: ("unknown_attr_1", t.uint16_t, True),
+            0x0422: ("unknown_attr_2", t.uint16_t, True),
+            0x0423: ("unknown_attr_3", t.int16s, True),
+            0x0424: ("unknown_attr_4", t.int16s, True),
+            0x0425: ("unknown_attr_5", t.int16s, True),
+            0x0426: ("unknown_attr_6", t.int16s, True),
+            0x0427: ("unknown_attr_7", t.uint16_t, True),
+            0x0428: ("unknown_attr_8", t.uint16_t, True),
+            0x0429: ("unknown_attr_9", t.int16s, True),
+            0x0430: ("unknown_attr_10", t.int16s, True),
+            0x0431: ("unknown_attr_11", t.int16s, True),
+            0x0432: ("unknown_attr_12", t.int16s, True),
+            0x0433: ("unknown_attr_13", t.uint16_t, True),
+            0x0434: ("unknown_attr_14", t.uint16_t, True),
+            0x0435: ("unknown_attr_15", t.int16s, True),
+            0x0436: ("unknown_attr_16", t.uint16_t, True),
+            0x0439: ("unknown_attr_17", t.uint16_t, True),
             0xFFFD: ("cluster_revision", t.uint16_t, True),
         }
     )
