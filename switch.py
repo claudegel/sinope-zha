@@ -24,9 +24,9 @@ from zigpy.zcl.clusters.general import (
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.lightlink import LightLink
 from zigpy.zcl.clusters.measurement import (
+    FlowMeasurement,
     RelativeHumidity,
     TemperatureMeasurement,
-    FlowMeasurement,
 )
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
@@ -121,7 +121,7 @@ class SinopeManufacturerCluster(CustomCluster):
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
-        0x0001: ("unknown_attr", t.Bool, True),
+        0x0001: ("unknown_attr_1", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
@@ -133,13 +133,15 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
         0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
         0x0078: ("dr_wt_time_on", t.uint16_t, True),
-        0x0080: ("unknown_attr_4", t.uint32_t, True),
+        0x0079: ("unknown_attr_6", t.bitmap8, True),
+        0x0080: ("unknown_attr_5", t.uint32_t, True),
         0x0090: ("current_summation_delivered", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
         0x00A1: ("timer_countdown", t.uint32_t, True),
-        0x0101: ("unknown_attr_9", Array, True),
+        0x0101: ("unknown_attr_7", Array, True),
         0x0200: ("status", t.bitmap32, True),
-        0x0221: ("unknown_attr_3", t.bitmap16, True),
+        0x0220: ("unknown_attr_3", t.bitmap16, True),
+        0x0221: ("unknown_attr_4", t.bitmap16, True),
         0x0230: ("alarm_flow_threshold", FlowAlarm, True),
         0x0231: ("alarm_options", AlarmAction, True),
         0x0240: ("flow_meter_config", Array, True),
