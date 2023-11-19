@@ -48,6 +48,7 @@ from zhaquirks.const import (
 from zhaquirks.sinope import (
     LIGHT_DEVICE_TRIGGERS,
     SINOPE,
+    CustomDeviceTemperatureCluster,
 )
 
 ATTRIBUTE_ACTION = "actionReport"
@@ -119,14 +120,6 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
 
 class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerCluster):
     """LightManufacturerCluster: fire events corresponding to press type."""
-
-
-class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
-    """Custom DeviceTemperature Cluster."""
-
-    def _update_attribute(self, attrid, value):
-        if attrid == self.AttributeDefs.current_temperature.id:
-            super()._update_attribute(attrid, value * 100)
 
 
 class SinopeTechnologieslight(CustomDevice):
