@@ -48,11 +48,11 @@ from zhaquirks.const import (
 from zhaquirks.sinope import (
     LIGHT_DEVICE_TRIGGERS,
     SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
     CustomDeviceTemperatureCluster,
 )
 
 ATTRIBUTE_ACTION = "actionReport"
-SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
 
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
