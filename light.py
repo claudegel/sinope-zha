@@ -105,7 +105,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0056: ("phase_control", PhaseControl, True),
         0x0058: ("double_up_full", DoubleFull, True),
         0x0080: ("unknown_attr_5", t.uint32_t, True),
-        0x0090: ("unknown_attr_6", t.uint32_t, True),
+        0x0090: ("current_summation_delivered", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
         0x00A1: ("timer_countdown", t.uint32_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
@@ -122,7 +122,7 @@ class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
     """Custom DeviceTemperature Cluster."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == 0x0000:
+        if attrid == self.AttributeDefs.current_temperature.id:
             super()._update_attribute(attrid, value * 100)
 
 
