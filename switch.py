@@ -153,6 +153,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0252: ("abnormal_flow_duration", FlowDuration, True),
         0x0253: ("abnormal_flow_action", AbnormalAction, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
+        0x0284: ("cold_load_pickup_remaining_time", t.uint16_t, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
