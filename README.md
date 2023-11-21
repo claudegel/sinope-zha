@@ -200,6 +200,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
 |0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read|
+|0xff01|0x0284|644|t.uint16_t|coldLoadPickupRemainingTime|65535=off countdown| |
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0002|2|t.uint16_t|ZoneStatus|0=no leak, 1=leak|read|
