@@ -191,7 +191,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
 |0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
 |0xff01|0x0010|16|t.int16s|unknown|400| |
-|0xff01|0x0013|19|t.enum8|tankSize|1,2,3,4|read/write|
+|0xff01|0x0013|19|t.enum8|tankSize|1=40 gal,2=50 gal,3=60 gal,4=80 gal|read/write|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
 |0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|45 or 0|read/write/report|
