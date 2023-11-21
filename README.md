@@ -194,7 +194,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0013|19|t.enum8|tankSize|1,2,3,4|read/write|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
-|0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|45 or 0| |
+|0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|45 or 0|read/write/report|
 |0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2| |
 |0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240| |
 |0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
