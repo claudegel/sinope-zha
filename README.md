@@ -202,6 +202,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2|read/write/report|
 |0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240|read/write/report|
 |0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
+|0xff01|0x007A|122|t.uint16_t|unknown|0|read/write/report|
+|0xff01|0x007B|123|t.uint16_t|unknown|288|read/write/report|
+|0xff01|0x007C|124|t.int16s|unknown|-32768|read/report|
+|0xff01|0x007D|125|t.int16s|unknown|-32768|read/report|
 |0xff01|0c0080|122|t.uint32_t|unknown|0|read/report|
 |0xff01|0x0090|144|t.uint32_t|CurrentSummationDelivered|kwh|read/report|
 |0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write/report|
@@ -213,7 +217,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
 |0xff01|0x0202|514|t.enum8|unknown|1|read/report|
 |0xff01|0x0203|515|t.enum8|unknown|12|read/report|
-|0xff01|0x0280|640|t.int16s|unknown|5300|read/write/report|
+|0xff01|0x0280|640|t.int16s|max_measured_value|5300|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0282|642|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read|
