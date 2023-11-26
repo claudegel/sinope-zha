@@ -165,6 +165,7 @@ class CustomBasicCluster(CustomCluster, Basic):
         """Power source."""
 
         Unknown = 0x0000
+        DC_mains = 0x0001
         Battery = 0x0003
         DC_source = 0x0004
         ACUPS_01 = 0x0081
