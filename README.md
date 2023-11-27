@@ -45,7 +45,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|celcius * 100|read/write/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
@@ -59,16 +59,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read/report|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
-|0xff01|0x0104|260|t.int16s|setpoint|celcius * 100|read/write|
+|0xff01|0x0104|260|t.int16s|setpoint|celsius * 100|read/write|
 |0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
 |0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
-|0xff01|0x0107|263|t.int16s|FloorTemperature|celcius*100|read|
-|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celcius*100, valid only if floor mode is selected|read/write|
-|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celcius*100|read/write|
-|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celcius*100|read/write|
+|0xff01|0x0107|263|t.int16s|FloorTemperature|celsius*100|read|
+|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celsius*100, valid only if floor mode is selected|read/write|
+|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celsius*100|read/write|
+|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celsius*100|read/write|
 |0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
 |0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
-|0xff01|0x010D|269|t.int16s|RoomTemperature|celcius*100|read|
+|0xff01|0x010D|269|t.int16s|RoomTemperature|celsius*100|read|
 |0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
 |0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
 |0xff01|0x0116|278|t.enum8|auxMode|0=off, 1=auto, 3=cool, 4=heat|read|
@@ -77,20 +77,20 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
 |0xff01|0x0128|296|t.uint8_t|pumpProtectionStatus| Off: 0x00, On: 0x01|read/write|
 |0xff01|0x012A|298|t.enum8|pumpProtectionDuration|default:60, 5,10,15,20,30,60|read/write/report|
-|0xff01|0x012B|299|t.int16s|currentSetpoint|Celcius*100|read/write/report|
+|0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
-|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celcius*100|read/report|
+|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|2|read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0201|0x0000|0|t.int16s|LocalTemperature|celcius*100|report/read|
+|0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
 |0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
 |0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
-|0x0201|0x0012|21|t.int16s|occupied_heating_setpoint|celcius*100|report/read/write|
-|0x0201|0x0014|21|t.int16s|unoccupied_heating_setpoint|celcius*100|read/write|
-|0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celcius*100|read/write|
-|0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celcius*100|read/write|
+|0x0201|0x0012|21|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
+|0x0201|0x0014|21|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
+|0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
+|0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
@@ -101,7 +101,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
 |0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celcius, 1=farenheight|read/write|
+|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celsius, 1=farenheight|read/write|
 |0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
@@ -253,8 +253,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 |2|0x0006|0x0000|0|t.Bool|OnOff2|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celcius*100|report/read|
-|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celcius*100|report/read|
+|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celsius*100|report/read|
+|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celsius*100|report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|report/read|
 
@@ -270,7 +270,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius*100|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius*100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)|report/read|
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
@@ -307,7 +307,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
 |0x0404|0x0001|1|t.uint16_t|min_measured_value|0|read|
@@ -331,7 +331,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celcius * 100|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius * 100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
 
@@ -343,7 +343,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|report/read|
 |0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|report/read
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celcius * 100|report/read|
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celsius * 100|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -718,7 +718,7 @@ template:
 
 # Automation examples:
 - Sending outside temperature to thermostats:
-- Celcius:
+- Celsius:
 ```
 - alias: Send-OutdoorTemp
   trigger:
