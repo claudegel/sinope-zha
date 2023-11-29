@@ -594,16 +594,8 @@ class SinopeTechnologiesCalypso(CustomDevice):
                     Time.cluster_id,
                     Ota.cluster_id,
                 ],
-            },
-            2: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.ON_OFF_OUTPUT,
-                INPUT_CLUSTERS: [
-                    TemperatureMeasurement.cluster_id,
-                ],
-                OUTPUT_CLUSTERS: [],
-            },
-        },
+            }
+        }
     }
 
 
