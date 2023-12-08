@@ -50,7 +50,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
-|0xff01|0x0071|113|t.int8s|ecoMode| default:-128, -100-0-100%|read/write/report|
+|0xff01|0x0071|113|t.int8s|eco_setpoint_reduction| off:-128, celsius*-10, amount of setpoint reduction|read/write/report|
 |0xff01|0x0072|114|t.uint8_t|ecoMode1| default:255, 0-99 Set maximum operating percentage 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|ecoMode2| default 255, 0-100|read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
