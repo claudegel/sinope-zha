@@ -124,7 +124,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0012: ("config_2nd_display", Display, True),
         0x0020: ("secs_since_2k", t.uint32_t, True),
         0x0070: ("current_load", t.bitmap8, True),
-        0x0071: ("eco_mode", t.int8s, True),
+        0x0071: ("eco_setpoint_reduction", t.int8s, True),
         0x0072: ("eco_mode_1", t.uint8_t, True),
         0x0073: ("eco_mode_2", t.uint8_t, True),
         0x0100: ("unknown_attr_2", t.uint8_t, True),
