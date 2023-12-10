@@ -43,7 +43,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0031: ("unknown_attr_3", t.uint16_t, True),
         0x0032: ("min_temperature_limit", t.int16s, True),
         0x0033: ("max_temperature_limit", t.int16s, True),
-        0x0034: ("unknown_attr_6", t.bitmap8, True),
+        0x0034: ("device_status", t.bitmap8, True),
         0x0035: ("unknown_attr_7", t.uint16_t, True),
         0x0036: ("unknown_attr_8", t.uint16_t, True),
         0x0080: ("unknown_attr_9", t.uint32_t, True),
