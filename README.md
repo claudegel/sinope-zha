@@ -93,9 +93,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
-|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second|read/write|
+|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1|read/write|
-|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second|read/write|
+|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write|
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
