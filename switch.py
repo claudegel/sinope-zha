@@ -75,7 +75,7 @@ class SinopeManufacturerCluster(CustomCluster):
 
         Battery = 0x00000000
         ACUPS_01 = 0x00000001
-        DC_power = 0x0001d4C0
+        DC_power = 0x0001D4C0
 
     class EmergencyPower(t.uint32_t):
         """Valve emergency power source types."""
@@ -88,7 +88,7 @@ class SinopeManufacturerCluster(CustomCluster):
         """Action in case of abnormal flow detected."""
 
         Nothing = 0x0000
-        Notify = 0x0001
+        Close_valve = 0x0001
         Close_notify = 0x0003
 
     class ColdStatus(t.enum8):
@@ -120,7 +120,7 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0010: ("outdoor_temp", t.int16s, True),
-        0x0013: ("unknown_attr_0", TankSize, True),
+        0x0013: ("unknown_attr_0", t.enum8, True),
         0x0030: ("unknown_attr_2", t.uint8_t, True),
         0x0035: ("unknown_attr_8", t.uint16_t, True),
         0x0037: ("unknown_attr_9", t.uint16_t, True),
@@ -186,7 +186,7 @@ class CustomBasicCluster(CustomCluster, Basic):
         }
     )
 
-    
+
 class CustomMeteringCluster(CustomCluster, Metering):
     """Custom Metering Cluster."""
 
@@ -634,7 +634,7 @@ class SinopeTechnologiesNewSwitch(CustomDevice):
                 ],
                 OUTPUT_CLUSTERS: [
                     Ota.cluster_id,
-                    LightLink.cluster_id,            
+                    LightLink.cluster_id,
                 ],
             }
         },
