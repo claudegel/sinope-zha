@@ -214,7 +214,9 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     )
 
 
-class SinopeTechnologiesElectricalMeasurementCluster(CustomCluster, ElectricalMeasurement):
+class SinopeTechnologiesElectricalMeasurementCluster(
+    CustomCluster, ElectricalMeasurement
+):
     """SinopeTechnologiesElectricalMeasurementCluster custom cluster."""
 
     attributes = ElectricalMeasurement.attributes.copy()
