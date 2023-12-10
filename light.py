@@ -23,27 +23,12 @@ from zigpy.zcl.clusters.smartenergy import Metering
 
 from zhaquirks import EventableCluster
 from zhaquirks.const import (
-    ARGS,
-    ATTRIBUTE_ID,
-    ATTRIBUTE_NAME,
-    CLUSTER_ID,
-    COMMAND,
-    COMMAND_BUTTON_DOUBLE,
-    COMMAND_BUTTON_HOLD,
-    COMMAND_BUTTON_SINGLE,
     DEVICE_TYPE,
-    DOUBLE_PRESS,
-    ENDPOINT_ID,
     ENDPOINTS,
     INPUT_CLUSTERS,
-    LONG_PRESS,
     MODELS_INFO,
     OUTPUT_CLUSTERS,
     PROFILE_ID,
-    SHORT_PRESS,
-    TURN_OFF,
-    TURN_ON,
-    VALUE,
 )
 from zhaquirks.sinope import (
     LIGHT_DEVICE_TRIGGERS,
