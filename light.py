@@ -52,8 +52,6 @@ from zhaquirks.sinope import (
     CustomDeviceTemperatureCluster,
 )
 
-ATTRIBUTE_ACTION = "actionReport"
-
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
