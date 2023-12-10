@@ -50,9 +50,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
-|0xff01|0x0071|113|t.int8s|eco_setpoint_delta| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
-|0xff01|0x0072|114|t.uint8_t|eco_pi_heating_demand_limit| off:255, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
-|0xff01|0x0073|115|t.uint8_t|ecoMode2| off:255, range: 0-100|read/write/report|
+|0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
+|0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255=100%, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
+|0xff01|0x0073|115|t.uint8_t|eco_safety_limit_percent| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
@@ -328,6 +328,18 @@ I'll list here all the custom cluster attribute with explanation about how to us
 - Sensors WL4200, WL4200S, WL4200C, WL4210
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0003|3|t.uint16_t|Firmware_number| |read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
+|0xff01|0x0031|49|t.uint16_t|unknown|696, 774|read/write|
+|0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
+|0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
+|0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
+|0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72|read|
+|0xff01|0x0036|54|t.uint16_t|Battery_type|7|read/write|
+|0xff01|0x0080|128|t.uint32_t|unknown|16973824|read|
+|0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
 | --- | --- | --- | --- | --- | --- | ---|
