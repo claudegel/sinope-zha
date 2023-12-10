@@ -1,4 +1,4 @@
-"""Module to handle quirks of the  Sinopé Technologies light.
+"""Module to handle quirks of the Sinopé Technologies light.
 
 Supported devices SW2500ZB, SW2500ZB-G2 dimmer DM2500ZB, DM2500ZB-G2, DM2550ZB,
 DM2550ZB-G2.
