@@ -24,9 +24,9 @@ from zigpy.zcl.clusters.general import (
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.lightlink import LightLink
 from zigpy.zcl.clusters.measurement import (
+    FlowMeasurement,
     RelativeHumidity,
     TemperatureMeasurement,
-    FlowMeasurement,
 )
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
@@ -40,9 +40,11 @@ from zhaquirks.const import (
     OUTPUT_CLUSTERS,
     PROFILE_ID,
 )
-from zhaquirks.sinope import SINOPE
-
-SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+from zhaquirks.sinope import (
+    SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
+    CustomDeviceTemperatureCluster,
+)
 
 
 class SinopeManufacturerCluster(CustomCluster):
@@ -73,7 +75,7 @@ class SinopeManufacturerCluster(CustomCluster):
 
         Battery = 0x00000000
         ACUPS_01 = 0x00000001
-        DC_power = 0x0001d4C0
+        DC_power = 0x0001D4C0
 
     class EmergencyPower(t.uint32_t):
         """Valve emergency power source types."""
@@ -86,7 +88,7 @@ class SinopeManufacturerCluster(CustomCluster):
         """Action in case of abnormal flow detected."""
 
         Nothing = 0x0000
-        Notify = 0x0001
+        Close_valve = 0x0001
         Close_notify = 0x0003
 
     class ColdStatus(t.enum8):
@@ -94,14 +96,6 @@ class SinopeManufacturerCluster(CustomCluster):
 
         Active = 0x00
         Off = 0x01
-
-    class TankSize(t.enum8):
-        """tank_size values."""
-
-        Gal_40 = 0x01
-        Gal_50 = 0x02
-        Gal_60 = 0x03
-        Gal_80 = 0x04
 
     class FlowDuration(t.uint32_t):
         """Abnormal flow duration."""
@@ -121,25 +115,40 @@ class SinopeManufacturerCluster(CustomCluster):
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
-        0x0001: ("unknown_attr", t.Bool, True),
+        0x0001: ("unknown_attr_1", t.Bool, True),
         0x0002: ("keypad_lockout", KeypadLock, True),
         0x0003: ("firmware_number", t.uint16_t, True),
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0010: ("outdoor_temp", t.int16s, True),
-        0x0013: ("tank_size", TankSize, True),
+        0x0013: ("unknown_attr_0", t.enum8, True),
         0x0030: ("unknown_attr_2", t.uint8_t, True),
+        0x0035: ("unknown_attr_8", t.uint16_t, True),
+        0x0037: ("unknown_attr_9", t.uint16_t, True),
+        0x0038: ("unknown_attr_10", t.enum8, True),
         0x0060: ("connected_load", t.uint16_t, True),
         0x0070: ("current_load", t.bitmap8, True),
+        0x0074: ("unknown_attr_11", t.enum8, True),
         0x0076: ("dr_config_water_temp_min", t.uint8_t, True),
         0x0077: ("dr_config_water_temp_time", t.uint8_t, True),
         0x0078: ("dr_wt_time_on", t.uint16_t, True),
-        0x0080: ("unknown_attr_4", t.uint32_t, True),
+        0x0079: ("unknown_attr_6", t.bitmap8, True),
+        0x007A: ("unknown_attr_20", t.uint16_t, True),
+        0x007B: ("unknown_attr_21", t.uint16_t, True),
+        0x007C: ("min_measured_temp", t.int16s, True),
+        0x007D: ("max_measured_temp", t.int16s, True),
+        0x0080: ("unknown_attr_5", t.uint32_t, True),
         0x0090: ("current_summation_delivered", t.uint32_t, True),
         0x00A0: ("timer", t.uint32_t, True),
         0x00A1: ("timer_countdown", t.uint32_t, True),
-        0x0101: ("unknown_attr_9", Array, True),
+        0x00B0: ("unknown_attr_12", t.Bool, True),
+        0x0101: ("unknown_attr_7", Array, True),
+        0x012A: ("unknown_attr_13", t.enum8, True),
+        0x012C: ("unknown_attr_14", Array, True),
         0x0200: ("status", t.bitmap32, True),
-        0x0221: ("unknown_attr_3", t.bitmap16, True),
+        0x0202: ("unknown_attr_15", t.enum8, True),
+        0x0203: ("unknown_attr_16", t.enum8, True),
+        0x0220: ("unknown_attr_3", t.bitmap16, True),
+        0x0221: ("unknown_attr_4", t.bitmap16, True),
         0x0230: ("alarm_flow_threshold", FlowAlarm, True),
         0x0231: ("alarm_options", AlarmAction, True),
         0x0240: ("flow_meter_config", Array, True),
@@ -148,7 +157,11 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0251: ("emergency_power_source", EmergencyPower, True),
         0x0252: ("abnormal_flow_duration", FlowDuration, True),
         0x0253: ("abnormal_flow_action", AbnormalAction, True),
+        0x0280: ("max_measured_value", t.int16s, True),
+        0x0281: ("unknown_attr_18", t.uint16_t, True),
+        0x0282: ("unknown_attr_19", t.uint16_t, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
+        0x0284: ("cold_load_pickup_remaining_time", t.uint16_t, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
@@ -160,6 +173,7 @@ class CustomBasicCluster(CustomCluster, Basic):
         """Power source."""
 
         Unknown = 0x0000
+        DC_mains = 0x0001
         Battery = 0x0003
         DC_source = 0x0004
         ACUPS_01 = 0x0081
@@ -172,7 +186,7 @@ class CustomBasicCluster(CustomCluster, Basic):
         }
     )
 
-    
+
 class CustomMeteringCluster(CustomCluster, Metering):
     """Custom Metering Cluster."""
 
@@ -201,19 +215,11 @@ class CustomMeteringCluster(CustomCluster, Metering):
     )
 
 
-class CustomDeviceTemperatureCluster(CustomCluster, DeviceTemperature):
-    """Custom DeviceTemperature Cluster."""
-
-    def _update_attribute(self, attrid, value):
-        if attrid == 0x0000:
-            super()._update_attribute(attrid, value * 100)
-
-
 class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
-    """Custom FlowMeasurement Cluster."""
+    """Custom flow measurement cluster that divides value by 10."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == 0x0000:
+        if attrid == self.AttributeDefs.measured_value.id:
             super()._update_attribute(attrid, value / 10)
 
 
@@ -596,16 +602,8 @@ class SinopeTechnologiesCalypso(CustomDevice):
                     Time.cluster_id,
                     Ota.cluster_id,
                 ],
-            },
-            2: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.ON_OFF_OUTPUT,
-                INPUT_CLUSTERS: [
-                    TemperatureMeasurement.cluster_id,
-                ],
-                OUTPUT_CLUSTERS: [],
-            },
-        },
+            }
+        }
     }
 
 
@@ -636,7 +634,7 @@ class SinopeTechnologiesNewSwitch(CustomDevice):
                 ],
                 OUTPUT_CLUSTERS: [
                     Ota.cluster_id,
-                    LightLink.cluster_id,            
+                    LightLink.cluster_id,
                 ],
             }
         },

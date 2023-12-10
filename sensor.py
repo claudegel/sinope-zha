@@ -1,4 +1,4 @@
-"""Module to handle quirks of the  Sinopé Technologies water leak sensor and level monitor.
+"""Module to handle quirks of the Sinopé Technologies water leak sensor and level monitor.
 
 It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S and LM4110-ZB
@@ -27,9 +27,7 @@ from zhaquirks.const import (
     OUTPUT_CLUSTERS,
     PROFILE_ID,
 )
-from zhaquirks.sinope import SINOPE
-
-SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
 class SinopeManufacturerCluster(CustomCluster):
@@ -43,8 +41,8 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0004: ("firmware_version", t.CharacterString, True),
         0x0030: ("unknown_attr_2", t.uint8_t, True),
         0x0031: ("unknown_attr_3", t.uint16_t, True),
-        0x0032: ("unknown_attr_4", t.int16s, True),
-        0x0033: ("unknown_attr_5", t.int16s, True),
+        0x0032: ("min_device_temperature", t.int16s, True),
+        0x0033: ("max_device_temperature", t.int16s, True),
         0x0034: ("unknown_attr_6", t.bitmap8, True),
         0x0035: ("unknown_attr_7", t.uint16_t, True),
         0x0036: ("unknown_attr_8", t.uint16_t, True),
