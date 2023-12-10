@@ -183,6 +183,7 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
         Min_20 = 0x04B0
         Min_25 = 0x05DC
         Min_30 = 0x0708
+        Off = 0xFFFF
 
     attributes = Thermostat.attributes.copy()
     attributes.update(
