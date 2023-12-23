@@ -100,16 +100,16 @@ class SinopeManufacturerCluster(CustomCluster):
     class FlowDuration(t.uint32_t):
         """Abnormal flow duration."""
 
-        M_15 = 0x0384
-        M_30 = 0x0708
-        M_45 = 0x0A8C
-        M_60 = 0x0E10
-        M_75 = 0x1194
-        M_90 = 0x1518
-        H_3 = 0x2A30
-        H_6 = 0x5460
-        H_12 = 0xA8C0
-        H_24 = 0x15180
+        M_15 = 0x00000384
+        M_30 = 0x00000708
+        M_45 = 0x00000A8C
+        M_60 = 0x00000E10
+        M_75 = 0x00001194
+        M_90 = 0x00001518
+        H_3 = 0x00002A30
+        H_6 = 0x00005460
+        H_12 = 0x0000A8C0
+        H_24 = 0x00015180
 
     class InputDelay(t.uint16_t):
         """Delay for on/off input."""
