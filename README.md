@@ -249,6 +249,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write|
+|1|0xff01|0x02A0|672|t.uint16_t|input_on_delay|seconds, 0=off, 0 to 10800|read/write|
+|1|0xff01|0x02A1|673|t.uint16_t|input_off_delay|seconds, 0=off, 0 to 10800|read/write|
+|2|0xff01|0x02A0|672|t.uint16_t|input_on_delay|seconds, 0=off, 0 to 10800|read/write|
+|2|0xff01|0x02A1|673|t.uint16_t|input_off_delay|seconds, 0=off, 0 to 10800|read/write|
 |1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
