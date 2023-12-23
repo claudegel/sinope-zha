@@ -111,6 +111,20 @@ class SinopeManufacturerCluster(CustomCluster):
         H_12 = 0xA8C0
         H_24 = 0x15180
 
+    class InputDelay(t.uint16_t):
+        """Delay for on/off input."""
+
+        Off = 0x0000
+        M_1 = 0x003C
+        M_2 = 0x0078
+        M_5 = 0x012C
+        M_10 = 0x0258
+        M_15 = 0x0384
+        M_30 = 0x0708
+        H_1 = 0x0E10
+        H_2 = 0x1C20
+        H_3 = 0x2A30
+
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
@@ -162,6 +176,8 @@ class SinopeManufacturerCluster(CustomCluster):
         0x0282: ("unknown_attr_19", t.uint16_t, True),
         0x0283: ("cold_load_pickup_status", ColdStatus, True),
         0x0284: ("cold_load_pickup_remaining_time", t.uint16_t, True),
+        0x02A0: ("input_on_delay", InputDelay, True),
+        0x02A1: ("input_off_delay", InputDelay, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
