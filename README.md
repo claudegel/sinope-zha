@@ -341,7 +341,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
-|0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72|read|
+|0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72, 133|read|
 |0xff01|0x0036|54|t.uint16_t|Battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
