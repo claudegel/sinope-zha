@@ -813,8 +813,8 @@ You can use any temperature source, local or remote.
               value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
   mode: single
 ```
-- Setting the little icon Eco to flash on the thermostat duroing peak
-- ```
+- Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
+```
   - id: eco flash
   alias: eco_flash
   trigger:
