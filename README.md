@@ -813,6 +813,37 @@ You can use any temperature source, local or remote.
               value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
   mode: single
 ```
+- Setting the little icon Eco to flash on the thermostat duroing peak
+- ```
+  - id: eco flash
+  alias: eco_flash
+  trigger:
+    - platform: time
+      at: 
+        - "06:00:00"
+        - "16:00:00"
+  condition:
+    condition: state
+    entity_id: binary_sensor.hydroqc_maison_upcoming_critical_peak
+    state: 'on'
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:26:6d
+      - 38:5c:fb:ff:fe:d9:ea:f4
+  action:
+    - repeat:
+        count: "{{thermostats|length}}"
+        sequence:
+          - service: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01
+              cluster_type: in
+              attribute: 0x0071
+              value: 0
+  mode: single
+  ```
 # Device hard reset:
 - Thermostats:
 
