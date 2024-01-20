@@ -815,7 +815,7 @@ You can use any temperature source, local or remote.
 ```
 - Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
 ```
-  - id: eco flash
+- id: eco flash
   alias: eco_flash
   trigger:
     - platform: time
