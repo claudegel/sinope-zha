@@ -39,7 +39,7 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
 - Thermostats:
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
@@ -109,7 +109,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|Unknown|0, 1|read/write|
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
@@ -143,7 +143,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch SP2600ZB, SP2610ZB
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0220|544|t.bitmap16|Unknown|0|report/read/write|
@@ -160,7 +160,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch RM3250ZB, Load Controller
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|unknown|0, 1|read/write|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
@@ -187,7 +187,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch RM3500ZB, Calypso water tank controller
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
 |0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
@@ -242,7 +242,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch MC3100ZB, multi controller
 
-|Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|report/read|
 |1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|report/read|
@@ -265,7 +265,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch valve VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
 |0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
@@ -284,7 +284,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Switch valve VA4220ZB G2, VA4221ZB G2 with flow meter
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0000|0x0007|7|t.enum8|power_source|129,130=mains, 3=battery, 4=dc|read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -332,7 +332,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Sensors WL4200, WL4200S, WL4200C, WL4210
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|Firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
@@ -354,7 +354,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - Sensors LM4110-ZB, tank level monitor
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|report/read|
 |0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|report/read|
