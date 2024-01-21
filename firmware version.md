@@ -4,6 +4,7 @@ This is for zigbee devices only as wifi devices can only be managed in Neviweb a
 If your firmware is lower then what is stated here. Connect your device is Neviweb for a firmware update.
 
 - Thermostats:
+
 |Device model|hardware version|firmware version|Note|
 |TH1123ZB| 2 |0.6.8 | |
 |TH1124ZB| | | |
@@ -17,13 +18,15 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |OTH3600-GA-ZB| | |
 |HP6000ZB| | |
 
-- Light and dimmers
+- Light and dimmers:
+
 |Device model|hardware version|firmware version|
 |DM2500ZB| 0 |1.3.2 |
 |DM2550ZB| 0 |0.1.2 |
 |SW2500ZB| | |
 
-- Valves water leak sensor
+- Valves and water leak sensor:
+
 |Device model|hardware version|firmware version| Note|
 |VA4220ZB| | | 2e gen with flow meter|
 |VA4200ZB| 0 |1.3.2 | |
@@ -31,12 +34,14 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |WL4200S| 0 |1.1.3 |With remote sensor|
 |WL4210C| | |With perimeter cable
 
-- Plug
+- Plug:
+
 |Device model|hardware version|firmware version|
 |SP2600ZB| 1 |0.0.9 |
 |SP2610ZB| 1 |0.0.8 |
 
-- Controllers
+- Controllers:
+
 |Device model|hardware version|firmware version|
 |RM3250ZB| 0 |1.3.3 |
 |RM3500ZB| 0 |0.3.0 |
