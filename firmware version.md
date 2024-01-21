@@ -6,6 +6,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 - Thermostats:
 
 |Device model|hardware version|firmware version|Note|
+| --- | --- | --- | --- |
 |TH1123ZB| 2 |0.6.8 | |
 |TH1124ZB| | | |
 |TH1123ZB-G2| 0 |0.1.3 | |
@@ -20,14 +21,16 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 
 - Light and dimmers:
 
-|Device model|hardware version|firmware version|
-|DM2500ZB| 0 |1.3.2 |
-|DM2550ZB| 0 |0.1.2 |
-|SW2500ZB| | |
+|Device model|hardware version|firmware version|Note|
+| --- | --- | --- | --- |
+|DM2500ZB| 0 |1.3.2 | |
+|DM2550ZB| 0 |0.1.2 | |
+|SW2500ZB| | | |
 
 - Valves and water leak sensor:
 
 |Device model|hardware version|firmware version| Note|
+| --- | --- | --- | --- |
 |VA4220ZB| | | 2e gen with flow meter|
 |VA4200ZB| 0 |1.3.2 | |
 |WL4200| 0 |1.0.2 | |
@@ -36,16 +39,18 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 
 - Plug:
 
-|Device model|hardware version|firmware version|
-|SP2600ZB| 1 |0.0.9 |
-|SP2610ZB| 1 |0.0.8 |
+|Device model|hardware version|firmware version|Note|
+| --- | --- | --- | --- |
+|SP2600ZB| 1 |0.0.9 | |
+|SP2610ZB| 1 |0.0.8 | |
 
 - Controllers:
 
-|Device model|hardware version|firmware version|
-|RM3250ZB| 0 |1.3.3 |
-|RM3500ZB| 0 |0.3.0 |
-|MC3100ZB| 0 |0.1.1 |
-|LM4110ZB| 0 |0.1.1 |
+|Device model|hardware version|firmware version|Note|
+| --- | --- | --- | --- |
+|RM3250ZB| 0 |1.3.3 | |
+|RM3500ZB| 0 |0.3.0 | |
+|MC3100ZB| 0 |0.1.1 | |
+|LM4110ZB| 0 |0.1.1 | |
 
 Please make a PR if you have newer firmware version or firmware for the one that are missing.
