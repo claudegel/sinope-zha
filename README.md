@@ -88,8 +88,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
 |0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
 |0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report
-|0x0201|0x0012|21|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
-|0x0201|0x0014|21|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
+|0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
+|0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
