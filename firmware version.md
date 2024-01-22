@@ -26,6 +26,9 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |DM2500ZB| 0 |1.3.2 | |
 |DM2550ZB| 0 |0.1.2 | |
 |SW2500ZB| 0 |1.3.2 | |
+|DM2500ZB-G2| | | |
+|SW2500ZB-G2| | | |
+|DM2500ZB-G2| | | |
 
 - Valves and water leak sensor:
 
