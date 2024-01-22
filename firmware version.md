@@ -8,7 +8,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
 |TH1123ZB| 2 |0.6.8 | |
-|TH1124ZB| | | |
+|TH1124ZB| 2 |0.6.8 | |
 |TH1123ZB-G2| 0 |0.1.3 | |
 |TH1124ZB-G2| 0 |0.1.3 | |
 |TH1134ZB| | | |
@@ -25,7 +25,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 | --- | --- | --- | --- |
 |DM2500ZB| 0 |1.3.2 | |
 |DM2550ZB| 0 |0.1.2 | |
-|SW2500ZB| | | |
+|SW2500ZB| 0 |1.3.2 | |
 
 - Valves and water leak sensor:
 
