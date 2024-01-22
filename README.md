@@ -81,7 +81,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
-|0xff01|0x0202|514|t.enum8|unknown|2|read|
+|0xff01|0x0202|514|t.enum8|unknown|2,6|read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
