@@ -42,6 +42,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
 |SP2600ZB| 1 |0.0.9 | |
+|SP2600ZB| 1 |0.1.8 | |
 |SP2610ZB| 1 |0.0.8 | |
 
 - Controllers:
@@ -52,5 +53,11 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |RM3500ZB| 0 |0.3.0 | |
 |MC3100ZB| 0 |0.1.1 | |
 |LM4110ZB| 0 |0.1.1 | |
+
+- Gateway:
+
+|Device model|hardware version|firmware version|Note|
+| --- | --- | --- | --- |
+|GT130| 3 |2.5.4 | |
 
 Please make a PR if you have newer firmware version or firmware for the one that are missing.
