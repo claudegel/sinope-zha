@@ -51,7 +51,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
-|0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255=100%, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
+|0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255:off, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
