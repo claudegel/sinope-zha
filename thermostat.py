@@ -41,6 +41,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
 
         Unlocked = 0x00
         Locked = 0x01
+        Partial_lock = 0x02
 
     class Display(t.enum8):
         """config_2nd_display values."""
