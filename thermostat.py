@@ -172,6 +172,7 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
 
         On_demand = 0x00
         Always_on = 0x01
+        Bedroom = 0x02
 
     class CycleOutput(t.uint16_t):
         """main and aux cycle period values."""
