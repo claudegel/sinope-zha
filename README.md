@@ -711,13 +711,14 @@ template:
         {% set gauge = states('input_text.tank_gauge') %} # must match the above input_text name
         {% set angle = states('sensor.current_angle') | float %}
         {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
-        {% set x_min = 110 | float %}
         {% if (gauge == "10-80") %}
+          {% set x_min = 110 | float %}
           {% set x_max = 406 | float %}
           {% set delta = 46 | float %}
           {% set low = 10 | float %}
           {% set high = 80 | float %}
         {% else %}
+          {% set x_min = 120 | float %}
           {% set x_max = 415 | float %}
           {% set delta = 55 | float %}
           {% set low = 5 | float %}
