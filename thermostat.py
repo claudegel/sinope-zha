@@ -128,6 +128,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0071: ("eco_delta_setpoint", t.int8s, True),
         0x0072: ("eco_max_pi_heating_demand", t.uint8_t, True),
         0x0073: ("eco_safety_temperature_delta", t.uint8_t, True),
+        0x0080: ("unknown_attr_9", t.uint32_t, True),
         0x0100: ("unknown_attr_2", t.uint8_t, True),
         0x0101: ("unknown_attr_1", Array, True),
         0x0102: ("unknown_attr_3", t.uint8_t, True),
@@ -153,8 +154,15 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x012B: ("current_setpoint", t.int16s, True),
         0x012C: ("unknown_attr_4", Array, True),
         0x012D: ("report_local_temperature", t.int16s, True),
+        0x0139: ("unknown_attr_10", t.int16s, True),
+        0x013B: ("unknown_attr_11", t.bitmap8, True),
         0x0200: ("status", t.bitmap32, True),
         0x0202: ("unknown_attr_6", t.enum8, True),
+        0x0281: ("unknown_attr_12", t.uint16_t, True),
+        0x0283: ("unknown_attr_13", t.enum8, True),
+        0x0284: ("unknown_attr_14", t.uint16_t, True),
+        0x0285: ("unknown_attr_15", t.uint8_t, True),
+        0x0286: ("unknown_attr_16", t.uint8_t, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
 
