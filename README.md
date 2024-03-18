@@ -80,19 +80,32 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
+|0xff01|0x0139|313|t.int16s|unknown|-32768|report/read/write|
+|0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|2,6|read|
+|0xff01|0x0281|641|t.uint16_t|900|report/read/write|
+|0xff01|0x0283|643|t.enum8|1|report/read|
+|0xff01|0x0284|644|t.uint16_t|0|report/read/write|
+|0xff01|0x0285|645|t.uint8_t|65|report/read/write|
+|0xff01|0x0286|646|t.uint8_t|100|report/read/write|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
+|0x0201|0x0001|1|t.int16s|outdoor_temperature|celsius*100|report/read|
 |0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
+|0x0201|0x0003|3|t.int16s|abs_min_heat_setpoint_limit|celsius*100|report/read|
+|0x0201|0x0004|4|t.int16s|abs_max_heat_setpoint_limit|celsius*100|report/read|
 |0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
 |0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report
+|0x0201|0x0011|17|t.int16s|occupied_cooling_setpoint|celsius*100|report/read/write|
 |0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
 |0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
+|0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2|report/read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
+|0x0201|0x001E|30|t.enum8|running_mode|0=off, 4=heat|report/read|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1, bedroom: 2|read/write|
