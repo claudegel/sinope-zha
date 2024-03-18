@@ -112,6 +112,12 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         T30 = 0x1E
         T60 = 0x3C
 
+    class CycleLength(t.uint16_t):
+        """" cycle length, 15 sec (15) or 15 min (900 sec)"""
+        
+        Sec_15 = 0x000F
+        Min_15 = 0x0384
+
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
     name = "Sinopé Technologies Manufacturer specific"
     ep_attribute = "sinope_manufacturer_specific"
@@ -158,7 +164,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x013B: ("unknown_attr_11", t.bitmap8, True),
         0x0200: ("status", t.bitmap32, True),
         0x0202: ("unknown_attr_6", t.enum8, True),
-        0x0281: ("unknown_attr_12", t.uint16_t, True),
+        0x0281: ("cycle_length", CycleLength, True),
         0x0283: ("unknown_attr_13", t.enum8, True),
         0x0284: ("unknown_attr_14", t.uint16_t, True),
         0x0285: ("unknown_attr_15", t.uint8_t, True),
