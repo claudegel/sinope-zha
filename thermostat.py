@@ -145,7 +145,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x010D: ("room_temperature", t.int16s, True),
         0x0114: ("time_format", TimeFormat, True),
         0x0115: ("gfci_status", GfciStatus, True),
-        0x0116: ("aux_mode", SystemMode, True),
+        0x0116: ("hvac_mode", SystemMode, True),
         0x0117: ("unknown_attr_8", Array, True),
         0x0118: ("aux_connected_load", t.uint16_t, True),
         0x0119: ("connected_load", t.uint16_t, True),
