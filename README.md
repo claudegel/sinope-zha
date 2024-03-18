@@ -71,7 +71,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x010D|269|t.int16s|RoomTemperature|celsius*100|read|
 |0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
 |0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
-|0xff01|0x0116|278|t.enum8|auxMode|0=off, 1=auto, 3=cool, 4=heat|read|
+|0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
 |0xff01|0x0117|279|Array|unknown|Array(type=AnonymousLVList, value=[165, 82, 20, 0, 0, 0, 22, 0, 2, 15, 11, 23])|read|
 |0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
 |0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
