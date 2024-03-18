@@ -85,11 +85,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|2,6|read|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
-|0xff01|0x0283|643|t.enum8|1|unknown|report/read|
+|0xff01|0x0283|643|t.enum8|unknown|1|report/read|
 |0xff01|0x0284|644|t.uint16_tunknown||0|report/read/write|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|report/read/write|
 |0xff01|0x0286|646|t.uint8_t|unknown|100|report/read/write|
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0 |read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
 |0x0201|0x0001|1|t.int16s|outdoor_temperature|celsius*100|report/read|
