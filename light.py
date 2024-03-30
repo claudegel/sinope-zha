@@ -42,26 +42,26 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     class KeypadLock(t.enum8):
-        """keypad_lockout values."""
+        """Keypad_lockout values."""
 
         Unlocked = 0x00
         Locked = 0x01
         Partial_lock = 0x02
 
     class PhaseControl(t.enum8):
-        """Phase control value, reverse / forward"""
+        """Phase control value, reverse / forward."""
 
         Forward = 0x00
         Reverse = 0x01
 
     class DoubleFull(t.enum8):
-        """Double click up set full intensity"""
+        """Double click up set full intensity."""
 
         Off = 0x00
         On = 0x01
 
     class Action(t.enum8):
-        """action_report values."""
+        """Action_report values."""
 
         Single_on = 0x01
         Single_release_on = 0x02
