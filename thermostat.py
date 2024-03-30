@@ -103,7 +103,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Heat = 0x04
 
     class PumpDuration(t.enum8):
-        """Pump protection duration period values"""
+        """Pump protection duration period values."""
 
         T5 = 0x05
         T10 = 0x0A
@@ -113,7 +113,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         T60 = 0x3C
 
     class CycleLength(t.uint16_t):
-        """" cycle length, 15 sec (15) or 15 min (900 sec)"""
+        """"Cycle length, 15 sec (15) or 15 min (900 sec)."""
         
         Sec_15 = 0x000F
         Min_15 = 0x0384
@@ -177,20 +177,20 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     """SinopeTechnologiesThermostatCluster custom cluster."""
 
     class Occupancy(t.enum8):
-        """set_occupancy values."""
+        """Set_occupancy values."""
 
         Away = 0x00
         Home = 0x01
 
     class Backlight(t.enum8):
-        """backlight_auto_dim_param values."""
+        """Backlight_auto_dim_param values."""
 
         On_demand = 0x00
         Always_on = 0x01
         Bedroom = 0x02
 
     class CycleOutput(t.uint16_t):
-        """main and aux cycle period values."""
+        """Main and aux cycle period values."""
 
         Sec_15 = 0x000F
         Min_5 = 0x012C
