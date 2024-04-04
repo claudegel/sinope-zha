@@ -569,7 +569,7 @@ trigger:
       cluster_id: 65281
       args:
         attribute_id: 84
-        attribute_name: actionReport
+        attribute_name: action_report
         value: 4
 condition: []
 action:
