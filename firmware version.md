@@ -62,6 +62,6 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
-|GT130| 3 |2.5.4 | |
+|GT130| 3 |2.5.6 | |
 
 Please make a PR if you have newer firmware version or firmware for the one that are missing.
