@@ -70,6 +70,7 @@ class SinopeManufacturerCluster(CustomCluster):
         Notify = 0x01
         Close = 0x02
         Close_notify = 0x03
+        No_flow = 0x04
 
     class PowerSource(t.uint32_t):
         """Valve power source types."""
@@ -405,6 +406,7 @@ class SinopeTechnologiesNewLoadController(CustomDevice):
             }
         }
     }
+
 
 class SinopeTechnologiesValve(CustomDevice):
     """SinopeTechnologiesValve custom device."""
