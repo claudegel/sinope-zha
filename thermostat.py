@@ -37,14 +37,14 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     class KeypadLock(t.enum8):
-        """keypad_lockout values."""
+        """Keypad_lockout values."""
 
         Unlocked = 0x00
         Locked = 0x01
         Partial_lock = 0x02
 
     class Display(t.enum8):
-        """config_2nd_display values."""
+        """Config_2nd_display values."""
 
         Auto = 0x00
         Setpoint = 0x01
@@ -57,7 +57,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Floor = 0x02
 
     class AuxMode(t.enum8):
-        """aux_output_mode values."""
+        """Aux_output_mode values."""
 
         Off = 0x00
         On = 0x01
@@ -77,25 +77,25 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Max_air_reached = 0x03
 
     class SensorType(t.enum8):
-        """temp_sensor_type values."""
+        """Temp_sensor_type values."""
 
         Sensor_10k = 0x00
         Sensor_12k = 0x01
 
     class TimeFormat(t.enum8):
-        """time_format values."""
+        """Time_format values."""
 
         Format_24h = 0x00
         Format_12h = 0x01
 
     class GfciStatus(t.enum8):
-        """gfci_status values."""
+        """Gfci_status values."""
 
         Ok = 0x00
         Error = 0x01
 
     class SystemMode(t.enum8):
-        """system mode values."""
+        """System mode values."""
 
         Off = 0x00
         Auto = 0x01
@@ -134,6 +134,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0071: ("eco_delta_setpoint", t.int8s, True),
         0x0072: ("eco_max_pi_heating_demand", t.uint8_t, True),
         0x0073: ("eco_safety_temperature_delta", t.uint8_t, True),
+        0x0075: ("unknown_attr_17", t.bitmap32, True),
         0x0080: ("unknown_attr_9", t.uint32_t, True),
         0x0100: ("unknown_attr_2", t.uint8_t, True),
         0x0101: ("unknown_attr_1", Array, True),
