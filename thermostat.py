@@ -51,7 +51,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Outside_temperature = 0x02
 
     class FloorMode(t.enum8):
-        """air_floor_mode values."""
+        """Air_floor_mode values."""
 
         Air_by_floor = 0x01
         Floor = 0x02
