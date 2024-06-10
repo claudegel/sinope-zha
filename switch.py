@@ -347,8 +347,8 @@ class SinopeTechnologiesLoadController(CustomDevice):
     }
 
 
-class SinopeTechnologiesNewLoadController(CustomDevice):
-    """SinopeTechnologiesNewLoadController custom device."""
+class SinopeTechnologiesLoadController_V2(CustomDevice):
+    """SinopeTechnologiesLoadController version 2 custom device."""
 
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
@@ -687,8 +687,8 @@ class SinopeTechnologiesCalypso(CustomDevice):
     }
 
 
-class SinopeTechnologiesNewSwitch(CustomDevice):
-    """SinopeTechnologiesNewSwitch custom device."""
+class SinopeTechnologiesSwitch_V2(CustomDevice):
+    """SinopeTechnologiesSwitch version 2 custom device."""
 
     signature = {
         # <SimpleDescriptor(endpoint=1, profile=260,
