@@ -16,6 +16,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |TH1300ZB| 0 |1.2.0 |Floor Thermostats|
 |TH1400ZB| | |Low voltage|
 |TH1500ZB| | |Double poles
+|TH1134ZB-HC|3|0.2.2|Heat/cool thermostat|
 |OTH4000-ZB| | |
 |OTH3600-GA-ZB| | |
 |HP6000ZB| | |
