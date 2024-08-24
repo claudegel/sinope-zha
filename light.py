@@ -4,9 +4,13 @@ Supported devices SW2500ZB, SW2500ZB-G2 dimmer DM2500ZB, DM2500ZB-G2, DM2550ZB,
 DM2550ZB-G2.
 """
 
+import logging
+from typing import Any, Optional, Union
+
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
+from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import (
     Basic,
     DeviceTemperature,
@@ -23,20 +27,29 @@ from zigpy.zcl.clusters.smartenergy import Metering
 
 from zhaquirks import EventableCluster
 from zhaquirks.const import (
+    ATTRIBUTE_ID,
+    ATTRIBUTE_NAME,
+    COMMAND_BUTTON_DOUBLE,
+    COMMAND_BUTTON_HOLD,
     DEVICE_TYPE,
     ENDPOINTS,
     INPUT_CLUSTERS,
     MODELS_INFO,
     OUTPUT_CLUSTERS,
     PROFILE_ID,
+    VALUE,
+    ZHA_SEND_EVENT,
 )
 from zhaquirks.sinope import (
+    ATTRIBUTE_ACTION,
     LIGHT_DEVICE_TRIGGERS,
     SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
     CustomDeviceTemperatureCluster,
 )
 
+SINOPE_MANUFACTURER_CLUSTER_ID = 0xFF01
+
+_LOGGER = logging.getLogger(__name__)
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
@@ -73,7 +86,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         Double_off = 0x14
 
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
-    name = "Sinopé Technologies Manufacturer specific"
+    name = "SinopeTechnologiesManufacturerCluster"
     ep_attribute = "sinope_manufacturer_specific"
     attributes = {
         0x0001: ("unknown_attr_4", t.Bool, True),
@@ -99,6 +112,67 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         0x0200: ("status", t.bitmap32, True),
         0xFFFD: ("cluster_revision", t.uint16_t, True),
     }
+
+    server_commands = {
+        0x54: foundation.ZCLCommandDef(
+            "button_press",
+            {"command": t.uint8_t},
+            direction=foundation.Direction.Server_to_Client,
+            is_manufacturer_specific=True,
+        )
+    }
+
+    def handle_cluster_general_request(
+        self,
+        hdr: foundation.ZCLHeader,
+        args: list[Any],
+        *,
+        dst_addressing: Optional[
+            Union[t.Addressing.Group, t.Addressing.IEEE, t.Addressing.NWK]
+        ] = None,
+    ):
+        """Handle the cluster command."""
+        self.debug(
+            "SINOPE cluster general request: hdr: %s - args: [%s]",
+            hdr,
+            args,
+        )
+
+        if hdr.command_id != foundation.GeneralCommand.Report_Attributes:
+            return super().handle_cluster_general_request(
+                hdr, args, dst_addressing=dst_addressing
+            )
+
+        attr = args[0][0]
+
+        if attr.attrid != self.attributes_by_name["action_report"].id:
+            return super().handle_cluster_general_request(
+                hdr, args, dst_addressing=dst_addressing
+            )
+
+        value = attr.value.value
+        event_args = {
+            ATTRIBUTE_ID: 84,
+            ATTRIBUTE_NAME: ATTRIBUTE_ACTION,
+            VALUE: value.value,
+        }
+        action = self._get_command_from_action(self.Action(value))
+        if not action:
+            return
+        self.listener_event(ZHA_SEND_EVENT, action, event_args)
+
+    def _get_command_from_action(self, action: Action) -> str | None:
+        # const lookup = {2: 'up_single', 3: 'up_hold', 4: 'up_double',
+        #             18: 'down_single', 19: 'down_hold', 20: 'down_double'};
+        match action:
+            case self.Action.Single_off | self.Action.Single_on:
+                return None
+            case self.Action.Double_off | self.Action.Double_on:
+                return COMMAND_BUTTON_DOUBLE
+            case self.Action.Long_off | self.Action.Long_on:
+                return COMMAND_BUTTON_HOLD
+            case _:
+                return None
 
 
 class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerCluster):
