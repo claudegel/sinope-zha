@@ -4,8 +4,8 @@ Supported devices, SP2600ZB, SP2610ZB, RM3250ZB, RM3500ZB,
 VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
-from typing import Final
 
+from typing import Final
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
