@@ -41,7 +41,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
+|0xff01|0x0001|1|t.Bool|unknown|0, 1|read/write/report|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
@@ -347,7 +347,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0003|3|t.uint16_t|Firmware_number| |read|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
 |0xff01|0x0031|49|t.uint16_t|unknown|696, 774|read/write|
@@ -355,8 +355,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
 |0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72, 133|read|
-|0xff01|0x0036|54|t.uint16_t|Battery_type|7|read/write|
+|0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read|
+|0xff01|0x0200|512|t.bitmap32|status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
