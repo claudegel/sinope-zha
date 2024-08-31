@@ -31,6 +31,7 @@ from zhaquirks.const import (
 )
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
+
 class LeakStatus(t.enum8):
     """Leak_status values."""
 
