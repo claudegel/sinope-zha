@@ -5,6 +5,7 @@ of outdoor temperature, setting occupancy on/off and setting device time.
 """
 
 from typing import Final
+
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
