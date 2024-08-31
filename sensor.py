@@ -3,8 +3,8 @@
 It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S and LM4110-ZB
 """
-from typing import Final
 
+from typing import Final
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
@@ -55,10 +55,10 @@ class SinopeManufacturerCluster(CustomCluster):
     firmware_version: Final = foundation.ZCLAttributeDef(
         id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
     )
-    unknown_attr_2: Final = foundation.ZCLAttributeDef(
+    unknown_attr_1: Final = foundation.ZCLAttributeDef(
         id=0x0030, type=t.uint8_t, access="rw", is_manufacturer_specific=True
     )
-    unknown_attr_3: Final = foundation.ZCLAttributeDef(
+    unknown_attr_2: Final = foundation.ZCLAttributeDef(
         id=0x0031, type=t.uint16_t, access="rw", is_manufacturer_specific=True
     )
     min_temperature_limit: Final = foundation.ZCLAttributeDef(
@@ -70,13 +70,13 @@ class SinopeManufacturerCluster(CustomCluster):
     device_status: Final = foundation.ZCLAttributeDef(
         id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
     )
-    unknown_attr_7: Final = foundation.ZCLAttributeDef(
+    unknown_attr_3: Final = foundation.ZCLAttributeDef(
         id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
     )
     battery_type: Final = foundation.ZCLAttributeDef(
         id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
     )
-    unknown_attr_9: Final = foundation.ZCLAttributeDef(
+    unknown_attr_4: Final = foundation.ZCLAttributeDef(
         id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
     )
     status: Final = foundation.ZCLAttributeDef(
