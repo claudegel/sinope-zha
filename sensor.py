@@ -5,6 +5,7 @@ Supported devices are WL4200, WL4200S and LM4110-ZB
 """
 
 from typing import Final
+
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
