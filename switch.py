@@ -332,12 +332,12 @@ class CustomBasicCluster(CustomCluster, Basic):
 
     PowerSource: Final = PowerSource
 
-    attributes = Basic.attributes.copy()
-    attributes.update(
-        {
-            0x0007: ("power_source", PowerSource, True),
-        }
-    )
+    class AttributeDefs(Basic.BaseAttributeDefs):
+        """Sinope Manufacturer Basic Cluster Attributes."""
+
+        power_source: Final = basic.ZCLAttributeDef(
+            id=0x0007, type=PowerSource, access="r", is_manufacturer_specific=True
+        )
 
 
 class CustomMeteringCluster(CustomCluster, Metering):
@@ -349,13 +349,15 @@ class CustomMeteringCluster(CustomCluster, Metering):
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
 
-    attributes = Metering.attributes.copy()
-    attributes.update(
-        {
-            0x0200: ("status", ValveStatus, True),
-            0x0300: ("unit_of_measure", UnitOfMeasure, True),
-        }
-    )
+    class AttributeDefs(Metering.BaseAttributeDefs):
+        """Sinope Manufacturer Metering Cluster Attributes."""
+
+        status: Final = Metering.ZCLAttributeDef(
+            id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True
+        )
+        unit_of_measure: Final = Metering.ZCLAttributeDef(
+            id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
+        )
 
 
 class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
