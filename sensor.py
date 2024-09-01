@@ -95,7 +95,7 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer IasZone Cluster Attributes."""
 
-    leak_status: Final = foundation.ZCLAttributeDef(
+    leak_status: Final = IasZone.ZCLAttributeDef(
         id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
     )
 
