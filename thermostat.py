@@ -338,7 +338,7 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     CycleOutput: Final = CycleOutput
 
     class AttributeDefs(Thermostat.BaseAttributeDefs):
-        """Sinope Manufacturer Cluster Attributes."""
+        """Sinope Manufacturer Thermostat Cluster Attributes."""
 
         set_occupancy: Final = Thermostat.ZCLAttributeDef(
             id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True
