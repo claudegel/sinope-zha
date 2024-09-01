@@ -337,33 +337,72 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     Backlight: Final = Backlight
     CycleOutput: Final = CycleOutput
 
-    attributes = Thermostat.attributes.copy()
-    attributes.update(
-        {
-            0x0400: ("set_occupancy", Occupancy, True),
-            0x0401: ("main_cycle_output", CycleOutput, True),
-            0x0402: ("backlight_auto_dim_param", Backlight, True),
-            0x0404: ("aux_cycle_output", CycleOutput, True),
-            0x0421: ("unknown_attr_1", t.uint16_t, True),
-            0x0422: ("unknown_attr_2", t.uint16_t, True),
-            0x0423: ("unknown_attr_3", t.int16s, True),
-            0x0424: ("unknown_attr_4", t.int16s, True),
-            0x0425: ("unknown_attr_5", t.int16s, True),
-            0x0426: ("unknown_attr_6", t.int16s, True),
-            0x0427: ("unknown_attr_7", t.uint16_t, True),
-            0x0428: ("unknown_attr_8", t.uint16_t, True),
-            0x0429: ("unknown_attr_9", t.int16s, True),
-            0x0430: ("unknown_attr_10", t.int16s, True),
-            0x0431: ("unknown_attr_11", t.int16s, True),
-            0x0432: ("unknown_attr_12", t.int16s, True),
-            0x0433: ("unknown_attr_13", t.uint16_t, True),
-            0x0434: ("unknown_attr_14", t.uint16_t, True),
-            0x0435: ("unknown_attr_15", t.int16s, True),
-            0x0436: ("unknown_attr_16", t.uint16_t, True),
-            0x0439: ("unknown_attr_17", t.uint16_t, True),
-            0xFFFD: ("cluster_revision", t.uint16_t, True),
-        }
-    )
+    class AttributeDefs(Thermostat.BaseAttributeDefs):
+        """Sinope Manufacturer Cluster Attributes."""
+
+        set_occupancy: Final = Thermostat.ZCLAttributeDef(
+            id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True
+        )
+        main_cycle_output: Final = Thermostat.ZCLAttributeDef(
+            id=0x0401, type=CycleOutput, access="rw", is_manufacturer_specific=True
+        )
+        backlight_auto_dim_param: Final = Thermostat.ZCLAttributeDef(
+            id=0x0402, type=Backlight, access="rw", is_manufacturer_specific=True
+        )
+        aux_cycle_output: Final = Thermostat.ZCLAttributeDef(
+            id=0x0404, type=CycleOutput, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_1: Final = Thermostat.ZCLAttributeDef(
+            id=0x0421, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_2: Final = Thermostat.ZCLAttributeDef(
+            id=0x0422, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_3: Final = Thermostat.ZCLAttributeDef(
+            id=0x0423, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_4: Final = Thermostat.ZCLAttributeDef(
+            id=0x0424, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_5: Final = Thermostat.ZCLAttributeDef(
+            id=0x0425, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_6: Final = Thermostat.ZCLAttributeDef(
+            id=0x0426, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_7: Final = Thermostat.ZCLAttributeDef(
+            id=0x0427, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_8: Final = Thermostat.ZCLAttributeDef(
+            id=0x0428, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_9: Final = Thermostat.ZCLAttributeDef(
+            id=0x0429, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_10: Final = Thermostat.ZCLAttributeDef(
+            id=0x0430, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_11: Final = Thermostat.ZCLAttributeDef(
+            id=0x0431, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_12: Final = Thermostat.ZCLAttributeDef(
+            id=0x0432, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_13: Final = Thermostat.ZCLAttributeDef(
+            id=0x0433, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_14: Final = Thermostat.ZCLAttributeDef(
+            id=0x0434, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_15: Final = Thermostat.ZCLAttributeDef(
+            id=0x0435, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_16: Final = Thermostat.ZCLAttributeDef(
+            id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_17: Final = Thermostat.ZCLAttributeDef(
+            id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
 
 
 class SinopeTechnologiesElectricalMeasurementCluster(
@@ -371,14 +410,18 @@ class SinopeTechnologiesElectricalMeasurementCluster(
 ):
     """SinopeTechnologiesElectricalMeasurementCluster custom cluster."""
 
-    attributes = ElectricalMeasurement.attributes.copy()
-    attributes.update(
-        {
-            0x0551: ("current_summation_delivered", t.uint32_t, True),
-            0x0552: ("aux_setpoint_min", t.uint32_t, True),
-            0x0553: ("aux_setpoint_max", t.uint32_t, True),
-        }
-    )
+    class AttributeDefs(ElectricalMeasurement.BaseAttributeDefs):
+        """Sinope Manufacturer ElectricalMeasurement Cluster Attributes."""
+
+        current_summation_delivered: Final = ElectricalMeasurement.ZCLAttributeDef(
+            id=0x0551, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
+        )
+        aux_setpoint_min: Final = ElectricalMeasurement.ZCLAttributeDef(
+            id=0x0552, type=t.uint32_t, access="rw", is_manufacturer_specific=True
+        )
+        aux_setpoint_max: Final = ElectricalMeasurement.ZCLAttributeDef(
+            id=0x0553, type=t.uint32_t, access="rw", is_manufacturer_specific=True
+        )
 
 
 class SinopeTechnologiesThermostat(CustomDevice):
