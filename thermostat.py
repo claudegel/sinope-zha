@@ -43,7 +43,7 @@ class KeypadLock(t.enum8):
     Locked = 0x01
     Partial_lock = 0x02
 
-    
+
 class Display(t.enum8):
     """Config_2nd_display values."""
 
@@ -51,28 +51,28 @@ class Display(t.enum8):
     Setpoint = 0x01
     Outside_temperature = 0x02
 
-    
+
 class FloorMode(t.enum8):
     """Air_floor_mode values."""
 
     Air_by_floor = 0x01
     Floor = 0x02
 
-    
+
 class AuxMode(t.enum8):
     """Aux_output_mode values."""
 
     Off = 0x00
     On = 0x01
 
-    
+
 class PumpStatus(t.uint8_t):
     """Pump protection status."""
 
     Off = 0x00
     On = 0x01
 
-    
+
 class LimitStatus(t.uint8_t):
     """Floor limit status values."""
 
@@ -81,7 +81,7 @@ class LimitStatus(t.uint8_t):
     Max_reached = 0x02
     Max_air_reached = 0x03
 
-    
+
 class SensorType(t.enum8):
     """Temp_sensor_type values."""
 
@@ -95,14 +95,14 @@ class TimeFormat(t.enum8):
     Format_24h = 0x00
     Format_12h = 0x01
 
-    
+
 class GfciStatus(t.enum8):
     """Gfci_status values."""
 
     Ok = 0x00
     Error = 0x01
 
-    
+
 class SystemMode(t.enum8):
     """System mode values."""
 
@@ -111,7 +111,7 @@ class SystemMode(t.enum8):
     Cool = 0x03
     Heat = 0x04
 
-    
+
 class PumpDuration(t.enum8):
     """Pump protection duration period values."""
 
@@ -122,10 +122,10 @@ class PumpDuration(t.enum8):
     T30 = 0x1E
     T60 = 0x3C
 
-    
+
 class CycleLength(t.uint16_t):
     """Cycle length, 15 sec (15) or 15 min (900 sec)."""
-        
+
     Sec_15 = 0x000F
     Min_15 = 0x0384
 
@@ -136,7 +136,7 @@ class Occupancy(t.enum8):
     Away = 0x00
     Home = 0x01
 
-    
+
 class Backlight(t.enum8):
     """Backlight_auto_dim_param values."""
 
@@ -144,7 +144,7 @@ class Backlight(t.enum8):
     Always_on = 0x01
     Bedroom = 0x02
 
-    
+
 class CycleOutput(t.uint16_t):
     """Main and aux cycle period values."""
 
