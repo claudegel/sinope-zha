@@ -191,7 +191,10 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True
         )
         firmware_version: Final = foundation.ZCLAttributeDef(
-            id=0x0004, type=t.CharacterString, access="rp", is_manufacturer_specific=True
+            id=0x0004,
+            type=t.CharacterString,
+            access="rp",
+            is_manufacturer_specific=True,
         )
         outdoor_temp: Final = foundation.ZCLAttributeDef(
             id=0x0010, type=t.int16s, access="rwp", is_manufacturer_specific=True
