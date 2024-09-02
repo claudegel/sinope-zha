@@ -10,6 +10,7 @@ from typing import Final
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
+from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import (
     Basic,
     BinaryInput,
@@ -73,6 +74,7 @@ class AlarmAction(t.enum8):
     Close_notify = 0x03
     No_flow = 0x04
 
+
 class PowerSource(t.uint32_t):
     """Valve power source types."""
 
@@ -133,6 +135,7 @@ class InputDelay(t.uint16_t):
     H_2 = 0x1C20
     H_3 = 0x2A30
 
+
 class PowerSource(t.enum8):
     """Power source."""
 
@@ -142,6 +145,7 @@ class PowerSource(t.enum8):
     DC_source = 0x0004
     ACUPS_01 = 0x0081
     ACUPS01 = 0x0082
+
 
 class ValveStatus(t.bitmap8):
     """Valve_status."""
@@ -223,13 +227,13 @@ class SinopeManufacturerCluster(CustomCluster):
         dr_wt_time_on: Final = foundation.ZCLAttributeDef(
             id=0x0078, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_7: Final = foundation.ZCLAttributeDef(
+        unknown_attr_8: Final = foundation.ZCLAttributeDef(
             id=0x0079, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_8: Final = foundation.ZCLAttributeDef(
+        unknown_attr_9: Final = foundation.ZCLAttributeDef(
             id=0x007A, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_9: Final = foundation.ZCLAttributeDef(
+        unknown_attr_10: Final = foundation.ZCLAttributeDef(
             id=0x007B, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         min_measured_temp: Final = foundation.ZCLAttributeDef(
@@ -238,7 +242,7 @@ class SinopeManufacturerCluster(CustomCluster):
         max_measured_temp: Final = foundation.ZCLAttributeDef(
             id=0x007D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = foundation.ZCLAttributeDef(
+        unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
         current_summation_delivered: Final = foundation.ZCLAttributeDef(
@@ -250,31 +254,31 @@ class SinopeManufacturerCluster(CustomCluster):
         timer_countdown: Final = foundation.ZCLAttributeDef(
             id=0x00A1, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = foundation.ZCLAttributeDef(
+        unknown_attr_12: Final = foundation.ZCLAttributeDef(
             id=0x00B0, type=t.Bool, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_12: Final = foundation.ZCLAttributeDef(
+        unknown_attr_13: Final = foundation.ZCLAttributeDef(
             id=0x0101, type=Array, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_13: Final = foundation.ZCLAttributeDef(
+        unknown_attr_14: Final = foundation.ZCLAttributeDef(
             id=0x012A, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_14: Final = foundation.ZCLAttributeDef(
+        unknown_attr_15: Final = foundation.ZCLAttributeDef(
             id=0x012C, type=Array, access="rp", is_manufacturer_specific=True
         )
         status: Final = foundation.ZCLAttributeDef(
             id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_15: Final = foundation.ZCLAttributeDef(
+        unknown_attr_16: Final = foundation.ZCLAttributeDef(
             id=0x0202, type=t.enum8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_16: Final = foundation.ZCLAttributeDef(
+        unknown_attr_17: Final = foundation.ZCLAttributeDef(
             id=0x0203, type=t.enum8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = foundation.ZCLAttributeDef(
+        unknown_attr_18: Final = foundation.ZCLAttributeDef(
             id=0x0220, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_18: Final = foundation.ZCLAttributeDef(
+        unknown_attr_19: Final = foundation.ZCLAttributeDef(
             id=0x0221, type=t.bitmap16, access="rp", is_manufacturer_specific=True
         )
         alarm_flow_threshold: Final = foundation.ZCLAttributeDef(
@@ -304,10 +308,10 @@ class SinopeManufacturerCluster(CustomCluster):
         max_measured_value: Final = foundation.ZCLAttributeDef(
             id=0x0280, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_19: Final = foundation.ZCLAttributeDef(
+        unknown_attr_20: Final = foundation.ZCLAttributeDef(
             id=0x0281, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_19: Final = foundation.ZCLAttributeDef(
+        unknown_attr_21: Final = foundation.ZCLAttributeDef(
             id=0x0282, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         cold_load_pickup_status: Final = foundation.ZCLAttributeDef(
@@ -322,26 +326,24 @@ class SinopeManufacturerCluster(CustomCluster):
         input_off_delay: Final = foundation.ZCLAttributeDef(
             id=0x02A1, type=InputDelay, access="rw", is_manufacturer_specific=True
         )
-        cluster_revision: Final = foundation.ZCLAttributeDef(
-            id=0xFFFD, type=t.uint16_t, access="rp", is_manufacturer_specific=True
-        )
+        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
 
 
-class CustomBasicCluster(CustomCluster, Basic):
-    """Custom Basic Cluster."""
+class SinopeTechnologiesBasicCluster(CustomCluster, Basic):
+    """SinopetechnologiesBasicCluster custom cluster ."""
 
     PowerSource: Final = PowerSource
 
-    class AttributeDefs(Basic.BaseAttributeDefs):
+    class AttributeDefs(Basic.AttributeDefs):
         """Sinope Manufacturer Basic Cluster Attributes."""
 
-        power_source: Final = basic.ZCLAttributeDef(
+        power_source: Final = foundation.ZCLAttributeDef(
             id=0x0007, type=PowerSource, access="r", is_manufacturer_specific=True
         )
 
 
-class CustomMeteringCluster(CustomCluster, Metering):
-    """Custom Metering Cluster."""
+class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
+    """SinopeTechnologiesMeteringCluster custom cluster."""
 
     ValveStatus: Final = ValveStatus
     UnitOfMeasure: Final = UnitOfMeasure
@@ -349,18 +351,18 @@ class CustomMeteringCluster(CustomCluster, Metering):
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
 
-    class AttributeDefs(Metering.BaseAttributeDefs):
+    class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
 
-        status: Final = Metering.ZCLAttributeDef(
+        status: Final = foundation.ZCLAttributeDef(
             id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True
         )
-        unit_of_measure: Final = Metering.ZCLAttributeDef(
+        unit_of_measure: Final = foundation.ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
         )
 
 
-class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
+class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     """Custom flow measurement cluster that divides value by 10."""
 
     def _update_attribute(self, attrid, value):
@@ -405,7 +407,7 @@ class SinopeTechnologiesSwitch(CustomDevice):
                     Basic.cluster_id,
                     Identify.cluster_id,
                     OnOff.cluster_id,
-                    CustomMeteringCluster,
+                    SinopeTechnologiesMeteringCluster,
                     ElectricalMeasurement.cluster_id,
                     SinopeManufacturerCluster,
                 ],
@@ -578,7 +580,7 @@ class SinopeTechnologiesValve(CustomDevice):
         ENDPOINTS: {
             1: {
                 INPUT_CLUSTERS: [
-                    CustomBasicCluster,
+                    SinopeTechnologiesBasicCluster,
                     PowerConfiguration.cluster_id,
                     Identify.cluster_id,
                     Groups.cluster_id,
@@ -640,7 +642,7 @@ class SinopeTechnologiesValveG2(CustomDevice):
         ENDPOINTS: {
             1: {
                 INPUT_CLUSTERS: [
-                    CustomBasicCluster,
+                    SinopeTechnologiesBasicCluster,
                     PowerConfiguration.cluster_id,
                     Identify.cluster_id,
                     Groups.cluster_id,
@@ -648,9 +650,9 @@ class SinopeTechnologiesValveG2(CustomDevice):
                     OnOff.cluster_id,
                     LevelControl.cluster_id,
                     TemperatureMeasurement.cluster_id,
-                    CustomFlowMeasurementCluster,
+                    SinopeTechnologiesFlowMeasurementCluster,
                     IasZone.cluster_id,
-                    CustomMeteringCluster,
+                    SinopeTechnologiesMeteringCluster,
                     Diagnostic.cluster_id,
                     SinopeManufacturerCluster,
                 ],
@@ -854,7 +856,7 @@ class SinopeTechnologiesSwitch_V2(CustomDevice):
                     Basic.cluster_id,
                     Identify.cluster_id,
                     OnOff.cluster_id,
-                    CustomMeteringCluster,
+                    SinopeTechnologiesMeteringCluster,
                     ElectricalMeasurement.cluster_id,
                     LightLink.cluster_id,
                     SinopeManufacturerCluster,
