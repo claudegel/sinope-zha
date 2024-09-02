@@ -50,42 +50,41 @@ class SinopeManufacturerCluster(CustomCluster):
     class AttributeDefs(foundation.BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-    firmware_number: Final = foundation.ZCLAttributeDef(
-        id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
-    )
-    firmware_version: Final = foundation.ZCLAttributeDef(
-        id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
-    )
-    unknown_attr_1: Final = foundation.ZCLAttributeDef(
-        id=0x0030, type=t.uint8_t, access="rw", is_manufacturer_specific=True
-    )
-    unknown_attr_2: Final = foundation.ZCLAttributeDef(
-        id=0x0031, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-    )
-    min_temperature_limit: Final = foundation.ZCLAttributeDef(
-        id=0x0032, type=t.int16s, access="rw", is_manufacturer_specific=True
-    )
-    max_temperature_limit: Final = foundation.ZCLAttributeDef(
-        id=0x0033, type=t.int16s, access="rw", is_manufacturer_specific=True
-    )
-    device_status: Final = foundation.ZCLAttributeDef(
-        id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-    )
-    unknown_attr_3: Final = foundation.ZCLAttributeDef(
-        id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
-    )
-    battery_type: Final = foundation.ZCLAttributeDef(
-        id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-    )
-    unknown_attr_4: Final = foundation.ZCLAttributeDef(
-        id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
-    )
-    status: Final = foundation.ZCLAttributeDef(
-        id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
-    )
-    cluster_revision: Final = foundation.ZCLAttributeDef(
-        id=0xFFFD, type=t.uint16_t, access="r", is_manufacturer_specific=True
-    )
+        firmware_number: Final = foundation.ZCLAttributeDef(
+            id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
+        )
+        firmware_version: Final = foundation.ZCLAttributeDef(
+            id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
+        )
+        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+            id=0x0030, type=t.uint8_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+            id=0x0031, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        min_temperature_limit: Final = foundation.ZCLAttributeDef(
+            id=0x0032, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        max_temperature_limit: Final = foundation.ZCLAttributeDef(
+            id=0x0033, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        device_status: Final = foundation.ZCLAttributeDef(
+            id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+            id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
+        )
+        battery_type: Final = foundation.ZCLAttributeDef(
+            id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
+        )
+        status: Final = foundation.ZCLAttributeDef(
+            id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
+        )
+        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
+
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     """SinopeTechnologiesIasZoneCluster custom cluster."""
@@ -95,9 +94,9 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer IasZone Cluster Attributes."""
 
-    leak_status: Final = IasZone.AttributeDefs(
-        id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
-    )
+        leak_status: Final = foundation.ZCLAttributeDef(
+            id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
+        )
 
 
 class SinopeTechnologiesSensor(CustomDevice):
