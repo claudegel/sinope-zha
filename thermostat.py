@@ -170,7 +170,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     SensorType: Final = SensorType
     TimeFormat: Final = TimeFormat
     GfciStatus: Final = GfciStatus
-    SystemMode: Finaal = SystemMode
+    SystemMode: Final = SystemMode
     PumpDuration: Final = PumpDuration
     CycleLength: Final = CycleLength
 
@@ -292,7 +292,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         current_setpoint: Final = foundation.ZCLAttributeDef(
             id=0x012B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+        unknown_attr_9: Final = foundation.ZCLAttributeDef(
             id=0x012C, type=Array, access="r", is_manufacturer_specific=True
         )
         report_local_temperature: Final = foundation.ZCLAttributeDef(
@@ -301,13 +301,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_10: Final = foundation.ZCLAttributeDef(
             id=0x0139, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_8: Final = foundation.ZCLAttributeDef(
+        unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
         status: Final = foundation.ZCLAttributeDef(
             id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_9: Final = foundation.ZCLAttributeDef(
+        unknown_attr_12: Final = foundation.ZCLAttributeDef(
             id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True
         )
         cycle_length: Final = foundation.ZCLAttributeDef(
@@ -316,18 +316,16 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_13: Final = foundation.ZCLAttributeDef(
             id=0x0283, type=t.enum8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = foundation.ZCLAttributeDef(
+        unknown_attr_14: Final = foundation.ZCLAttributeDef(
             id=0x0284, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = foundation.ZCLAttributeDef(
+        unknown_attr_15: Final = foundation.ZCLAttributeDef(
             id=0x0285, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_12: Final = foundation.ZCLAttributeDef(
+        unknown_attr_16: Final = foundation.ZCLAttributeDef(
             id=0x0286, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        cluster_revision: Final = foundation.ZCLAttributeDef(
-            id=0xFFFD, type=t.uint16_t, access="r", is_manufacturer_specific=True
-        )
+        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
 
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
@@ -337,70 +335,70 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     Backlight: Final = Backlight
     CycleOutput: Final = CycleOutput
 
-    class AttributeDefs(Thermostat.BaseAttributeDefs):
+    class AttributeDefs(Thermostat.AttributeDefs):
         """Sinope Manufacturer Thermostat Cluster Attributes."""
 
-        set_occupancy: Final = Thermostat.ZCLAttributeDef(
+        set_occupancy: Final = foundation.ZCLAttributeDef(
             id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True
         )
-        main_cycle_output: Final = Thermostat.ZCLAttributeDef(
+        main_cycle_output: Final = foundation.ZCLAttributeDef(
             id=0x0401, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
-        backlight_auto_dim_param: Final = Thermostat.ZCLAttributeDef(
+        backlight_auto_dim_param: Final = foundation.ZCLAttributeDef(
             id=0x0402, type=Backlight, access="rw", is_manufacturer_specific=True
         )
-        aux_cycle_output: Final = Thermostat.ZCLAttributeDef(
+        aux_cycle_output: Final = foundation.ZCLAttributeDef(
             id=0x0404, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_1: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_1: Final = foundation.ZCLAttributeDef(
             id=0x0421, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_2: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_2: Final = foundation.ZCLAttributeDef(
             id=0x0422, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_3: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_3: Final = foundation.ZCLAttributeDef(
             id=0x0423, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_4: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_4: Final = foundation.ZCLAttributeDef(
             id=0x0424, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_5: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_5: Final = foundation.ZCLAttributeDef(
             id=0x0425, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_6: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_6: Final = foundation.ZCLAttributeDef(
             id=0x0426, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_7: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_7: Final = foundation.ZCLAttributeDef(
             id=0x0427, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_8: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_8: Final = foundation.ZCLAttributeDef(
             id=0x0428, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_9: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_9: Final = foundation.ZCLAttributeDef(
             id=0x0429, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_10: Final = foundation.ZCLAttributeDef(
             id=0x0430, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x0431, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_12: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_12: Final = foundation.ZCLAttributeDef(
             id=0x0432, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_13: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_13: Final = foundation.ZCLAttributeDef(
             id=0x0433, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_14: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_14: Final = foundation.ZCLAttributeDef(
             id=0x0434, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_15: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_15: Final = foundation.ZCLAttributeDef(
             id=0x0435, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_16: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_16: Final = foundation.ZCLAttributeDef(
             id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = Thermostat.ZCLAttributeDef(
+        unknown_attr_17: Final = foundation.ZCLAttributeDef(
             id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
 
@@ -410,16 +408,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
 ):
     """SinopeTechnologiesElectricalMeasurementCluster custom cluster."""
 
-    class AttributeDefs(ElectricalMeasurement.BaseAttributeDefs):
+    class AttributeDefs(ElectricalMeasurement.AttributeDefs):
         """Sinope Manufacturer ElectricalMeasurement Cluster Attributes."""
 
-        current_summation_delivered: Final = ElectricalMeasurement.ZCLAttributeDef(
+        current_summation_delivered: Final = foundation.ZCLAttributeDef(
             id=0x0551, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
         )
-        aux_setpoint_min: Final = ElectricalMeasurement.ZCLAttributeDef(
+        aux_setpoint_min: Final = foundation.ZCLAttributeDef(
             id=0x0552, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
-        aux_setpoint_max: Final = ElectricalMeasurement.ZCLAttributeDef(
+        aux_setpoint_max: Final = foundation.ZCLAttributeDef(
             id=0x0553, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
 
