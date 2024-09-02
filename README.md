@@ -56,7 +56,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
-|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read/report|
+|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celsius * 100|read/write|
