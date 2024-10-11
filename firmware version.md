@@ -39,7 +39,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |VA4220ZB| 0 |0.1.4 | 2e gen with flow meter|
 |VA4200ZB| 0 |1.3.2 | |
 |WL4200| 0 |1.0.2 | |
-|WL4200S| 0 |1.1.3 |With remote sensor|
+|WL4200S| 0 |1.2.5 |With remote sensor|
 |WL4210C| | |With perimeter cable
 
 - Plug:
