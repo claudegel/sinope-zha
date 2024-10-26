@@ -34,7 +34,7 @@ from zhaquirks.const import (
     PROFILE_ID,
 )
 
-from . import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
 class KeypadLock(t.enum8):
