@@ -4,9 +4,12 @@ It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S and LM4110-ZB
 """
 
+from typing import Final
+
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
+from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import (
     AnalogInput,
     Basic,
@@ -30,43 +33,70 @@ from zhaquirks.const import (
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
+class LeakStatus(t.enum8):
+    """Leak_status values."""
+
+    Dry = 0x00
+    Leak = 0x01
+
+
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
 
-    cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
-    name = "Sinopé Manufacturer specific"
-    ep_attribute = "sinope_manufacturer_specific"
-    attributes = {
-        0x0003: ("firmware_number", t.uint16_t, True),
-        0x0004: ("firmware_version", t.CharacterString, True),
-        0x0030: ("unknown_attr_2", t.uint8_t, True),
-        0x0031: ("unknown_attr_3", t.uint16_t, True),
-        0x0032: ("min_temperature_limit", t.int16s, True),
-        0x0033: ("max_temperature_limit", t.int16s, True),
-        0x0034: ("device_status", t.bitmap8, True),
-        0x0035: ("unknown_attr_7", t.uint16_t, True),
-        0x0036: ("unknown_attr_8", t.uint16_t, True),
-        0x0080: ("unknown_attr_9", t.uint32_t, True),
-        0x0200: ("status", t.bitmap32, True),
-        0xFFFD: ("cluster_revision", t.uint16_t, True),
-    }
+    cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
+    name: Final = "SinopeManufacturerCluster"
+    ep_attribute: Final = "sinope_manufacturer_specific"
+
+    class AttributeDefs(foundation.BaseAttributeDefs):
+        """Sinope Manufacturer Cluster Attributes."""
+
+        firmware_number: Final = foundation.ZCLAttributeDef(
+            id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
+        )
+        firmware_version: Final = foundation.ZCLAttributeDef(
+            id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
+        )
+        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+            id=0x0030, type=t.uint8_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+            id=0x0031, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        min_temperature_limit: Final = foundation.ZCLAttributeDef(
+            id=0x0032, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        max_temperature_limit: Final = foundation.ZCLAttributeDef(
+            id=0x0033, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        device_status: Final = foundation.ZCLAttributeDef(
+            id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+            id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
+        )
+        battery_type: Final = foundation.ZCLAttributeDef(
+            id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
+        )
+        status: Final = foundation.ZCLAttributeDef(
+            id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
+        )
+        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     """SinopeTechnologiesIasZoneCluster custom cluster."""
 
-    class LeakStatus(t.enum8):
-        """Leak_status values."""
+    LeakStatus: Final = LeakStatus
 
-        Dry = 0x00
-        Leak = 0x01
+    class AttributeDefs(IasZone.AttributeDefs):
+        """Sinope Manufacturer IasZone Cluster Attributes."""
 
-    attributes = IasZone.attributes.copy()
-    attributes.update(
-        {
-            0x0030: ("leak_status", LeakStatus, True),
-        }
-    )
+        leak_status: Final = foundation.ZCLAttributeDef(
+            id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
+        )
 
 
 class SinopeTechnologiesSensor(CustomDevice):

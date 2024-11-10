@@ -41,7 +41,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
+|0xff01|0x0001|1|t.Bool|unknown|0, 1|read/write/report|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
@@ -56,7 +56,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
-|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read/report|
+|0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celsius * 100|read/write|
@@ -139,13 +139,13 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
 |0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
 |0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
-|0xff01|0x0080|128|t.uint32_t|Unknown| |read|
+|0xff01|0x0080|128|t.uint32_t|Unknown|16908288|read|
 |0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|report/read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -203,6 +203,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read/write/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
 |0xff01|0x0010|16|t.int16s|unknown|400| |
 |0xff01|0x0013|19|t.enum8|unknown|1,2,3,4,16,21|read/write|
@@ -216,6 +217,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2|read/write/report|
 |0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240|read/write/report|
 |0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
+|0xff01|0x0080|122|t.uint32_t|unknown|0|read/report|
+|0xff01|0x0090|132|t.uint32_t|current_summation_delivered|watt/hr|read/report|
 |0xff01|0x007A|122|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x007B|123|t.uint16_t|unknown|288|read/write/report|
 |0xff01|0x007C|124|t.int16s|min_measured_temp|water temp celsius*100|read/report|
@@ -225,7 +228,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write/report|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read/report|
 |0xff01|0x00B0|176|t.Bool|unknown|1|read/report|
-|0xff01|0x0101|257|Array|  |read/report|
+|0xff01|0x0101|257|Array| |read/report|
 |0xff01|0x012A|298|t.enum8|unknown|60|read/write/report|
 |0xff01|0x012C|300|Array|unknown|  |read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
@@ -234,7 +237,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0280|640|t.int16s|max_measured_value|5300|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0282|642|t.uint16_t|unknown|0|read/write/report|
-|0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read|
+|0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read/report|
 |0xff01|0x0284|644|t.uint16_t|coldLoadPickupRemainingTime|65535=off countdown| |
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -347,7 +350,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0003|3|t.uint16_t|Firmware_number| |read|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
 |0xff01|0x0031|49|t.uint16_t|unknown|696, 774|read/write|
@@ -355,8 +358,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
 |0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72, 133|read|
-|0xff01|0x0036|54|t.uint16_t|Battery_type|7|read/write|
+|0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read|
+|0xff01|0x0200|512|t.bitmap32|status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
@@ -759,11 +763,11 @@ template:
     thermostats:
       - 50:0b:91:40:00:02:2d:6d  #ieee of your thermostat dvices, one per line
       - 50:0b:91:40:00:02:2a:65
-  action:
+  actions:
     - repeat:  #service will be call for each ieee
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
@@ -780,8 +784,8 @@ template:
   trigger:
     - platform: time_pattern # send temperature evey 45 minutes
       minutes: '45'
-  action:
-    - service: zha.set_zigbee_cluster_attribute
+  actions:
+    - action: zha.set_zigbee_cluster_attribute
       data:
         ieee: 50:0b:91:32:01:03:6b:2f
         endpoint_id: 1
@@ -813,11 +817,11 @@ You can use any temperature source, local or remote.
   variables:
     thermostats:
       - 50:0b:91:40:00:02:26:6d ## add all your IEEE zigbee thermostats, one per line
-  action:
+  actions:
     - repeat:
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
@@ -844,11 +848,11 @@ You can use any temperature source, local or remote.
     thermostats:
       - 50:0b:91:40:00:02:26:6d
       - 38:5c:fb:ff:fe:d9:ea:f4
-  action:
+  actions:
     - repeat:
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
