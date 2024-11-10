@@ -1,4 +1,4 @@
-"""Module to handle quirks of the  Sinopé Technologies thermostats.
+"""Module to handle quirks of the Sinopé Technologies thermostats.
 
 Manufacturer specific cluster implements attributes to control displaying
 of outdoor temperature, setting occupancy on/off and setting device time.
