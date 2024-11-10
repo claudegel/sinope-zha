@@ -95,6 +95,9 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     class AttributeDefs(foundation.BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
+        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+            id=0x0001, type=t.Bool, access="rw", is_manufacturer_specific=True
+        )
         keypad_lockout: Final = foundation.ZCLAttributeDef(
             id=0x0002, type=KeypadLock, access="rw", is_manufacturer_specific=True
         )
@@ -106,6 +109,12 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         on_intensity: Final = foundation.ZCLAttributeDef(
             id=0x0010, type=t.int16s, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+            id=0x0012, type=t.enum8, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+            id=0x0013, type=t.enum8, access="rw", is_manufacturer_specific=True
         )
         on_led_color: Final = foundation.ZCLAttributeDef(
             id=0x0050, type=t.uint24_t, access="rw", is_manufacturer_specific=True
@@ -130,6 +139,9 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         double_up_full: Final = foundation.ZCLAttributeDef(
             id=0x0058, type=DoubleFull, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
         )
         current_summation_delivered: Final = foundation.ZCLAttributeDef(
             id=0x0090, type=t.uint32_t, access="rp", is_manufacturer_specific=True
