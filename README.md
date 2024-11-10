@@ -760,11 +760,11 @@ template:
     thermostats:
       - 50:0b:91:40:00:02:2d:6d  #ieee of your thermostat dvices, one per line
       - 50:0b:91:40:00:02:2a:65
-  action:
+  actions:
     - repeat:  #service will be call for each ieee
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
@@ -781,8 +781,8 @@ template:
   trigger:
     - platform: time_pattern # send temperature evey 45 minutes
       minutes: '45'
-  action:
-    - service: zha.set_zigbee_cluster_attribute
+  actions:
+    - action: zha.set_zigbee_cluster_attribute
       data:
         ieee: 50:0b:91:32:01:03:6b:2f
         endpoint_id: 1
@@ -814,11 +814,11 @@ You can use any temperature source, local or remote.
   variables:
     thermostats:
       - 50:0b:91:40:00:02:26:6d ## add all your IEEE zigbee thermostats, one per line
-  action:
+  actions:
     - repeat:
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
@@ -845,11 +845,11 @@ You can use any temperature source, local or remote.
     thermostats:
       - 50:0b:91:40:00:02:26:6d
       - 38:5c:fb:ff:fe:d9:ea:f4
-  action:
+  actions:
     - repeat:
         count: "{{thermostats|length}}"
         sequence:
-          - service: zha.set_zigbee_cluster_attribute
+          - action: zha.set_zigbee_cluster_attribute
             data:
               ieee: "{{ thermostats[repeat.index-1] }}"
               endpoint_id: 1
