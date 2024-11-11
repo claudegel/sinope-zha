@@ -746,8 +746,9 @@ class SinopeHPThermostats(SinopeTechnologiesThermostat):
         # input_clusters=[0, 3, 4, 5, 8, 513, 514, 516, 1026, 2821, 65281]
         # output_clusters=[25]>
         MODELS_INFO: [
-            (SINOPE, "HP6000ZB-MA"),
             (SINOPE, "HP6000ZB-GE"),
+            (SINOPE, "HP6000ZB-HS"),
+            (SINOPE, "HP6000ZB-MA"),
         ],
         ENDPOINTS: {
             1: {
