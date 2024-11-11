@@ -5,9 +5,12 @@ VA4220ZB, VA4221ZB,
 2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
 
+from typing import Final
+
 import zigpy.profiles.zha as zha_p
 from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
+from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import (
     Basic,
     DeviceTemperature,
@@ -20,10 +23,7 @@ from zigpy.zcl.clusters.general import (
     Scenes,
 )
 from zigpy.zcl.clusters.homeautomation import Diagnostic
-from zigpy.zcl.clusters.measurement import (
-    FlowMeasurement,
-    TemperatureMeasurement,
-)
+from zigpy.zcl.clusters.measurement import FlowMeasurement, TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import Array
@@ -215,7 +215,7 @@ class CustomMeteringCluster(CustomCluster, Metering):
         )
         unit_of_measure: Final = foundation.ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
-
+        )
 
 class CustomFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     """Custom flow measurement cluster that divides value by 10."""
@@ -230,9 +230,8 @@ class SinopeTechnologiesValve(CustomDevice):
     """SinopeTechnologiesValve custom device."""
 
     signature = {
-        # <SimpleDescriptor(endpoint=1, profile=260,
-        # device_type=3, device_version=0,
-        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 2821, 65281]
+        # <SimpleDescriptor(endpoint=1, profile=260, device_type=3
+        # device_version=0, input_clusters=[0, 1, 3, 4, 5, 6, 8, 2821, 65281]
         # output_clusters=[3, 25]>
         MODELS_INFO: [
             (SINOPE, "VA4200WZ"),
@@ -292,10 +291,9 @@ class SinopeTechnologiesValveG2(CustomDevice):
     """SinopeTechnologiesValveG2 custom device."""
 
     signature = {
-        # <SimpleDescriptor(endpoint=1, profile=260,
-        # device_type=3, device_version=0,
-        # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
-        # output_clusters=[3, 6, 25]>
+        # <SimpleDescriptor(endpoint=1, profile=260, device_type=3
+        # device_version=0, input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794,
+        # 2821, 65281] output_clusters=[3, 6, 25]>
         MODELS_INFO: [
             (SINOPE, "VA4220ZB"),
             (SINOPE, "VA4221ZB"),
