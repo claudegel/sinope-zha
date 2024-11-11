@@ -347,7 +347,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
 
     ValveStatus: Final = ValveStatus
     UnitOfMeasure: Final = UnitOfMeasure
-    
+
     DIVISOR = 0x0302
     _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
 
