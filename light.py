@@ -88,6 +88,11 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     DoubleFull: Final = DoubleFull
     Action: Final = ButtonAction
 
+    def _update_attribute(self, attrid, value):
+        if attrid == self.AttributeDefs.current_summation_delivered.id:
+            value = value / 100
+        super()._update_attribute(attrid, value)
+
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
     name: Final = "SinopeTechnologiesManufacturerCluster"
     ep_attribute: Final = "sinope_manufacturer_specific"
