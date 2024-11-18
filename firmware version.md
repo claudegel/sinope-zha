@@ -19,7 +19,9 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |TH1134ZB-HC|3|0.2.2|Heat/cool thermostat|
 |OTH4000-ZB| | |
 |OTH3600-GA-ZB| | |
-|HP6000ZB| | |
+|HP6000ZB-ZB|0| 0.2.9|
+|HP6000ZB-MA|0| 0.2.9|
+|HP6000ZB-HS|0| 0.2.9|
 
 - Light and dimmers:
 
