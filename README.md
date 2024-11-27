@@ -45,7 +45,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100|read/write/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|off: -32768, celsius * 100|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
