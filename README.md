@@ -54,7 +54,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255:off, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
-|0xff01|0x0080|128|t.uint32_t|unknown|17563654|read/report|
+|0xff01|0x0080|128|t.uint32_t|unknown|0, 17563654, 17563656|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
@@ -80,15 +80,40 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
-|0xff01|0x0139|313|t.int16s|unknown|-32768|report/read/write|
+|0xff01|0x0130|304|t.bitmap8|unknown|2|read/write/report|
+|0xff01|0x0134|308|t.int16s|unknown|off: -32768|read/write/report|
+|0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
+|0xff01|0x0138|312|t.bitmap16|unknown|235|read/write/report|
+|0xff01|0x0139|313|t.int16s|unknown|off: -32768|report/read/write|
+|0xff01|0x013A|314|t.int16s|unknown|off: -32768|report/read/write|
 |0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
-|0xff01|0x0202|514|t.enum8|unknown|1,2,6|read|
+|0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
+|0xff01|0x0260|608|t.bitmap16|unknown|7967|read/write/report|
+|0xff01|0x0261|609|t.bitmap16|unknown|0|read/write/report|
+|0xff01|0x0262|610|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0263|611|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0264|612|t.enum8|unknown|1|read/write/report|
+|0xff01|0x0265|613|t.enum8|unknown|1|read/write/report|
+|0xff01|0x0266|614|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0268|616|t.bitmap8|unknown|2|read/write/report|
+|0xff01|0x0269|617|t.bitmap8|unknown|3|read/write/report|
+|0xff01|0x026A|618|t.bitmap8|unknown|15|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|report/read|
 |0xff01|0x0284|644|t.uint16_t|unknown|0|report/read/write|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|report/read/write|
 |0xff01|0x0286|646|t.uint8_t|unknown|100|report/read/write|
+|0xff01|0xFF04|65284|t.LVBytes|unknown|"\u0017"|report/read|
+|0xff01|0xFF05|65285|t.LVBytes|unknown|"\u0018"|report/read|
+|0xff01|0xFF06|65286|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF07|65287|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF08|65288|t.LVBytes|unknown|"3"|report/read|
+|0xff01|0xFF09|65289|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF0A|65290|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF0B|65291|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF0C|65292|t.LVBytes|unknown|""|report/read|
+|0xff01|0xFF0D|65293|t.LVBytes|unknown|""|report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
@@ -103,13 +128,19 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
-|0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2|report/read/write|
-|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat|read/write|
+|0x0201|0x0017|23|t.int16s|min_cool_setpoint_limit|celsius*100|read/write/report|
+|0x0201|0x0018|24|t.int16s|max_cool_setpoint_limit|celsius*100|read/write/report|
+|0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2, 4|report/read/write|
+|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat, 7=heat/cool|read/write|
 |0x0201|0x001E|30|t.enum8|running_mode|0=off, 4=heat|report/read|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1, bedroom: 2|read/write|
 |0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
+|0x0201|0x0437|1079|t.uint16_t|unknown|100|read/write/report|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0202|0x0000|0|t.enum8|fan_mode|0, 5|read/write/report|
+|0x0202|0x0001|1|t.enum8|fan_mode_sequence|2|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write|
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
@@ -117,6 +148,8 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celsius, 1=farenheight|read/write|
 |0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.int16s|measured_value|celsius*100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
 
