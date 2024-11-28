@@ -302,8 +302,23 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         report_local_temperature: Final = foundation.ZCLAttributeDef(
             id=0x012D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
+        unknown_attr_17: Final = foundation.ZCLAttributeDef(
+            id=0x0130, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_18: Final = foundation.ZCLAttributeDef(
+            id=0x0134, type=t.int16s, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_19: Final = foundation.ZCLAttributeDef(
+            id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_20: Final = foundation.ZCLAttributeDef(
+            id=0x0138, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
+        )
         unknown_attr_10: Final = foundation.ZCLAttributeDef(
             id=0x0139, type=t.int16s, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_21: Final = foundation.ZCLAttributeDef(
+            id=0x013A, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
@@ -313,6 +328,36 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         unknown_attr_12: Final = foundation.ZCLAttributeDef(
             id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True
+        )
+        unknown_attr_22: Final = foundation.ZCLAttributeDef(
+            id=0x0260, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_23: Final = foundation.ZCLAttributeDef(
+            id=0x0261, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_24: Final = foundation.ZCLAttributeDef(
+            id=0x0262, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_25: Final = foundation.ZCLAttributeDef(
+            id=0x0263, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_26: Final = foundation.ZCLAttributeDef(
+            id=0x0264, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_27: Final = foundation.ZCLAttributeDef(
+            id=0x0265, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_28: Final = foundation.ZCLAttributeDef(
+            id=0x0266, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_29: Final = foundation.ZCLAttributeDef(
+            id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_30: Final = foundation.ZCLAttributeDef(
+            id=0x0269, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_31: Final = foundation.ZCLAttributeDef(
+            id=0x026A, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
         cycle_length: Final = foundation.ZCLAttributeDef(
             id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True
@@ -328,6 +373,36 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         unknown_attr_16: Final = foundation.ZCLAttributeDef(
             id=0x0286, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
+        )
+        unknown_attr_32: Final = foundation.ZCLAttributeDef(
+            id=0xFF04, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_33: Final = foundation.ZCLAttributeDef(
+            id=0xFF05, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_34: Final = foundation.ZCLAttributeDef(
+            id=0xFF06, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_35: Final = foundation.ZCLAttributeDef(
+            id=0xFF07, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_36: Final = foundation.ZCLAttributeDef(
+            id=0xFF08, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_37: Final = foundation.ZCLAttributeDef(
+            id=0xFF09, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_38: Final = foundation.ZCLAttributeDef(
+            id=0xFF0A, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_39: Final = foundation.ZCLAttributeDef(
+            id=0xFF0B, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_40: Final = foundation.ZCLAttributeDef(
+            id=0xFF0C, type=t.LVBytes, access="rp", is_manufacturer_specific=True
+        )
+        unknown_attr_41: Final = foundation.ZCLAttributeDef(
+            id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
         cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
 
@@ -401,6 +476,9 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
         )
         unknown_attr_16: Final = foundation.ZCLAttributeDef(
             id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True
+        )
+        unknown_attr_18: Final = foundation.ZCLAttributeDef(
+            id=0x0437, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_17: Final = foundation.ZCLAttributeDef(
             id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True
