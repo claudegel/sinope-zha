@@ -80,15 +80,40 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
+|0xff01|0x0130|304|t.bitmap8|unknown|2|report/read/write|
+|0xff01|0x0134|308|t.int16s|unknown|-32768=off|report/read/write|
+|0xff01|0x0135|309|t.int16s|unknown|300|report/read/write|
+|0xff01|0x0138|312|t.bitmap16|unknown|235|report/read/write|
 |0xff01|0x0139|313|t.int16s|unknown|-32768=off|report/read/write|
+|0xff01|0x013A|314|t.int16s|unknown|-32768=off|7967
 |0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|1,2,6|read|
+|0xff01|0x0260|608|t.bitmap16|unknown|7967|report/read/write|
+|0xff01|0x0261|609|t.bitmap16|unknown|0|report/read/write|
+|0xff01|0x0262|610|t.enum8|unknown|0|report/read/write|
+|0xff01|0x0263|611|t.enum8|unknown|0|report/read/write|
+|0xff01|0x0264|612|t.enum8|unknown|1|report/read/write|
+|0xff01|0x0265|613|t.enum8|unknown|1|report/read/write|
+|0xff01|0x0266|614|t.enum8|unknown|0|report/read/write|
+|0xff01|0x0268|616|t.bitmap8|unknown|2|report/read/write|
+|0xff01|0x0269|617|t.bitmap8|unknown|3|report/read/write|
+|0xff01|0x026A|618|t.bitmap8|unknown|15|report/read/write|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|report/read|
 |0xff01|0x0284|644|t.uint16_t|unknown|0|report/read/write|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|report/read/write|
 |0xff01|0x0286|646|t.uint8_t|unknown|100|report/read/write|
+|0xff01|0xFF04|65284|LVBytes|unknown|\u0017|report/read|
+|0xff01|0xFF05|65285|LVBytes|unknown|\u0018|report/read|
+|0xff01|0xFF06|65286|LVBytes|unknown| |report/read|
+|0xff01|0xFF07|65287|LVBytes|unknown| |report/read|
+|0xff01|0xFF08|65288|LVBytes|unknown|3|report/read|
+|0xff01|0xFF09|65289|LVBytes|unknown| |report/read|
+|0xff01|0xFF0A|65290|LVBytes|unknown| |report/read|
+|0xff01|0xFF0B|65291|LVBytes|unknown| |report/read|
+|0xff01|0xFF0C|65292|LVBytes|unknown| |report/read|
+|0xff01|0xFF0D|65293|LVBytes|unknown| |report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
