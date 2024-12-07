@@ -80,7 +80,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
-|0xff01|0x0139|313|t.int16s|unknown|-32768|report/read/write|
+|0xff01|0x0139|313|t.int16s|unknown|-32768=off|report/read/write|
 |0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|1,2,6|read|
