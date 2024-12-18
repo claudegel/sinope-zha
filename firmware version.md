@@ -8,6 +8,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
 |TH1123ZB| 2 |0.6.8 | |
+|TH1124ZB| 1 |0.6.4 | |
 |TH1124ZB| 2 |0.6.8 | |
 |TH1124ZB| 3 |0.6.9 | |
 |TH1123ZB-G2| 0 |0.1.4 | |
