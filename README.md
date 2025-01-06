@@ -45,9 +45,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100|read/write/report|
+|0xff01|0x0005|5|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100, -32768=off|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
+|0xff01|0x0013|19|t.enum8|unknown|0|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
@@ -81,25 +83,34 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
 |0xff01|0x0130|304|t.bitmap8|unknown|2|report/read/write|
-|0xff01|0x0134|308|t.int16s|unknown|-32768=off|report/read/write|
+|0xff01|0x0134|308|t.int16s|unknown|-32768=off, -1000|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|report/read/write|
-|0xff01|0x0138|312|t.bitmap16|unknown|235|report/read/write|
+|0xff01|0x0136|310|t.uint16_t|unknown|10800|read/write/report|
+|0xff01|0x0137|311|t.int16s|unknown|500|read/write/report|
+|0xff01|0x0138|312|t.bitmap16|unknown|235, 195|report/read/write|
 |0xff01|0x0139|313|t.int16s|unknown|-32768=off|report/read/write|
-|0xff01|0x013A|314|t.int16s|unknown|-32768=off|7967
+|0xff01|0x013A|314|t.int16s|unknown|-32768=off|read/write/report|
 |0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
 |0xff01|0x0202|514|t.enum8|unknown|1,2,6|read|
-|0xff01|0x0260|608|t.bitmap16|unknown|7967|report/read/write|
+|0xff01|0x0260|608|t.bitmap16|unknown|0, 7967|report/read/write|
 |0xff01|0x0261|609|t.bitmap16|unknown|0|report/read/write|
 |0xff01|0x0262|610|t.enum8|unknown|0|report/read/write|
 |0xff01|0x0263|611|t.enum8|unknown|0|report/read/write|
-|0xff01|0x0264|612|t.enum8|unknown|1|report/read/write|
-|0xff01|0x0265|613|t.enum8|unknown|1|report/read/write|
+|0xff01|0x0264|612|t.enum8|unknown|0, 1|report/read/write|
+|0xff01|0x0265|613|t.enum8|unknown|0, 1|report/read/write|
 |0xff01|0x0266|614|t.enum8|unknown|0|report/read/write|
-|0xff01|0x0268|616|t.bitmap8|unknown|2|report/read/write|
-|0xff01|0x0269|617|t.bitmap8|unknown|3|report/read/write|
-|0xff01|0x026A|618|t.bitmap8|unknown|15|report/read/write|
+|0xff01|0x0267|615|EUI64|[255,255,255,255,255,255,255,255]|read/write/report|
+|0xff01|0x0268|616|t.bitmap8|unknown|0, 2|report/read/write|
+|0xff01|0x0269|617|t.bitmap8|unknown|0, 3|report/read/write|
+|0xff01|0x026A|618|t.bitmap8|unknown|0, 15|report/read/write|
+|0xff01|0x026B|619|t.int16s|unknown, setpoint_min?|1600|read/write/report|
+|0xff01|0x026C|620|t.int16s|unknown, setpoint_max?|3000|read/write/report|
+|0xff01|0x026D|621|t.int16s|unknown, cooling_setpoint_min?|1600|read/write/report|
+|0xff01|0x026E|622|t.int16s|unknown, cooling_setpoint_max?|3000|read/write/report|
+|0xff01|0x0280|640|t.int16s|unknown|10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
+|0xff01|0x0282|642|t.uint16_t|cycle_?|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|report/read|
 |0xff01|0x0284|644|t.uint16_t|unknown|0|report/read/write|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|report/read/write|
