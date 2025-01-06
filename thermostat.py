@@ -97,6 +97,13 @@ class TimeFormat(t.enum8):
     Format_12h = 0x01
 
 
+class WeatherView(t.enum8):
+    """Show weather on screen."""
+
+    Hide = 0x00
+    Show = 0x01
+
+
 class GfciStatus(t.enum8):
     """Gfci_status values."""
 
@@ -170,6 +177,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     LimitStatus: Final = LimitStatus
     SensorType: Final = SensorType
     TimeFormat: Final = TimeFormat
+    WeatherView: Final = WeatherView
     GfciStatus: Final = GfciStatus
     SystemMode: Final = SystemMode
     PumpDuration: Final = PumpDuration
@@ -209,8 +217,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         config_2nd_display: Final = foundation.ZCLAttributeDef(
             id=0x0012, type=Display, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_18: Final = foundation.ZCLAttributeDef(
-            id=0x0013, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        weather_view: Final = foundation.ZCLAttributeDef(
+            id=0x0013, type=WeatherView, access="rwp", is_manufacturer_specific=True
         )
         secs_since_2k: Final = foundation.ZCLAttributeDef(
             id=0x0020, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
