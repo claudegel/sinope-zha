@@ -49,7 +49,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100, -32768=off|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
-|0xff01|0x0013|19|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0013|19|t.enum8|weather_view|0=no weather, 1=weather|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
