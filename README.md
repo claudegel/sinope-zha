@@ -67,10 +67,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celsius*100|read/write|
 |0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celsius*100|read/write|
 |0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
-|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|report/read|
+|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|read/report|
 |0xff01|0x010D|269|t.int16s|RoomTemperature|celsius*100|read|
 |0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
-|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|report/read|
+|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|read/report|
 |0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
 |0xff01|0x0117|279|Array|unknown|Array(type=AnonymousLVList, value=[165, 82, 20, 0, 0, 0, 22, 0, 2, 15, 11, 23])|read|
 |0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
@@ -84,10 +84,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0134|308|t.int16s|unknown|off: -32768|read/write/report|
 |0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
 |0xff01|0x0138|312|t.bitmap16|unknown|235|read/write/report|
-|0xff01|0x0139|313|t.int16s|unknown|off: -32768|report/read/write|
-|0xff01|0x013A|314|t.int16s|unknown|off: -32768|report/read/write|
-|0xff01|0x013B|315|t.bitmab8|unknown|0|report/read|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|report/read|
+|0xff01|0x0139|313|t.int16s|unknown|off: -32768|read/write/report|
+|0xff01|0x013A|314|t.int16s|unknown|off: -32768|read/write/report|
+|0xff01|0x013B|315|t.bitmab8|unknown|0|read/report|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
 |0xff01|0x0260|608|t.bitmap16|unknown|7967|read/write/report|
 |0xff01|0x0261|609|t.bitmap16|unknown|0|read/write/report|
@@ -99,32 +99,32 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0268|616|t.bitmap8|unknown|2|read/write/report|
 |0xff01|0x0269|617|t.bitmap8|unknown|3|read/write/report|
 |0xff01|0x026A|618|t.bitmap8|unknown|15|read/write/report|
-|0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
-|0xff01|0x0283|643|t.enum8|unknown|1|report/read|
-|0xff01|0x0284|644|t.uint16_t|unknown|0|report/read/write|
-|0xff01|0x0285|645|t.uint8_t|unknown|65|report/read/write|
-|0xff01|0x0286|646|t.uint8_t|unknown|100|report/read/write|
-|0xff01|0xFF04|65284|t.LVBytes|unknown|"\u0017"|report/read|
-|0xff01|0xFF05|65285|t.LVBytes|unknown|"\u0018"|report/read|
-|0xff01|0xFF06|65286|t.LVBytes|unknown|""|report/read|
-|0xff01|0xFF07|65287|t.LVBytes|unknown|""|report/read|
-|0xff01|0xFF08|65288|t.LVBytes|unknown|"3"|report/read|
-|0xff01|0xFF09|65289|t.LVBytes|unknown|""|report/read|
-|0xff01|0xFF0A|65290|t.LVBytes|unknown|""|report/read|
-|0xff01|0xFF0B|65291|t.LVBytes|unknown|""|report/read|
-|0xff01|0xFF0C|65292|t.LVBytes|unknown|""|report/read|
+|0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|read/write/report|
+|0xff01|0x0283|643|t.enum8|unknown|1|read/report|
+|0xff01|0x0284|644|t.uint16_t|unknown|0|read/write/report|
+|0xff01|0x0285|645|t.uint8_t|unknown|65|read/write/report|
+|0xff01|0x0286|646|t.uint8_t|unknown|100|read/write/report|
+|0xff01|0xFF04|65284|t.LVBytes|unknown|"\u0017"|read/report|
+|0xff01|0xFF05|65285|t.LVBytes|unknown|"\u0018"|read/report|
+|0xff01|0xFF06|65286|t.LVBytes|unknown|""|read/report|
+|0xff01|0xFF07|65287|t.LVBytes|unknown|""|read/report|
+|0xff01|0xFF08|65288|t.LVBytes|unknown|"3"|read/report|
+|0xff01|0xFF09|65289|t.LVBytes|unknown|""|read/report|
+|0xff01|0xFF0A|65290|t.LVBytes|unknown|""|read/report|
+|0xff01|0xFF0B|65291|t.LVBytes|unknown|""|read/report|
+|0xff01|0xFF0C|65292|t.LVBytes|unknown|""|read/report|
 |0xff01|0xFF0D|65293|t.LVBytes|unknown|""|report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|0|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|report/read|
-|0x0201|0x0001|1|t.int16s|outdoor_temperature|celsius*100|report/read|
+|0x0201|0x0000|0|t.int16s|LocalTemperature|celsius*100|read/report|
+|0x0201|0x0001|1|t.int16s|outdoor_temperature|celsius*100|read/report|
 |0x0201|0x0002|2|t.bitmap8|occupancy|1=occupied, 0=unoccupied|read|
-|0x0201|0x0003|3|t.int16s|abs_min_heat_setpoint_limit|celsius*100|report/read|
-|0x0201|0x0004|4|t.int16s|abs_max_heat_setpoint_limit|celsius*100|report/read|
-|0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|report/read|
-|0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report
-|0x0201|0x0011|17|t.int16s|occupied_cooling_setpoint|celsius*100|report/read/write|
-|0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
+|0x0201|0x0003|3|t.int16s|abs_min_heat_setpoint_limit|celsius*100|read/report|
+|0x0201|0x0004|4|t.int16s|abs_max_heat_setpoint_limit|celsius*100|read/report|
+|0x0201|0x0008|8|t.uint8_t|PIHeatingDemand|0 -- 100%|read/report|
+|0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report|
+|0x0201|0x0011|17|t.int16s|occupied_cooling_setpoint|celsius*100|read/write/report|
+|0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|read/write/report|
 |0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
@@ -132,7 +132,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0018|24|t.int16s|max_cool_setpoint_limit|celsius*100|read/write/report|
 |0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2, 4|report/read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat, 7=heat/cool|read/write|
-|0x0201|0x001E|30|t.enum8|running_mode|0=off, 4=heat|report/read|
+|0x0201|0x001E|30|t.enum8|running_mode|0=off, 4=heat|read/report|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1, bedroom: 2|read/write|
@@ -142,16 +142,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0202|0x0000|0|t.enum8|fan_mode|0, 5|read/write/report|
 |0x0202|0x0001|1|t.enum8|fan_mode_sequence|2|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|report/read/write|
+|0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|read/write/report|
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
-|0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|report/read|
+|0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celsius, 1=farenheight|read/write|
 |0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0402|0x0000|0|t.int16s|measured_value|celsius*100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|read/report|
 
 - lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
 
@@ -173,18 +173,18 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
 |0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown|16908288|read|
-|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|read/report|
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff| 1=on, 0=off|report/read/write|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|report/read|
+|0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|read/report|
 |0x0008|0x0011|17|t.uint8_t|OnLevel| 0=0%, 254=100%|read/write|
 
 - Switch SP2600ZB, SP2610ZB
@@ -194,11 +194,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0220|544|t.bitmap16|Unknown|0|report/read/write|
 |0xff01|0x0221|545|t.bitmap16|Unknown|1|report/read|
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|read/report|
 |0x0b04|0x0604|1540|t.uint16_t|ACPowerMultiplier|1|read|
 |0x0b04|0x0605|1541|t.uint16_t|ACPowerDivisor|10|read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -217,19 +217,19 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
-|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|report/read|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 |report/read|
-|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
+|0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|read/report|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 |read/report|
+|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|report/read|
+|0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
-|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|read/report|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|read/report|
 |0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 |0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
 |0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|read/report|
 
 - Switch RM3500ZB, Calypso water tank controller
 
@@ -264,7 +264,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0101|257|Array| |read/report|
 |0xff01|0x012A|298|t.enum8|unknown|60|read/write/report|
 |0xff01|0x012C|300|Array|unknown|  |read/report|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|1|read/report|
 |0xff01|0x0203|515|t.enum8|unknown|12|read/report|
 |0xff01|0x0280|640|t.int16s|max_measured_value|5300|read/write/report|
@@ -276,25 +276,25 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0002|2|t.uint16_t|ZoneStatus|0=no leak, 1=leak|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|report/read|
-|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|report/read|
+|0x0b04|0x050B|1291|t.uint16_t|Active_Power|watt/hr|read/report|
+|0x0b04|0x0505|1285|t.uint16_t|rms_voltage|volt|read/report|
 |0x0b04|0x0605|1541|t.uint16_t|AC_Power_Divisor|1|read|
 |0x0b04|0x0604|1540|t.uint16_t|AC_Power_Multiplier|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0b05|0x011d|285|t.int8s|Rssi| value -45||report/read|
+|0x0b05|0x011d|285|t.int8s|Rssi| value -45||read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|WaterTemperature| temp oC||report/read|
+|0x0402|0x0000|0|t.int16s|WaterTemperature| temp oC||read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|Watt/hr|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|Watt/hr|read/report|
 
 - Switch MC3100ZB, multi controller
 
 |Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|report/read|
-|1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|report/read|
+|1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|read/report|
+|1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|read/report|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write|
@@ -304,29 +304,29 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |2|0xff01|0x02A1|673|t.uint32_t|input_off_delay|seconds, 0=off, 0 to 10800|read/write|
 |1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
-|2|0x0006|0x0000|0|t.Bool|OnOff2|1=on, 0=off|report/read|
+|1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
+|2|0x0006|0x0000|0|t.Bool|OnOff2|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celsius*100|report/read|
-|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celsius*100|report/read|
+|1|0x0402|0x0000|0|t.int16s|Measured value, indoor temperature|celsius*100|read/report|
+|2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celsius*100|read/report|
 | --- | --- | --- | --- | --- | --- | --- | ---|
-|1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|report/read|
+|1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|read/report|
 
 - Switch valve VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
-|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
-|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|read/report|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|read/report|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius*100|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius*100|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)|report/read|
+|0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|	L/h (see below)|read/report|
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
 |0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
@@ -337,15 +337,15 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0000|0x0007|7|t.enum8|power_source|129,130=mains, 3=battery, 4=dc|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|report/read|
-|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|report/read|
-|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|report/read|
+|0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|read/report|
+|0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|read/report|
+|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|report/read|
+|0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|read/report|
 |0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
-|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000| report/read
+|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000|read/report|
 |0xff01|0x0230|560|t.enum8|alarm_flow_threshold|0=off,1=on|read/write|
 |0xff01|0x0231|561|t.enum8|alarm_options|0=nothing,1=alarm,2=close,3=close and alarm,4=no flowmeter|read|
 |0xff01|0x0240|576|Array|flow_meter_config|12 elements (uint8)|read/write|
@@ -359,11 +359,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0252|594|t.uint32_t|abnormal_flow_duration|seconds ,900 (15 min) to 86400 (24hr)|read/write|
 |0xff01|0x0253|595|t.bitmap16|abnormal_flow_action|0x0000= do nothing, 0x0001=send alert, 0x0003= close and send alert|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|report/read|
+|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|report/read|
+|0x0404|0x0000|0|t.uint16_t|MeasuredValue, flowrate|L/hr|read/report|
 |0x0404|0x0001|1|t.uint16_t|min_measured_value|0|read|
 |0x0404|0x0002|2|t.uint16_t|max_measured_value|?|read|
 |0x0404|0x0003|3|t.uint16_t|tolerance|?|read|
@@ -396,9 +396,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0200|512|t.bitmap32|status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|report/read
+|0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius * 100|report/read|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius * 100|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
 
@@ -406,19 +406,19 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|report/read|
-|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|report/read|
-|0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|report/read
+|0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|read/report|
+|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|read/report|
+|0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celsius * 100|report/read|
+|0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celsius * 100|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|report/read|
+|0x000c|0x0055|85|t.uint16_t|Present value, angle| angle of the gauge needle in degree|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|Unknown|60|report/read/write|
-|0xff01|0x0080|128|t.uint32_t|Unknown|0|report/read|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0x0080|128|t.uint32_t|Unknown|0|read/report|
+|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read|
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
