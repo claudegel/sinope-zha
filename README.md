@@ -100,7 +100,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0264|612|t.enum8|unknown|0, 1|report/read/write|
 |0xff01|0x0265|613|t.enum8|unknown|0, 1|report/read/write|
 |0xff01|0x0266|614|t.enum8|unknown|0|report/read/write|
-|0xff01|0x0267|615|EUI64|zigbee Mac Addr|[255,255,255,255,255,255,255,255]|read/write/report|
+|0xff01|0x0267|615|EUI64|HC_Model Mac Addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
 |0xff01|0x0268|616|t.bitmap8|unknown|0, 2|report/read/write|
 |0xff01|0x0269|617|t.bitmap8|unknown|0, 3|report/read/write|
 |0xff01|0x026A|618|t.bitmap8|unknown|0, 15|report/read/write|
