@@ -325,8 +325,11 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x0137, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = foundation.ZCLAttributeDef(
+        heatLockoutTemperature: Final = foundation.ZCLAttributeDef(
             id=0x0139, type=t.int16s, access="rwp", is_manufacturer_specific=True
+        )
+        coolLockoutTemperature: Final = foundation.ZCLAttributeDef(
+            id=0x013A, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
@@ -355,7 +358,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         cycle_length: Final = foundation.ZCLAttributeDef(
             id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_28: Final = foundation.ZCLAttributeDef(
+        cool_cycle_length: Final = foundation.ZCLAttributeDef(
             id=0x0282, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_13: Final = foundation.ZCLAttributeDef(
