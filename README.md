@@ -136,10 +136,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report
 |0x0201|0x0011|17|t.int16s|occupied_cooling_setpoint|celsius*100|report/read/write|
 |0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|report/read/write|
-|0x0201|0x0014|20|t.int16s|unoccupied_cooling_setpoint|celsius*100|read/write|
+|0x0201|0x0013|19|t.int16s|unoccupied_cooling_setpoint|celsius*100|read/write|
 |0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
+|0x0201|0x0017|23|t.int16s|MinCooling Setpoint|celsius*100|read/write|
+|0x0201|0x0018|24|t.int16s|MaxCooling Setpoint|celsius*100|read/write|
 |0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2|report/read/write|
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 1=auto, 3=cool, 4=heat, 7=fan only, 8=dry|read/write|
 |0x0201|0x001E|30|t.enum8|running_mode|0=off, 3=cool, 4=heat|report/read|
