@@ -86,7 +86,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0134|308|t.int16s|BalancePoint|-32768=off, default=-1000 (celsius*100)|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|report/read/write|
 |0xff01|0x0136|310|t.uint16_t|unknown|10800 sec (3hrs)|read/write/report|
-|0xff01|0x0137|311|t.int16s|setpointMin|500, celsius*100|read/write/report|
+|0xff01|0x0137|311|t.int16s|min_heat_setpoint_limit|500, celsius*100|read/write/report|
 |0xff01|0x0138|312|t.bitmap16|unknown|235, 195|report/read/write|
 |0xff01|0x0139|313|t.int16s|heatLockoutTemperature|-32768=off celsius*100|report/read/write|
 |0xff01|0x013A|314|t.int16s|coolLockoutTemperature|-32768=off celsius*100|read/write/report|
@@ -105,9 +105,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0269|617|t.bitmap8|unknown|0, 3|report/read/write|
 |0xff01|0x026A|618|t.bitmap8|unknown|0, 15|report/read/write|
 |0xff01|0x026B|619|t.int16s|unknown, setpoint_min?|1600|read/write/report|
-|0xff01|0x026C|620|t.int16s|unknown, setpoint_max?|3000|read/write/report|
-|0xff01|0x026D|621|t.int16s|unknown, cooling_setpoint_min?|1600|read/write/report|
-|0xff01|0x026E|622|t.int16s|unknown, cooling_setpoint_max?|3000|read/write/report|
+|0xff01|0x026C|620|t.int16s|unknown, max_heat_setpoint_limit?|3000|read/write/report|
+|0xff01|0x026D|621|t.int16s|unknown, min_cool_setpoint_limit?|1600|read/write/report|
+|0xff01|0x026E|622|t.int16s|unknown, max_cool_setpoint_limit?|3000|read/write/report|
 |0xff01|0x0280|640|t.int16s|unknown|10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0282|642|t.uint16_t|aux_cycle_length?|15 sec or 15 min (900 sec)|report/read/write|
