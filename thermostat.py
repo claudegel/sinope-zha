@@ -316,13 +316,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         report_local_temperature: Final = foundation.ZCLAttributeDef(
             id=0x012D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_19: Final = foundation.ZCLAttributeDef(
+        balance_point: Final = foundation.ZCLAttributeDef(
             id=0x0134, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_29: Final = foundation.ZCLAttributeDef(
             id=0x0136, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_21: Final = foundation.ZCLAttributeDef(
+        min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x0137, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_10: Final = foundation.ZCLAttributeDef(
@@ -340,13 +340,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_23: Final = foundation.ZCLAttributeDef(
             id=0x026B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_24: Final = foundation.ZCLAttributeDef(
+        max_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x026C, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_25: Final = foundation.ZCLAttributeDef(
+        min_cool_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x026D, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_26: Final = foundation.ZCLAttributeDef(
+        max_cool_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x026E, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_27: Final = foundation.ZCLAttributeDef(
