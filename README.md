@@ -45,9 +45,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0010|16|t.int16s|outdoor_temp|off: -32768, celsius * 100|read/write/report|
+|0xff01|0x0005|5|t.enum8|unknown|0, 1|read/write/report|
+|0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100, -32768=off|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
 |0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
+|0xff01|0x0013|19|t.enum8|weather_icon|0=no weather icon, 1=weather icon|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
@@ -81,25 +83,34 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
 |0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
 |0xff01|0x0130|304|t.bitmap8|unknown|2|read/write/report|
-|0xff01|0x0134|308|t.int16s|unknown|off: -32768|read/write/report|
+|0xff01|0x0134|308|t.int16s|BalancePoint|-32768=off, default=-1000 (celsius*100)|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
-|0xff01|0x0138|312|t.bitmap16|unknown|235|read/write/report|
-|0xff01|0x0139|313|t.int16s|unknown|off: -32768|read/write/report|
-|0xff01|0x013A|314|t.int16s|unknown|off: -32768|read/write/report|
+|0xff01|0x0136|310|t.uint16_t|timer_off|10800 sec (3hrs)|read/write/report|
+|0xff01|0x0137|311|t.int16s|min_heat_setpoint_limit|500, celsius*100|read/write/report|
+|0xff01|0x0138|312|t.bitmap16|unknown|235, 195|read/write/report|
+|0xff01|0x0139|313|t.int16s|heatLockoutTemperature|-32768=off, celsius*100|report/read/write|
+|0xff01|0x013A|314|t.int16s|coolLockoutTemperature|-32768=off, celsius*100|read/write/report|
 |0xff01|0x013B|315|t.bitmab8|unknown|0|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
-|0xff01|0x0260|608|t.bitmap16|unknown|7967|read/write/report|
+|0xff01|0x0260|608|t.bitmap16|unknown|0, 7967|read/write/report|
 |0xff01|0x0261|609|t.bitmap16|unknown|0|read/write/report|
 |0xff01|0x0262|610|t.enum8|unknown|0|read/write/report|
 |0xff01|0x0263|611|t.enum8|unknown|0|read/write/report|
-|0xff01|0x0264|612|t.enum8|unknown|1|read/write/report|
-|0xff01|0x0265|613|t.enum8|unknown|1|read/write/report|
+|0xff01|0x0264|612|t.enum8|unknown|0, 1|read/write/report|
+|0xff01|0x0265|613|t.enum8|unknown|0, 1|read/write/report|
 |0xff01|0x0266|614|t.enum8|unknown|0|read/write/report|
-|0xff01|0x0268|616|t.bitmap8|unknown|2|read/write/report|
-|0xff01|0x0269|617|t.bitmap8|unknown|3|read/write/report|
-|0xff01|0x026A|618|t.bitmap8|unknown|15|read/write/report|
+|0xff01|0x0267|615|t.EUI64|HC_Model Mac Addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
+|0xff01|0x0268|616|t.bitmap8|unknown|0, 2|read/write/report|
+|0xff01|0x0269|617|t.bitmap8|unknown|0, 3|read/write/report|
+|0xff01|0x026A|618|t.bitmap8|unknown|0, 15|read/write/report|
+|0xff01|0x026B|619|t.int16s|unknown, setpoint_min?|1600|read/write/report|
+|0xff01|0x026C|620|t.int16s|unknown, max_heat_setpoint_limit?|3000|read/write/report|
+|0xff01|0x026D|621|t.int16s|unknown, min_cool_setpoint_limit?|1600|read/write/report|
+|0xff01|0x026E|622|t.int16s|unknown, max_cool_setpoint_limit?|3000|read/write/report|
+|0xff01|0x0280|640|t.int16s|unknown|10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|read/write/report|
+|0xff01|0x0282|642|t.uint16_t|cool_cycle_length?|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|read/report|
 |0xff01|0x0284|644|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|read/write/report|
@@ -125,22 +136,23 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x0010|16|t.int8s|local_temperature_calibration|-25 to +25 (+- 2.5oC)|read/write/report|
 |0x0201|0x0011|17|t.int16s|occupied_cooling_setpoint|celsius*100|read/write/report|
 |0x0201|0x0012|18|t.int16s|occupied_heating_setpoint|celsius*100|read/write/report|
+|0x0201|0x0013|19|t.int16s|unoccupied_cooling_setpoint|celsius*100|read/write|
 |0x0201|0x0014|20|t.int16s|unoccupied_heating_setpoint|celsius*100|read/write|
 |0x0201|0x0015|21|t.int16s|MinHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0016|22|t.int16s|MaxHeating Setpoint|celsius*100|read/write|
 |0x0201|0x0017|23|t.int16s|min_cool_setpoint_limit|celsius*100|read/write/report|
 |0x0201|0x0018|24|t.int16s|max_cool_setpoint_limit|celsius*100|read/write/report|
-|0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2, 4|report/read/write|
-|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 4=heat, 7=heat/cool|read/write|
-|0x0201|0x001E|30|t.enum8|running_mode|0=off, 4=heat|read/report|
+|0x0201|0x001B|27|t.enum8|ctrl_sequence_of_oper|2, 4|read/write/report|
+|0x0201|0x001C|28|t.enum8|SystemMode|0=off, 1=auto, 3=cool, 4=heat, 7=fan only, 8=dry|read/write|
+|0x0201|0x001E|30|t.enum8|running_mode|0=off, 3=cool, 4=heat|read/report|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1, bedroom: 2|read/write|
 |0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0437|1079|t.uint16_t|unknown|100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0202|0x0000|0|t.enum8|fan_mode|0, 5|read/write/report|
-|0x0202|0x0001|1|t.enum8|fan_mode_sequence|2|read/write/report|
+|0x0202|0x0000|0|t.enum8|fan_mode|0=off,1=low,2=medium,3=high,4=on,5=auto,6=smart (auto),6|read/write/report|
+|0x0202|0x0001|1|t.enum8|fan_mode_sequence|0=(Low_Med_High),1=Low_High),2 (Low_Med_High_Auto),3=(Low_High_Auto),4=(On_Auto)|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0b04|0x050b|1291|t.uint16_t|Active_Power|watt/hr|read/write/report|
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
@@ -152,6 +164,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0402|0x0000|0|t.int16s|measured_value|celsius*100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|read/report|
+|0x0702|0x0200|512|t.bitmap8|status|0=ok|read/report|
 
 - lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
 
