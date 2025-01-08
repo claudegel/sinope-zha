@@ -325,7 +325,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_19: Final = foundation.ZCLAttributeDef(
             id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_29: Final = foundation.ZCLAttributeDef(
+        unknown_attr_18: Final = foundation.ZCLAttributeDef(
             id=0x0136, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
@@ -352,7 +352,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_22: Final = foundation.ZCLAttributeDef(
             id=0x0260, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_23: Final = foundation.ZCLAttributeDef(
+        unknown_attr_21: Final = foundation.ZCLAttributeDef(
             id=0x0261, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_24: Final = foundation.ZCLAttributeDef(
@@ -373,7 +373,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_29: Final = foundation.ZCLAttributeDef(
             id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_30: Final = foundation.ZCLAttributeDef(
+        unknown_attr_42: Final = foundation.ZCLAttributeDef(
             id=0x0269, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_31: Final = foundation.ZCLAttributeDef(
@@ -391,7 +391,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         max_cool_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x026E, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_27: Final = foundation.ZCLAttributeDef(
+        unknown_attr_10: Final = foundation.ZCLAttributeDef(
             id=0x0280, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         cycle_length: Final = foundation.ZCLAttributeDef(
