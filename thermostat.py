@@ -370,6 +370,9 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_28: Final = foundation.ZCLAttributeDef(
             id=0x0266, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
+        hc_model_mac_addr: Final = foundation.ZCLAttributeDef(
+            id=0x0267, type=t.EUI64, access="rwp", is_manufacturer_specific=True
+        )
         unknown_attr_29: Final = foundation.ZCLAttributeDef(
             id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
