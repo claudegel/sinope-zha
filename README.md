@@ -110,7 +110,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x026E|622|t.int16s|unknown, max_cool_setpoint_limit?|3000|read/write/report|
 |0xff01|0x0280|640|t.int16s|unknown|10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|read/write/report|
-|0xff01|0x0282|642|t.uint16_t|cool_cycle_length?|15 sec or 15 min (900 sec)|report/read/write|
+|0xff01|0x0282|642|t.uint16_t|cool_cycle_length|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|read/report|
 |0xff01|0x0284|644|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|read/write/report|
