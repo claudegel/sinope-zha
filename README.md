@@ -263,13 +263,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2|read/write/report|
 |0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240|read/write/report|
 |0xff01|0x0079|121|t.bitmap8|unknown| 0|report/read|
-|0xff01|0x0080|122|t.uint32_t|unknown|0|read/report|
-|0xff01|0x0090|132|t.uint32_t|current_summation_delivered|watt/hr|read/report|
 |0xff01|0x007A|122|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x007B|123|t.uint16_t|unknown|288|read/write/report|
 |0xff01|0x007C|124|t.int16s|min_measured_temp|water temp celsius*100|read/report|
 |0xff01|0x007D|125|t.int16s|max_measured_temp|water temp celsius*100|read/report|
-|0xff01|0c0080|122|t.uint32_t|unknown|0|read/report|
+|0xff01|0x007E|126|t.enum8|water_temp_protection_type|0|read/write/report|
+|0xff01|0c0080|128|t.uint32_t|unknown|0|read/report|
 |0xff01|0x0090|144|t.uint32_t|CurrentSummationDelivered|kwh|read/report|
 |0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write/report|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read/report|
