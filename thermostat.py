@@ -133,7 +133,7 @@ class WeatherIcon(t.enum8):
     cloudRainMoon = 0x1F
     cloudRainSun = 0x20
     cloudRainMoon = 0x21
-    
+
 
 class GfciStatus(t.enum8):
     """Gfci_status values."""
