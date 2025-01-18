@@ -99,7 +99,7 @@ class TimeFormat(t.enum8):
 
 
 class WeatherIcon(t.enum8):
-    """Show weather on screen."""
+    """Show weather icons on screen."""
 
     Hide = 0x00
     Sun = 0x01
