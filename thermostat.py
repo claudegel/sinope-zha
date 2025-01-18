@@ -51,6 +51,7 @@ class Display(t.enum8):
     Auto = 0x00
     Setpoint = 0x01
     Outside_temperature = 0x02
+    Room_temperature = 0x04
 
 
 class FloorMode(t.enum8):
@@ -101,8 +102,38 @@ class WeatherIcon(t.enum8):
     """Show weather on screen."""
 
     Hide = 0x00
-    Show = 0x01
-
+    Sun = 0x01
+    Sun = 0x02
+    CloudSun = 0x03
+    CloudSun = 0x04
+    Cloud = 0x05
+    cloudRainSun = 0x06
+    cloudRainSun = 0x07
+    Cloud = 0x08
+    Cloud = 0x09
+    cloudRain = 0x0A
+    cloudLightning = 0x0B
+    cloudLightning = 0x0C
+    cloudSnow = 0x0D
+    cloudSnow = 0x0E
+    cloudSnow = 0x0F
+    cloudSnow = 0x10
+    cloudFog = 0x11
+    cloudMoon = 0x13
+    cloudMoon = 0x14
+    cloudMoon = 0x15
+    cloudSnow = 0x16
+    cloudRainMoon = 0x17
+    cloudRainMoon = 0x18
+    cloudRainMoon = 0x19
+    cloudSnow = 0x1A
+    cloudRain = 0x1C
+    cloudRain = 0x1D
+    cloudRainSun = 0x1E
+    cloudRainMoon = 0x1F
+    cloudRainSun = 0x20
+    cloudRainMoon = 0x21
+    
 
 class GfciStatus(t.enum8):
     """Gfci_status values."""
@@ -166,6 +197,13 @@ class CycleOutput(t.uint16_t):
     Off = 0xFFFF
 
 
+class Language(t.enum8):
+    """Display langauge mode values."""
+
+    En = 0x00
+    Fr = 0x01
+
+
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
@@ -174,6 +212,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     FloorMode: Final = FloorMode
     AuxMode: Final = AuxMode
     PumpStatus: Final = PumpStatus
+    Language: Final = Language
     LimitStatus: Final = LimitStatus
     SensorType: Final = SensorType
     TimeFormat: Final = TimeFormat
@@ -205,8 +244,8 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             access="rp",
             is_manufacturer_specific=True,
         )
-        unknown_attr_30: Final = foundation.ZCLAttributeDef(
-            id=0x0005, type=t.enum8, access="rwp", is_manufacturer_specific=True
+        display_language: Final = foundation.ZCLAttributeDef(
+            id=0x0005, type=Language, access="rwp", is_manufacturer_specific=True
         )
         outdoor_temp: Final = foundation.ZCLAttributeDef(
             id=0x0010, type=t.int16s, access="rwp", is_manufacturer_specific=True
@@ -217,7 +256,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         config_2nd_display: Final = foundation.ZCLAttributeDef(
             id=0x0012, type=Display, access="rwp", is_manufacturer_specific=True
         )
-        weather_icon: Final = foundation.ZCLAttributeDef(
+        weather_icons: Final = foundation.ZCLAttributeDef(
             id=0x0013, type=WeatherIcon, access="rwp", is_manufacturer_specific=True
         )
         secs_since_2k: Final = foundation.ZCLAttributeDef(
@@ -325,19 +364,19 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_19: Final = foundation.ZCLAttributeDef(
             id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_18: Final = foundation.ZCLAttributeDef(
+        timer_off: Final = foundation.ZCLAttributeDef(
             id=0x0136, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        abs_min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x0137, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_20: Final = foundation.ZCLAttributeDef(
             id=0x0138, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        heatLockoutTemperature: Final = foundation.ZCLAttributeDef(
+        heat_lockout_temperature: Final = foundation.ZCLAttributeDef(
             id=0x0139, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        coolLockoutTemperature: Final = foundation.ZCLAttributeDef(
+        cool_lockout_temperature: Final = foundation.ZCLAttributeDef(
             id=0x013A, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_11: Final = foundation.ZCLAttributeDef(
@@ -382,7 +421,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         unknown_attr_31: Final = foundation.ZCLAttributeDef(
             id=0x026A, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_23: Final = foundation.ZCLAttributeDef(
+        min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
             id=0x026B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         max_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
