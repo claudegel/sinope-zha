@@ -45,18 +45,18 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0005|5|t.enum8|unknown|0, 1|read/write/report|
+|0xff01|0x0005|5|t.enum8|Language|0=en, 1=fr|read/write/report|
 |0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100, -32768=off|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
-|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature.|read/write/report|
-|0xff01|0x0013|19|t.enum8|weather_icon|0=no weather icon, 1=weather icon|read/write/report|
+|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature., 4=room temp|read/write/report|
+|0xff01|0x0013|19|t.enum8|weather_icon|0=no weather icon, 1 to 33=weather icon|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
 |0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
 |0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255:off, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
-|0xff01|0x0080|128|t.uint32_t|unknown|0, 17563654, 17563656|read/report|
+|0xff01|0x0080|128|t.uint32_t|unknown|0, 17563653, 17563654, 17563656|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
@@ -86,7 +86,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0134|308|t.int16s|BalancePoint|-32768=off, default=-1000 (celsius*100)|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
 |0xff01|0x0136|310|t.uint16_t|timer_off|10800 sec (3hrs)|read/write/report|
-|0xff01|0x0137|311|t.int16s|min_heat_setpoint_limit|500, celsius*100|read/write/report|
+|0xff01|0x0137|311|t.int16s|Absolute_min_heat_setpoint_limit|500, celsius*100|read/write/report|
 |0xff01|0x0138|312|t.bitmap16|unknown|235, 195|read/write/report|
 |0xff01|0x0139|313|t.int16s|heatLockoutTemperature|-32768=off, celsius*100|report/read/write|
 |0xff01|0x013A|314|t.int16s|coolLockoutTemperature|-32768=off, celsius*100|read/write/report|
@@ -104,15 +104,15 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0268|616|t.bitmap8|unknown|0, 2|read/write/report|
 |0xff01|0x0269|617|t.bitmap8|unknown|0, 3|read/write/report|
 |0xff01|0x026A|618|t.bitmap8|unknown|0, 15|read/write/report|
-|0xff01|0x026B|619|t.int16s|unknown, setpoint_min?|1600|read/write/report|
-|0xff01|0x026C|620|t.int16s|unknown, max_heat_setpoint_limit?|3000|read/write/report|
-|0xff01|0x026D|621|t.int16s|unknown, min_cool_setpoint_limit?|1600|read/write/report|
-|0xff01|0x026E|622|t.int16s|unknown, max_cool_setpoint_limit?|3000|read/write/report|
+|0xff01|0x026B|619|t.int16s|Min_heat_setpoint_limit|1600|read/write/report|
+|0xff01|0x026C|620|t.int16s|max_heat_setpoint_limit|3000|read/write/report|
+|0xff01|0x026D|621|t.int16s|min_cool_setpoint_limit|1600|read/write/report|
+|0xff01|0x026E|622|t.int16s|max_cool_setpoint_limit|3000|read/write/report|
 |0xff01|0x0280|640|t.int16s|unknown|10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|cycle_length|15 sec or 15 min (900 sec)|read/write/report|
 |0xff01|0x0282|642|t.uint16_t|cool_cycle_length|15 sec or 15 min (900 sec)|report/read/write|
 |0xff01|0x0283|643|t.enum8|unknown|1|read/report|
-|0xff01|0x0284|644|t.uint16_t|unknown|0|read/write/report|
+|0xff01|0x0284|644|t.uint16_t|unknown|0, 65535=off|read/write/report|
 |0xff01|0x0285|645|t.uint8_t|unknown|65|read/write/report|
 |0xff01|0x0286|646|t.uint8_t|unknown|100|read/write/report|
 |0xff01|0xFF04|65284|t.LVBytes|unknown|"\u0017"|read/report|
