@@ -42,16 +42,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.Bool|unknown|0, 1|read/write/report|
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
+|0xff01|0x0002|2|t.enum8|keypad_lockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
-|0xff01|0x0005|5|t.enum8|Language|0=en, 1=fr|read/write/report|
+|0xff01|0x0005|5|t.enum8|display_language|0=en, 1=fr|read/write/report|
 |0xff01|0x0010|16|t.int16s|outdoor_temp|celsius * 100, -32768=off|read/write/report|
 |0xff01|0x0011|17|t.uint16_t|outdoor_temp_timeout| Delay in seconds before reverting to setpoint display if no more outdoor temp is received|read/write/report|
-|0xff01|0x0012|18|t.enum8|config2ndDisplay| 0 = auto, 1 = setpoint, 2 = outside temperature., 4=room temp|read/write/report|
-|0xff01|0x0013|19|t.enum8|weather_icon|0=no weather icon, 1 to 33=weather icon|read/write/report|
+|0xff01|0x0012|18|t.enum8|config_2nd_display| 0 = auto, 1 = setpoint, 2 = outside temperature., 4=room temp|read/write/report|
+|0xff01|0x0013|19|t.enum8|weather_icons|0=no weather icon, 1 to 33=weather icon|read/write/report|
 |0xff01|0x0020|32|t.uint32_t|secs_since_2k| second since year 2000|read/write/report|
-|0xff01|0x0070|112|t.bitmap8|currentLoad| watt/hr|read/report|
+|0xff01|0x0070|112|t.bitmap8|current_load| watt/hr|read/report|
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
 |0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255:off, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
@@ -62,34 +62,34 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celsius * 100|read/write|
-|0xff01|0x0105|261|t.enum8|airFloorMode|Air: 1, floor: 2|read/write|
-|0xff01|0x0106|262|t.enum8|auxOutputMode|0=off, 1=expantion module|read/write|
-|0xff01|0x0107|263|t.int16s|FloorTemperature|celsius*100|read|
-|0xff01|0x0108|264|t.int16s|airMaxLimit|temp: celsius*100, valid only if floor mode is selected|read/write|
-|0xff01|0x0109|265|t.int16s|floorMinSetpoint| off: -32768, temp: celsius*100|read/write|
-|0xff01|0x010A|266|t.int16s|floorMaxSetpoint| off: -32768, temp: celsius*100|read/write|
-|0xff01|0x010B|267|t.enum8|tempSensorType| 0=10k, 1=12k|read/write|
-|0xff01|0x010C|268|t.uint8_t|floorLimitStatus|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|read/report|
-|0xff01|0x010D|269|t.int16s|RoomTemperature|celsius*100|read|
-|0xff01|0x0114|276|t.enum8|timeFormat|0=24h, 1=12h|read/write/report|
-|0xff01|0x0115|277|t.enum8|gfciStatus|0=ok, 1=error|read/report|
-|0xff01|0x0116|278|t.enum8|hvacMode|0=off, 1=auto, 3=cool, 4=heat|read|
+|0xff01|0x0105|261|t.enum8|air_floor_mode|Air: 1, floor: 2|read/write|
+|0xff01|0x0106|262|t.enum8|aux_output_mode|0=off, 1=expantion module|read/write|
+|0xff01|0x0107|263|t.int16s|floor_temperature|celsius*100|read|
+|0xff01|0x0108|264|t.int16s|air_max_limit|temp: celsius*100, valid only if floor mode is selected|read/write|
+|0xff01|0x0109|265|t.int16s|floor_min_setpoint| off: -32768, temp: celsius*100|read/write|
+|0xff01|0x010A|266|t.int16s|floor_max_setpoint| off: -32768, temp: celsius*100|read/write|
+|0xff01|0x010B|267|t.enum8|floor_sensor_type_param| 0=10k, 1=12k|read/write|
+|0xff01|0x010C|268|t.uint8_t|floor_limit_status|0=ok, 1=floorLimitLowReached, 2=floorLimitMaxReached, 3=floorAirLimitMaxReached|read/report|
+|0xff01|0x010D|269|t.int16s|room_temperature|celsius*100|read|
+|0xff01|0x0114|276|t.enum8|time_format|0=24h, 1=12h|read/write/report|
+|0xff01|0x0115|277|t.enum8|gfci_status|0=ok, 1=error|read/report|
+|0xff01|0x0116|278|t.enum8|hvac_mode|0=off, 1=auto, 3=cool, 4=heat|read|
 |0xff01|0x0117|279|Array|unknown|Array(type=AnonymousLVList, value=[165, 82, 20, 0, 0, 0, 22, 0, 2, 15, 11, 23])|read|
-|0xff01|0x0118|280|t.uint16_t|auxConnectedLoad|watt/hr, 0xffff=off (65535)|read/write|
-|0xff01|0x0119|281|t.uint16_t|connectedLoad|watt/hr|read/write|
-|0xff01|0x0128|296|t.uint8_t|pumpProtectionStatus| Off: 0x00, On: 0x01|read/write|
-|0xff01|0x012A|298|t.enum8|pumpProtectionDuration|default:60, 5,10,15,20,30,60|read/write/report|
-|0xff01|0x012B|299|t.int16s|currentSetpoint|Celsius*100|read/write/report|
+|0xff01|0x0118|280|t.uint16_t|aux_connected_load|watt/hr, 0xffff=off (65535)|read/write|
+|0xff01|0x0119|281|t.uint16_t|connected_load|watt/hr|read/write|
+|0xff01|0x0128|296|t.uint8_t|pump_protection_status| Off: 0x00, On: 0x01|read/write|
+|0xff01|0x012A|298|t.enum8|pump_protection_duration|default:60, 5,10,15,20,30,60|read/write/report|
+|0xff01|0x012B|299|t.int16s|current_setpoint|Celsius*100|read/write/report|
 |0xff01|0x012C|300|Array|unknown|Array(type=AnonymousLVList, value=[16, 0, 0, 0, 0, 0, 176, 240, 230, 44]) |read|
-|0xff01|0x012D|301|t.int16s|reportLocalTemperature|Celsius*100|read/report|
+|0xff01|0x012D|301|t.int16s|report_local_temperature|Celsius*100|read/report|
 |0xff01|0x0130|304|t.bitmap8|unknown|2|read/write/report|
-|0xff01|0x0134|308|t.int16s|BalancePoint|-32768=off, default=-1000 (celsius*100)|report/read/write|
+|0xff01|0x0134|308|t.int16s|balance_point|-32768=off, default=-1000 (celsius*100)|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
 |0xff01|0x0136|310|t.uint16_t|timer_off|10800 sec (3hrs)|read/write/report|
-|0xff01|0x0137|311|t.int16s|Absolute_min_heat_setpoint_limit|500, celsius*100|read/write/report|
+|0xff01|0x0137|311|t.int16s|abs_min_heat_setpoint_limit|500, celsius*100|read/write/report|
 |0xff01|0x0138|312|t.bitmap16|unknown|235, 195|read/write/report|
-|0xff01|0x0139|313|t.int16s|heatLockoutTemperature|-32768=off, celsius*100|report/read/write|
-|0xff01|0x013A|314|t.int16s|coolLockoutTemperature|-32768=off, celsius*100|read/write/report|
+|0xff01|0x0139|313|t.int16s|heat_lockout_temperature|-32768=off, celsius*100|report/read/write|
+|0xff01|0x013A|314|t.int16s|cool_lockout_temperature|-32768=off, celsius*100|read/write/report|
 |0xff01|0x013B|315|t.bitmab8|unknown|0|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
@@ -100,11 +100,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0264|612|t.enum8|unknown|0, 1|read/write/report|
 |0xff01|0x0265|613|t.enum8|unknown|0, 1|read/write/report|
 |0xff01|0x0266|614|t.enum8|unknown|0|read/write/report|
-|0xff01|0x0267|615|t.EUI64|HC_Model Mac Addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
+|0xff01|0x0267|615|t.EUI64|hc_model_mac_addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
 |0xff01|0x0268|616|t.bitmap8|unknown|0, 2|read/write/report|
 |0xff01|0x0269|617|t.bitmap8|unknown|0, 3|read/write/report|
 |0xff01|0x026A|618|t.bitmap8|unknown|0, 15|read/write/report|
-|0xff01|0x026B|619|t.int16s|Min_heat_setpoint_limit|1600|read/write/report|
+|0xff01|0x026B|619|t.int16s|min_heat_setpoint_limit|1600|read/write/report|
 |0xff01|0x026C|620|t.int16s|max_heat_setpoint_limit|3000|read/write/report|
 |0xff01|0x026D|621|t.int16s|min_cool_setpoint_limit|1600|read/write/report|
 |0xff01|0x026E|622|t.int16s|max_cool_setpoint_limit|3000|read/write/report|
@@ -146,9 +146,9 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x001C|28|t.enum8|SystemMode|0=off, 1=auto, 3=cool, 4=heat, 7=fan only, 8=dry|read/write|
 |0x0201|0x001E|30|t.enum8|running_mode|0=off, 3=cool, 4=heat|read/report|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
-|0x0201|0x0401|1025|t.uint16_t|MainCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
-|0x0201|0x0402|1026|t.enum8|BacklightAutoDimParam| OnDemand: 0, Always: 1, bedroom: 2|read/write|
-|0x0201|0x0404|1028|t.uint16_t|AuxCycleOutput| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
+|0x0201|0x0401|1025|t.uint16_t|main_cycle_output| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
+|0x0201|0x0402|1026|t.enum8|backlight_auto_dim_param| OnDemand: 0, Always: 1, bedroom: 2|read/write|
+|0x0201|0x0404|1028|t.uint16_t|aux_cycle_output| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0437|1079|t.uint16_t|unknown|100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0202|0x0000|0|t.enum8|fan_mode|0=off,1=low,2=medium,3=high,4=on,5=auto,6=smart (auto),6|read/write/report|
