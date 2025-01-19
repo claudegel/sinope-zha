@@ -85,7 +85,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0130|304|t.bitmap8|unknown|2|read/write/report|
 |0xff01|0x0134|308|t.int16s|balance_point|-32768=off, default=-1000 (celsius*100)|report/read/write|
 |0xff01|0x0135|309|t.int16s|unknown|300|read/write/report|
-|0xff01|0x0136|310|t.uint16_t|timer_off|10800 sec (3hrs)|read/write/report|
+|0xff01|0x0136|310|t.uint16_t|weather_icons_timeout|10800 sec (3hrs)|read/write/report|
 |0xff01|0x0137|311|t.int16s|abs_min_heat_setpoint_limit|500, celsius*100|read/write/report|
 |0xff01|0x0138|312|t.bitmap16|unknown|235, 195|read/write/report|
 |0xff01|0x0139|313|t.int16s|heat_lockout_temperature|-32768=off, celsius*100|report/read/write|
