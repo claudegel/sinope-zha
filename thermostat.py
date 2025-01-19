@@ -131,7 +131,7 @@ class WeatherIcon(t.enum8):
     Cloudrainmoon = 0x17
     Cloudrainmoon2 = 0x18
     Cloudrainmoon3 = 0X19
-    Cloudrainmoon4 = 0X1E
+    Cloudrainmoon4 = 0X1F
     Cloudrainmoon5 = 0X21
 
 
