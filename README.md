@@ -506,6 +506,24 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |Energy reading|0x0702|0x0000|0x29|299|1799|int|
 |Safety water temp reporting|0xFF01|0x0076|DataType.UINT8|0|86400|null|
 
+- TH1134ZB-HC
+
+|Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|OccupiedHeatingSetpoint|0x0201|0x0012| |10|21726| |null|
+|OccupiedCoolingSetpoint|0x0201|0x0011| |10|22035| |null|
+|PiHeatingDemand|0x0201|0x0008| |10|3976| |null|
+|SystemMode|0x0201|0x001C| |5|1800| |null|
+|LocalTemperature|0x0201|0x0000| |0|65535| |null|
+|fan mode|0x0202|0x0000| |5|0| |null|
+|ReportLocalTemperature|0xff01|0x012D| |10|4055| |null|
+| |0xff01|0x0262| |5|0| |null|
+| |0xff01|0x0263| |5|0| |null|
+|current_load|0xff01|0x0070| |10|43268| |null|
+|status|0xff01|0x0200| |10|0| |null|
+|hc_model_mac_addr|0xff01|0x0267| |5|64800| |null|
+| |0xff01|0x013B| |0|65535| |null|
+
 # Setting the flow meter model for your VA422xZB valve 2n gen.
 To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter:
 - FS4220: (3/4 inch)
