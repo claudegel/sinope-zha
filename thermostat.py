@@ -441,7 +441,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
         cool_cycle_length: Final = foundation.ZCLAttributeDef(
-            id=0x0282, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
+            id=0x0282, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_13: Final = foundation.ZCLAttributeDef(
             id=0x0283, type=t.enum8, access="rp", is_manufacturer_specific=True
