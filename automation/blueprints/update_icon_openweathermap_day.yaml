@@ -1,13 +1,14 @@
 blueprint:
-  name: thermostat icon update via Openweathermap weather conditions codes.
-  description: Change thermostat icon when weather code change. Need one automation for day time and one for night time.
+  name: thermostat icon update via Openweathermap weather conditions codes, day time period.
+  description: Change thermostat icon when weather code changes. Your Openweathermap icon code source should be set correctly for your location. You need one automation for day time and one for night time. You also need integration sun
   domain: automation
-  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/icon_update_open.yaml
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_openweathermap_day.yaml
   input:
     weather_entity:
-      name: Weather_code
+      name: Your City Weather Icon Code source
+      description: Entity ID of the weather icon code sensor
       selector:
-        entity: openweathermap_weather_code
+        entity:
           domain: sensor
     condition_entity:
       name: sun
@@ -16,35 +17,14 @@ blueprint:
           domain: sun
     climate_target:
       name: Thermostat_ieee
+      description: Target thermostat entity
       selector:
         target:
-          entity: TH1134ZB-HC
+          entity:
             domain: climate
 
 # If weather code change we update the thermostat,
 mode: single
-
-trigger_variables:
-    weather_change:
-      "800": Sun
-      "801": Sun2
-      "802": Cloudsun
-      "803": Cloudsun2
-      "500": Cloudrainsun
-      "200": Cloudrainsun2
-      "501": Cloudrainsun3
-      "502": Cloudrainsun4
-      "511": Cloudlightning2
-      "600": Cloudsnow2
-      "804": Cloud2
-      "521": Cloudrain2
-      "522": Cloudrain3
-      "520": Cloudrain
-      "201": Cloudlightning
-      "202": Cloudlightning
-      "616": Cloud
-      "615": Cloud
-      "300": Cloud3
 
 trigger:
   - platform: state
@@ -52,24 +32,45 @@ trigger:
   - platform: sun
     event: sunrise
 
+variables:
+  weather_change:
+    "800": Sun
+    "801": Sun2
+    "802": Cloudsun
+    "803": Cloudsun2
+    "500": Cloudrainsun
+    "200": Cloudrainsun2
+    "501": Cloudrainsun3
+    "502": Cloudrainsun4
+    "511": Cloudlightning2
+    "600": Cloudsnow2
+    "804": Cloud2
+    "521": Cloudrain2
+    "522": Cloudrain3
+    "520": Cloudrain
+    "201": Cloudlightning
+    "202": Cloudlightning
+    "616": Cloud
+    "615": Cloud
+    "300": Cloud3
+
+  thermostats:
+    - !input climate_target
+
 conditions:
   - condition: state
     entity_id: !input condition_entity
     state: "above_horizon"
 
-variables:
-  thermostats:
-    - !input climate_target
-
 action:
   - repeat:
-      count: "{{thermostats|length}}"
+      count: "{{ thermostats.entity_id | count }}"
       sequence:
         - action: zha.set_zigbee_cluster_attribute
           data:
             cluster_type: in
-            ieee: "{{ thermostats[repeat.index-1] }}"
+            ieee: "{{ thermostats.entity_id[repeat.index-1] }}"
             endpoint_id: 1
             cluster_id: 0xff01
             attribute: 0x0013
-            value: "{{ weather_change.get(states('!input weather_entity'), 'Hide') }}"
+            value: "{{ weather_change.get(states(weather_entity), 'Hide') }}"
