@@ -50,7 +50,7 @@ trigger:
   - platform: state
     entity_id: !input weather_entity
   - platform: sun
-    event: sunrize
+    event: sunrise
 
 conditions:
   - condition: state
