@@ -1,6 +1,6 @@
 blueprint:
   name: thermostat icon update via Environement Canada weather conditions codes.
-  description: Change thermostat icon when weather code changes. Your Environment Canada icon code source should be set to your_city_icon_code.
+  description: Change thermostat icon when weather condition code changes. Your Environment Canada icon code source should be set to your_city_icon_code.
   domain: automation
   source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_env_canada.yaml
   input:
