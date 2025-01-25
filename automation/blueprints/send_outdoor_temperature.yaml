@@ -1,0 +1,43 @@
+blueprint:
+  name: Update second display to show outdoor temperature.
+  description: Send outdoor temperature to thermostat second display. You need a sensor from Openweathermap, environment canada or any good local temperature source. Temperature is updated each time the sensor is updated.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/send_oudoor_temperature.yaml
+  input:
+    weather_entity:
+      name: Your City Weather source.
+      description: Entity ID of the outdoor temperature sensor.
+      selector:
+        entity:
+          domain: sensor
+    climate_target:
+      name: Thermostat_ieee
+      description: Target thermostat entity. Can put more then one.
+      selector:
+        target:
+          entity:
+            domain: climate
+
+# If outdoor temperature change we update the thermostat display.
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input weather_entity
+
+variables:
+  thermostats:
+    - !input climate_target
+
+action:
+  - repeat:
+      count: "{{ thermostats.entity_id | count }}"
+      sequence:
+        - action: zha.set_zigbee_cluster_attribute
+          data:
+            cluster_type: in
+            ieee: "{{ thermostats.entity_id[repeat.index-1] }}"
+            endpoint_id: 1
+            cluster_id: 0xff01
+            attribute: 0x0010
+            value: "{{ weather_change.get(states(weather_entity), 'Hide') }}"
