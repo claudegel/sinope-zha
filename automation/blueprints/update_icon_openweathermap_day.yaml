@@ -1,6 +1,6 @@
 blueprint:
-  name: thermostat icon updated
-  description: Change thermostat icon when weather code change.
+  name: thermostat icon update via Openweathermap weather conditions codes.
+  description: Change thermostat icon when weather code change. Need one automation for day time and one for night time.
   domain: automation
   source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/icon_update_open.yaml
   input:
@@ -47,8 +47,10 @@ trigger_variables:
       "300": Cloud3
 
 trigger:
-  platform: state
-  entity_id: !input weather_entity
+  - platform: state
+    entity_id: !input weather_entity
+  - platform: sun
+    event: sunrize
 
 conditions:
   - condition: state
@@ -58,12 +60,12 @@ conditions:
 variables:
   thermostats:
     - !input climate_target
+
 action:
   - repeat:
       count: "{{thermostats|length}}"
       sequence:
         - action: zha.set_zigbee_cluster_attribute
-          metadata: {}
           data:
             cluster_type: in
             ieee: "{{ thermostats[repeat.index-1] }}"
@@ -71,9 +73,3 @@ action:
             cluster_id: 0xff01
             attribute: 0x0013
             value: "{{ weather_change.get(states('!input weather_entity'), 'Hide') }}"
-              cluster_type: in
-              ieee: "{{ thermostats[repeat.index-1] }}"
-              endpoint_id: 1
-              cluster_id: 0xff01
-              attribute: 0x0013
-              value: "{{ weather_change.get(states('sensor.weather_code'), 'Hide') }}"
