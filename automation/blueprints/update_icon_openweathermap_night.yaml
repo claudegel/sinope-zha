@@ -1,0 +1,75 @@
+blueprint:
+  name: thermostat icon update via Openweathermap weather conditions codes night time period.
+  description: Change thermostat icon when weather code change. Need one automation for day time and one for night time.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_openweathermap_night.yaml
+  input:
+    weather_entity:
+      name: Weather_code
+      selector:
+        entity: openweathermap_weather_code
+          domain: sensor
+    condition_entity:
+      name: sun
+      selector:
+        entity: sun
+          domain: sun
+    climate_target:
+      name: Thermostat_ieee
+      selector:
+        target:
+          entity: TH1134ZB-HC
+            domain: climate
+
+# If weather code change we update the thermostat,
+mode: single
+
+trigger_variables:
+    weather_change:
+      "804": Cloud2
+      "601": Cloudsnow4
+      "602": Cloudsnow3
+      "620": Cloudsnow5
+      "800": Moonstar
+      "801": Cloudmoon
+      "802": Cloudmoon2
+      "803": Cloudmoon3
+      "500": Cloudrainmoon
+      "511": Cloudrainmoon3
+      "501": Cloudrainmoon4
+      "502": Cloudrainmoon5
+      "600": Cloudsnow6
+      "200": Cloudrainmoon2
+      "622": Cloudsnow5
+      "701": Cloudfog
+      "741": Cloudfog
+      "522": Cloudrain3
+
+trigger:
+  - platform: state
+    entity_id: !input weather_entity
+  - platform: sun
+    event: sunset
+
+conditions:
+  - condition: state
+    entity_id: !input condition_entity
+    state: "below_horizon"
+
+variables:
+  thermostats:
+    - !input climate_target
+
+action:
+  - repeat:
+      count: "{{thermostats|length}}"
+      sequence:
+        - action: zha.set_zigbee_cluster_attribute
+          data:
+            cluster_type: in
+            ieee: "{{ thermostats[repeat.index-1] }}"
+            endpoint_id: 1
+            cluster_id: 0xff01
+            attribute: 0x0013
+            value: "{{ weather_change.get(states('!input weather_entity'), 'Hide') }}"
+ 
