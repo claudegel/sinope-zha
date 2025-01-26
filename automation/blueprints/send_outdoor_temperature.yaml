@@ -40,4 +40,4 @@ action:
             endpoint_id: 1
             cluster_id: 0xff01
             attribute: 0x0010
-            value: "{{ weather_change.get(states(weather_entity), 'Hide') }}"
+            value: "{{ ( trigger.to_state.state|float * 100 ) |int }}"
