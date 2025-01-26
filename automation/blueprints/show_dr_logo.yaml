@@ -4,6 +4,12 @@ blueprint:
   domain: automation
   source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/show_dr_logo.yaml
   input:
+    condition_target:
+      name: The hydro_QC bynary sensor for upcomming peak period.
+      description: Entity ID of the bynary_sensor from hydro_QC integration.
+      selector:
+        entity:
+          domain: bynary_sensor
     climate_target:
       name: Thermostat_ieee
       description: Target thermostat entity. Can put more then one.
@@ -27,7 +33,7 @@ variables:
 
 condition:
   condition: state
-  entity_id: binary_sensor.hydroqc_maison_upcoming_critical_peak
+  entity_id: !input condition_target
   state: 'on'
 
 action:
