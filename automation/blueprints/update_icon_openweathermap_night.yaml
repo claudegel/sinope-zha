@@ -29,24 +29,41 @@ trigger:
 
 variables:
   weather_change:
-    "804": Cloud2
+    "200": Cloudrainmoon2
+    "201": Cloudrainmoon2
+    "211": Cloudrainmoon2
+    "212": Cloudrainmoon2
+    "300": Cloud3
+    "301": Cloud3
+    "311": Cloud3
+    "500": Cloudrainmoon
+    "501": Cloudrainmoon4
+    "502": Cloudrainmoon5
+    "503": Cloudrainmoon5
+    "504": Cloudrain3
+    "511": Cloudrainmoon3
+    "521": Cloudrain2
+    "522": Cloudrain3
+    "600": Cloudsnow6
     "601": Cloudsnow4
     "602": Cloudsnow3
+    "613": Cloud
     "620": Cloudsnow5
+    "621": Cloudsnow3
+    "622": Cloudsnow5
+    "701": Cloudfog
+    "711": Cloudfog
+    "721": Cloudfog
+    "731": Cloudfog
+    "741": Cloudfog
+    "751": Cloudfog
+    "761": Cloudfog
+    "771": Cloudsnow5
     "800": Moonstar
     "801": Cloudmoon
     "802": Cloudmoon2
     "803": Cloudmoon3
-    "500": Cloudrainmoon
-    "511": Cloudrainmoon3
-    "501": Cloudrainmoon4
-    "502": Cloudrainmoon5
-    "600": Cloudsnow6
-    "200": Cloudrainmoon2
-    "622": Cloudsnow5
-    "701": Cloudfog
-    "741": Cloudfog
-    "522": Cloudrain3
+    "804": Cloud2
 
   thermostats:
     - !input climate_target
