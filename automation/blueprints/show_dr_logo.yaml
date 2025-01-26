@@ -1,0 +1,44 @@
+blueprint:
+  name: Show Eco logo on thermostat display.
+  description: Send code to thermostat to have the ECO logo blinking. 
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/show_dr_logo.yaml
+  input:
+    climate_target:
+      name: Thermostat_ieee
+      description: Target thermostat entity. Can put more then one.
+      selector:
+        target:
+          entity:
+            domain: climate
+
+# if peak period is active we show ECO logo on the thermostat screen.
+mode: single
+
+trigger:
+  - platform: time
+    at: 
+      - "05:00:00"
+      - "15:00:00"
+
+variables:
+  thermostats:
+    - !input climate_target
+
+condition:
+  condition: state
+  entity_id: binary_sensor.hydroqc_maison_upcoming_critical_peak
+  state: 'on'
+
+action:
+  - repeat:
+      count: "{{ thermostats.entity_id | count }}"
+      sequence:
+        - action: zha.set_zigbee_cluster_attribute
+          data:
+            cluster_type: in
+            ieee: "{{ thermostats.entity_id[repeat.index-1] }}"
+            endpoint_id: 1
+            cluster_id: 0xff01
+            attribute: 0x0071
+            value: 0
