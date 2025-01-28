@@ -57,7 +57,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
 |0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|0, 17563653, 17563654, 17563656|read/report|
-|0xff01|0x0100|256|t.uint8_t|unknown testing|0|read/report
+|0xff01|0x0100|256|t.uint8_t|unknown testing|0, 3|read/report
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
 |0xff01|0x0102|258|t.uint8_t|unknown|0|read|
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
