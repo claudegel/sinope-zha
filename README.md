@@ -800,7 +800,7 @@ template:
         {% else %}
           {% set x_min = 120 | float %}
           {% set x_max = 415 | float %}
-          {% set delta = 55 | float %}
+          {% set delta = 56 | float %} #could be 55 or 56, change value if % level is not accurate
           {% set low = 5 | float %}
           {% set high = 95 | float %}
         {% endif %}
