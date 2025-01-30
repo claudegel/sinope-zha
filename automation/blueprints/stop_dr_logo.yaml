@@ -15,8 +15,8 @@ blueprint:
 # We remove the ECO logo from the thermostat screen after the peak period.
 mode: single
 
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: 
       - "09:10:00"
       - "20:10:00"
@@ -25,7 +25,7 @@ variables:
   thermostats:
     - !input climate_target
 
-action:
+actions:
   - repeat:
       count: "{{ thermostats.entity_id | count }}"
       sequence:
