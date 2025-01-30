@@ -65,7 +65,9 @@ class AuxMode(t.enum8):
     """Aux_output_mode values."""
 
     Off = 0x00
-    On = 0x01
+    On_15 = 0x01
+    On_900 = 0x02
+    Exp_module = 0x04
 
 
 class PumpStatus(t.uint8_t):
