@@ -21,15 +21,15 @@ blueprint:
 # If outdoor temperature change we update the thermostat display.
 mode: single
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input weather_entity
 
 variables:
   thermostats:
     - !input climate_target
 
-action:
+actions:
   - repeat:
       count: "{{ thermostats.entity_id | count }}"
       sequence:
