@@ -21,10 +21,10 @@ blueprint:
 # If weather code change we update the thermostat,
 mode: single
 
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: !input weather_entity
-  - platform: sun
+  - trigger: sun
     event: sunset
 
 variables:
@@ -73,7 +73,7 @@ conditions:
     entity_id: sun.sun
     state: "below_horizon"
 
-action:
+actions:
   - repeat:
       count: "{{ thermostats.entity_id | count }}"
       sequence:
