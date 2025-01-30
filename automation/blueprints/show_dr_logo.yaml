@@ -21,8 +21,8 @@ blueprint:
 # if peak period is active we show ECO logo on the thermostat screen.
 mode: single
 
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: 
       - "05:00:00"
       - "15:00:00"
@@ -36,7 +36,7 @@ condition:
   entity_id: !input condition_target
   state: 'on'
 
-action:
+actions:
   - repeat:
       count: "{{ thermostats.entity_id | count }}"
       sequence:
