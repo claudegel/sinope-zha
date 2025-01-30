@@ -709,7 +709,7 @@ This automation will create the sensor.current_angle or any other name you want.
   alias: Lecture niveau propane
   description: Lecture du niveau de réservoir à chaque heure
   trigger:
-  - platform: time_pattern
+  - trigger: time_pattern
     hours: /1
   condition: []
   action:
@@ -749,7 +749,7 @@ input_text:
 ```
 template:
   - trigger:
-    - platform: time_pattern
+    - trigger: time_pattern
       hours: "/5"
   - sensor:
     - name: "Tank remaining level"
@@ -790,7 +790,7 @@ template:
 ```
 - alias: Send-OutdoorTemp
   trigger:
-    - platform: state  # send temperature when there are changes
+    - trigger: state  # send temperature when there are changes
       entity_id: sensor.local_temp # sensor to get local temperature
   variables:
     thermostats:
@@ -815,7 +815,7 @@ template:
 - alias: Update outside Temperature
   description: ''
   trigger:
-    - platform: time_pattern # send temperature evey 45 minutes
+    - trigger: time_pattern # send temperature evey 45 minutes
       minutes: '45'
   actions:
     - action: zha.set_zigbee_cluster_attribute
@@ -845,7 +845,7 @@ You can use any temperature source, local or remote.
 ```
 - alias: set_time
   trigger:
-    - platform: time
+    - trigger: time
       at: "01:00:00" ## at 1:00 AM
   variables:
     thermostats:
@@ -869,7 +869,7 @@ You can use any temperature source, local or remote.
 - id: eco flash
   alias: eco_flash
   trigger:
-    - platform: time
+    - trigger: time
       at: 
         - "06:00:00"
         - "16:00:00"
