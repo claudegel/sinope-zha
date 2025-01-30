@@ -598,8 +598,8 @@ data:
 ```
 alias: Enable desk light when double tap on light switch
 description: ""
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_ieee: 50:0b:91:40:00:03:db:c2
@@ -609,11 +609,12 @@ trigger:
         attribute_name: action_report
         value: 4
 condition: []
-action:
-  - type: toggle
-    device_id: 8b11765575b04f899d9867165fa16069
-    entity_id: light.interrupteur_lumiere_bureau_light_2
-    domain: light
+actions:
+  action:
+    - type: toggle
+      device_id: 8b11765575b04f899d9867165fa16069
+      entity_id: light.interrupteur_lumiere_bureau_light_2
+      domain: light
 mode: single
 ```
 For automations you will have acces to those events in the UI for device triggers:
@@ -708,20 +709,21 @@ This automation will create the sensor.current_angle or any other name you want.
 - id: '1692841759194'
   alias: Lecture niveau propane
   description: Lecture du niveau de réservoir à chaque heure
-  trigger:
+  triggers:
   - trigger: time_pattern
     hours: /1
   condition: []
-  action:
-  - service: zha_toolkit.execute
-    data:
-      command: attr_read
-      ieee: "«your LM4110 ieee »"
-      cluster: 12
-      attribute: 85
-      state_id: sensor.current_angle
-      allow_create: true
-      tries: 100
+  actions:
+    action:
+      - service: zha_toolkit.execute
+        data:
+          command: attr_read
+          ieee: "«your LM4110 ieee »"
+          cluster: 12
+          attribute: 85
+          state_id: sensor.current_angle
+          allow_create: true
+          tries: 100
   mode: single
 ```
 
@@ -748,7 +750,7 @@ input_text:
 - Calculates propane tank % level according to value returned by Sinope device (for R3D 10-80 gauge or R3D 5-95 gauge)
 ```
 template:
-  - trigger:
+  - triggers:
     - trigger: time_pattern
       hours: "/5"
   - sensor:
@@ -789,7 +791,7 @@ template:
 - Celsius:
 ```
 - alias: Send-OutdoorTemp
-  trigger:
+  triggers:
     - trigger: state  # send temperature when there are changes
       entity_id: sensor.local_temp # sensor to get local temperature
   variables:
@@ -814,19 +816,22 @@ template:
 ```
 - alias: Update outside Temperature
   description: ''
-  trigger:
+  triggers:
     - trigger: time_pattern # send temperature evey 45 minutes
       minutes: '45'
   actions:
-    - action: zha.set_zigbee_cluster_attribute
-      data:
-        ieee: 50:0b:91:32:01:03:6b:2f
-        endpoint_id: 1
-        cluster_id: 65281
-        cluster_type: in
-        attribute: 16
-        value: >-
-          {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
+    - repeat:  #service will be call for each ieee
+        count: "{{thermostats|length}}"
+        sequence:
+          - action: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: 50:0b:91:32:01:03:6b:2f
+              endpoint_id: 1
+              cluster_id: 65281
+              cluster_type: in
+              attribute: 16
+              value: >-
+                {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
   mode: single
 ```
 You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
@@ -844,7 +849,7 @@ You can use any temperature source, local or remote.
 - Sending time to your thermostats. This should be done once a day to keep the time display accurate.
 ```
 - alias: set_time
-  trigger:
+  triggers:
     - trigger: time
       at: "01:00:00" ## at 1:00 AM
   variables:
@@ -868,7 +873,7 @@ You can use any temperature source, local or remote.
 ```
 - id: eco flash
   alias: eco_flash
-  trigger:
+  triggers:
     - trigger: time
       at: 
         - "06:00:00"
