@@ -63,7 +63,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0103|259|Array|unknown|Array(type=AnonymousLVList, value=[1, 0, 0, 0])|read|
 |0xff01|0x0104|260|t.int16s|setpoint|celsius * 100|read/write|
 |0xff01|0x0105|261|t.enum8|air_floor_mode|Air: 1, floor: 2|read/write|
-|0xff01|0x0106|262|t.enum8|aux_output_mode|0=off, 1=expantion module|read/write|
+|0xff01|0x0106|262|t.enum8|aux_output_mode|0=off,1=15 minutes, 2=15 seconds 3=expantion module|read/write|
 |0xff01|0x0107|263|t.int16s|floor_temperature|celsius*100|read|
 |0xff01|0x0108|264|t.int16s|air_max_limit|temp: celsius*100, valid only if floor mode is selected|read/write|
 |0xff01|0x0109|265|t.int16s|floor_min_setpoint| off: -32768, temp: celsius*100|read/write|
