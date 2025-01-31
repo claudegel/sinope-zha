@@ -27,12 +27,12 @@ variables:
 
 actions:
   - repeat:
-      count: "{{ thermostats.entity_id | count }}"
+      count: "{{thermostats|length}}"
       sequence:
         - action: zha.set_zigbee_cluster_attribute
           data:
             cluster_type: in
-            ieee: "{{ thermostats.entity_id[repeat.index-1] }}"
+            ieee: "{{ thermostats[repeat.index-1] }}"
             endpoint_id: 1
             cluster_id: 0xff01
             attribute: 0x0071
