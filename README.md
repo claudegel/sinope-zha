@@ -815,6 +815,14 @@ template:
 ```
 
 # Automation examples:
+In this section we include various examples au automation available via blueprints you can use in HA.
+The blueprints are stored in automation/blueprints. You need to copy them to your HA config/blueprints/automation/sinope-zha. 
+If the directory does not exists just create it. Then all automations blueprints will be availables via Parameters / automations and scenes / Blueprints tab. 
+Follow the instruction to create your automations.
+
+Availables automations are:
+![blueprints](automation/blueprints)
+
 - Sending outside temperature to thermostats:
 - Celsius:
 ```
