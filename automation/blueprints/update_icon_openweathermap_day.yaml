@@ -91,4 +91,4 @@ actions:
             endpoint_id: 1
             cluster_id: 0xff01
             attribute: 0x0013
-            value: "{{ weather_change.get(states(weather_entity), 'Hide') }}"
+            value: "{{ weather_change.get(states(!input weather_entity), 'Hide') }}"
