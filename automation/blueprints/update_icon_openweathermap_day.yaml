@@ -31,6 +31,7 @@ triggers:
     entity_id: !input weather_entity
   - trigger: sun
     event: sunrise
+    offset: "00:30:00"
 
 variables:
   weather_change:
