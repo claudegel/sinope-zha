@@ -842,7 +842,7 @@ You can use any temperature source, local or remote.
         state: "{{ state_attr('weather.openweathermap', 'temperature') }}"
 ```
 - Sending time to your thermostats. This is now done automatically by ZHA.
-  - ![send time](automation/blueprints/send_time_to_thermostat.yaml)
+  - ![send time](automation/blueprints/send_time_to_thermostats.yaml)
 - Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
   - ![show dr logo](automation/blueprints/show_dr_logo.yaml)
   - ![Hide dr logo](automation/blueprints/stop_dr_logo.yaml)
