@@ -850,10 +850,10 @@ You can use any temperature source, local or remote.
   - ![show dr logo](automation/blueprints/show_dr_logo.yaml)
   - ![Hide dr logo](automation/blueprints/stop_dr_logo.yaml)
 - Send weather icons codes to TH1134ZB-HC thermostat using Openweathermap conditions codes: (see ![icons](www))
-  - In that case you need to set two automations as the conditions codes are the same for day time and night time but the icons on the thermostat are different.
+  - In that case you need to set two automations as the weather conditions codes are the same for day time and night time but the icons on the thermostat are different.
     - ![show day time icons](automation/blueprints/update_icon_openweathermap_day.yaml)
     - ![show night time icons](automation/blueprints/update_icon_openweathermap_night.yaml)
-- Send weather icons codes to TH1134ZB-HC thermostat using Environment Canada codes conditions:
+- Send weather icons codes to TH1134ZB-HC thermostat using Environment Canada weather conditions codes:
   - In that case you need only one automation:
     - ![show icons](automation/blueprints/update_icon_env_canada.yaml)  
 
