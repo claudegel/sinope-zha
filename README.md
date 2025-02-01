@@ -897,7 +897,7 @@ You can use any temperature source, local or remote.
 - Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
   - ![show dr logo](automation/blueprints/show_dr_logo.yaml)
   - ![Hide dr logo](automation/blueprints/stop_dr_logo.yaml)
-- Send weather icons codes to TH1134ZB-HC thermostat using Openweathermap conditions codes:
+- Send weather icons codes to TH1134ZB-HC thermostat using Openweathermap conditions codes: (see ![icons](www))
   - In that case you need to set two automations as the conditions codes are the same for day time and night time but the icons on the thermostat are different.
     - ![show day time icons](automation/blueprints/update_icon_openweathermap_day.yaml)
     - ![show night time icons](automation/blueprints/update_icon_openweathermap_night.yaml)
