@@ -55,7 +55,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0071|113|t.int8s|eco_delta_setpoint| off:-128, celsius*+-10, amount of setpoint reduction/increase for peak and pre-heating|read/write/report|
 |0xff01|0x0072|114|t.uint8_t|eco_max_pi_heating_demand| 255:off, range: 0-99 Set pi_heating_demand percentage limit 0% to 99% (225 = 100%)|read/write/report|
 |0xff01|0x0073|115|t.uint8_t|eco_safety_temperature_delta| off:255, range: 0-100, set heating restart if room temperature goes x% below setpoint |read/write/report|
-|0xff01|0x0075|117|t.bitmap32|unknown testing|0|read/write/report|
+|0xff01|0x0075|117|t.bitmap32|unknown testing|0,1,2,3|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|0, 17563653, 17563654, 17563656|read/report|
 |0xff01|0x0100|256|t.uint8_t|unknown testing|0, 3|read/report
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[6, 0, 1, 5])|read|
@@ -90,15 +90,15 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0138|312|t.bitmap16|unknown|235, 195|read/write/report|
 |0xff01|0x0139|313|t.int16s|heat_lockout_temperature|-32768=off, celsius*100|report/read/write|
 |0xff01|0x013A|314|t.int16s|cool_lockout_temperature|-32768=off, celsius*100|read/write/report|
-|0xff01|0x013B|315|t.bitmab8|unknown|0|read/report|
+|0xff01|0x013B|315|t.bitmab8|unknown|0,4|read/report|
 |0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
 |0xff01|0x0260|608|t.bitmap16|unknown|0, 7967|read/write/report|
 |0xff01|0x0261|609|t.bitmap16|unknown|0|read/write/report|
-|0xff01|0x0262|610|t.enum8|unknown|0|read/write/report|
+|0xff01|0x0262|610|t.enum8|unknown|0,1|read/write/report|
 |0xff01|0x0263|611|t.enum8|unknown|0|read/write/report|
-|0xff01|0x0264|612|t.enum8|unknown|0, 1|read/write/report|
-|0xff01|0x0265|613|t.enum8|unknown|0, 1|read/write/report|
+|0xff01|0x0264|612|t.enum8|unknown|0,1|read/write/report|
+|0xff01|0x0265|613|t.enum8|unknown|0,1|read/write/report|
 |0xff01|0x0266|614|t.enum8|unknown|0|read/write/report|
 |0xff01|0x0267|615|t.EUI64|hc_model_mac_addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
 |0xff01|0x0268|616|t.bitmap8|unknown|0, 2|read/write/report|
