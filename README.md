@@ -815,21 +815,21 @@ template:
 ```
 
 # Automation examples:
-In this section we include various examples au automation available via blueprints you can use in HA.
-The blueprints are stored in automation/blueprints. You need to copy them to your HA config/blueprints/automation/sinope-zha. 
+In this section we include various examples of automations availables via blueprints you can use in HA.
+The blueprints are located in automation/blueprints subdirectory. You need to copy them to HA config/blueprints/automation/sinope-zha. 
 If the directory does not exists just create it. Then all automations blueprints will be availables via Parameters / automations and scenes / Blueprints tab. 
-Follow the instruction to create your automations.
+Follow the instructions to create your automations.
 
 Availables automations are availables there:
 ![blueprints](automation/blueprints)
 
 - send_outdoor_temperature:
-  - Celsius:
-  - Farenheight:
+  - Celsius: ![send temperature celcius](automation/blueprints/send_outdoor_temperature.yaml)
+  - Farenheight: ![send temperature farenheight](automation/blueprints/send_outdoor_farenheight_temperature.yaml)
 
 You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
 
-- setting the outside temperature sensor:
+  - setting the outside temperature sensor:
 
 You can use any temperature source, local or remote.
 ```
@@ -842,17 +842,17 @@ You can use any temperature source, local or remote.
         state: "{{ state_attr('weather.openweathermap', 'temperature') }}"
 ```
 - Sending time to your thermostats. This is now done automatically by ZHA.
-  - send_time_to_thermostat.yaml
+  - ![send time](automation/blueprints/send_time_to_thermostat.yaml)
 - Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
-  - show_dr_logo.yaml
-  - stop_dr_logo.yaml
+  - ![show dr logo](automation/blueprints/show_dr_logo.yaml)
+  - ![Hide dr logo](automation/blueprints/stop_dr_logo.yaml)
 - Send weather icons codes to TH1134ZB-HC thermostat using Openweathermap conditions codes:
   - In that case you need to set two automations as the conditions codes are the same for day time and night time but the icons on the thermostat are different.
-    - update_icon_openweathermap_day.yaml
-    - update_icon_openweathermap_night.yaml
+    - ![show day time icons](automation/blueprints/update_icon_openweathermap_day.yaml)
+    - ![show night time icons](automation/blueprints/update_icon_openweathermap_night.yaml)
 - Send weather icons codes to TH1134ZB-HC thermostat using Environment Canada codes conditions:
   - In that case you need only one automation:
-    - update_icon_env_canada.yaml  
+    - ![show icons](automation/blueprints/update_icon_env_canada.yaml)  
 
 # Device hard reset:
 - Thermostats:
