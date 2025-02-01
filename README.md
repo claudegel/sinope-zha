@@ -820,53 +820,13 @@ The blueprints are stored in automation/blueprints. You need to copy them to you
 If the directory does not exists just create it. Then all automations blueprints will be availables via Parameters / automations and scenes / Blueprints tab. 
 Follow the instruction to create your automations.
 
-Availables automations are:
+Availables automations are availables there:
 ![blueprints](automation/blueprints)
 
-- Sending outside temperature to thermostats:
-- Celsius:
-```
-- alias: Send-OutdoorTemp
-  trigger:
-    - platform: state  # send temperature when there are changes
-      entity_id: sensor.local_temp # sensor to get local temperature
-  variables:
-    thermostats:
-      - 50:0b:91:40:00:02:2d:6d  #ieee of your thermostat dvices, one per line
-      - 50:0b:91:40:00:02:2a:65
-  actions:
-    - repeat:  #service will be call for each ieee
-        count: "{{thermostats|length}}"
-        sequence:
-          - action: zha.set_zigbee_cluster_attribute
-            data:
-              ieee: "{{ thermostats[repeat.index-1] }}"
-              endpoint_id: 1
-              cluster_id: 0xff01 # 65281
-              cluster_type: in
-              attribute: 0x0010 # 16
-              value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
-  mode: single
-```
-   - Farenheight:
-```
-- alias: Update outside Temperature
-  description: ''
-  trigger:
-    - platform: time_pattern # send temperature evey 45 minutes
-      minutes: '45'
-  actions:
-    - action: zha.set_zigbee_cluster_attribute
-      data:
-        ieee: 50:0b:91:32:01:03:6b:2f
-        endpoint_id: 1
-        cluster_id: 65281
-        cluster_type: in
-        attribute: 16
-        value: >-
-          {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
-  mode: single
-```
+- send_outdoor_temperature:
+  - Celsius:
+  - Farenheight:
+
 You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
 
 - setting the outside temperature sensor:
@@ -874,65 +834,26 @@ You can use either 0xff01 or 65281 in automation. You can send temperature on re
 You can use any temperature source, local or remote.
 ```
   - platform: template
-    sensors:
-      local_temp:
-        friendly_name: "Outside_temperature"
-        value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
+    sensor:
+      - name: "local_temp"
+        unit_of_measurement: '°C'
+        device_class: temperature
+        state_class: measurement
+        state: "{{ state_attr('weather.openweathermap', 'temperature') }}"
 ```
-- Sending time to your thermostats. This should be done once a day to keep the time display accurate.
-```
-- alias: set_time
-  trigger:
-    - platform: time
-      at: "01:00:00" ## at 1:00 AM
-  variables:
-    thermostats:
-      - 50:0b:91:40:00:02:26:6d ## add all your IEEE zigbee thermostats, one per line
-  actions:
-    - repeat:
-        count: "{{thermostats|length}}"
-        sequence:
-          - action: zha.set_zigbee_cluster_attribute
-            data:
-              ieee: "{{ thermostats[repeat.index-1] }}"
-              endpoint_id: 1
-              cluster_id: 0xff01
-              cluster_type: in
-              attribute: 0x0020
-              value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
-  mode: single
-```
+- Sending time to your thermostats. This is now done automatically by ZHA.
+  - send_time_to_thermostat.yaml
 - Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
-```
-- id: eco flash
-  alias: eco_flash
-  trigger:
-    - platform: time
-      at: 
-        - "06:00:00"
-        - "16:00:00"
-  condition:
-    condition: state
-    entity_id: binary_sensor.hydroqc_maison_upcoming_critical_peak
-    state: 'on'
-  variables:
-    thermostats:
-      - 50:0b:91:40:00:02:26:6d
-      - 38:5c:fb:ff:fe:d9:ea:f4
-  actions:
-    - repeat:
-        count: "{{thermostats|length}}"
-        sequence:
-          - action: zha.set_zigbee_cluster_attribute
-            data:
-              ieee: "{{ thermostats[repeat.index-1] }}"
-              endpoint_id: 1
-              cluster_id: 0xff01
-              cluster_type: in
-              attribute: 0x0071
-              value: 0
-  mode: single
-  ```
+  - show_dr_logo.yaml
+  - stop_dr_logo.yaml
+- Send weather icons codes to TH1134ZB-HC thermostat using Openweathermap conditions codes:
+  - In that case you need to set two automations as the conditions codes are the same for day time and night time but the icons on the thermostat are different.
+    - update_icon_openweathermap_day.yaml
+    - update_icon_openweathermap_night.yaml
+- Send weather icons codes to TH1134ZB-HC thermostat using Environment Canada codes conditions:
+  - In that case you need only one automation:
+    - update_icon_env_canada.yaml  
+
 # Device hard reset:
 - Thermostats:
 
