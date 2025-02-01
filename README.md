@@ -628,8 +628,8 @@ data:
 ```
 alias: Enable desk light when double tap on light switch
 description: ""
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: zha_event
     event_data:
       device_ieee: 50:0b:91:40:00:03:db:c2
@@ -639,11 +639,12 @@ trigger:
         attribute_name: action_report
         value: 4
 condition: []
-action:
-  - type: toggle
-    device_id: 8b11765575b04f899d9867165fa16069
-    entity_id: light.interrupteur_lumiere_bureau_light_2
-    domain: light
+actions:
+  action:
+    - type: toggle
+      device_id: 8b11765575b04f899d9867165fa16069
+      entity_id: light.interrupteur_lumiere_bureau_light_2
+      domain: light
 mode: single
 ```
 For automations you will have acces to those events in the UI for device triggers:
@@ -738,20 +739,21 @@ This automation will create the sensor.current_angle or any other name you want.
 - id: '1692841759194'
   alias: Lecture niveau propane
   description: Lecture du niveau de réservoir à chaque heure
-  trigger:
-  - platform: time_pattern
+  triggers:
+  - trigger: time_pattern
     hours: /1
   condition: []
-  action:
-  - service: zha_toolkit.execute
-    data:
-      command: attr_read
-      ieee: "«your LM4110 ieee »"
-      cluster: 12
-      attribute: 85
-      state_id: sensor.current_angle
-      allow_create: true
-      tries: 100
+  actions:
+    action:
+      - service: zha_toolkit.execute
+        data:
+          command: attr_read
+          ieee: "«your LM4110 ieee »"
+          cluster: 12
+          attribute: 85
+          state_id: sensor.current_angle
+          allow_create: true
+          tries: 100
   mode: single
 ```
 
@@ -778,8 +780,8 @@ input_text:
 - Calculates propane tank % level according to value returned by Sinope device (for R3D 10-80 gauge or R3D 5-95 gauge)
 ```
 template:
-  - trigger:
-    - platform: time_pattern
+  - triggers:
+    - trigger: time_pattern
       hours: "/5"
   - sensor:
     - name: "Tank remaining level"
@@ -815,6 +817,7 @@ template:
 ```
 
 # Automation examples:
+
 In this section we include various examples of automations availables via blueprints you can use in HA.
 The blueprints are located in automation/blueprints subdirectory. You need to copy them to HA config/blueprints/automation/sinope-zha. 
 If the directory does not exists just create it. Then all automations blueprints will be availables via Parameters / automations and scenes / Blueprints tab. 
@@ -826,6 +829,54 @@ Availables automations are availables there:
 - send_outdoor_temperature:
   - Celsius: ![send temperature celcius](automation/blueprints/send_outdoor_temperature.yaml)
   - Farenheight: ![send temperature farenheight](automation/blueprints/send_outdoor_farenheight_temperature.yaml)
+
+- Sending outside temperature to thermostats:
+- Celsius:
+```
+- alias: Send-OutdoorTemp
+  triggers:
+    - trigger: state  # send temperature when there are changes
+      entity_id: sensor.local_temp # sensor to get local temperature
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:2d:6d  #ieee of your thermostat dvices, one per line
+      - 50:0b:91:40:00:02:2a:65
+  actions:
+    - repeat:  #service will be call for each ieee
+        count: "{{thermostats|length}}"
+        sequence:
+          - action: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01 # 65281
+              cluster_type: in
+              attribute: 0x0010 # 16
+              value: "{{ ( trigger.to_state.state|float * 100 ) |int }}" # sending temperature in hundredth of a degree
+  mode: single
+```
+   - Farenheight:
+```
+- alias: Update outside Temperature
+  description: ''
+  triggers:
+    - trigger: time_pattern # send temperature evey 45 minutes
+      minutes: '45'
+  actions:
+    - repeat:  #service will be call for each ieee
+        count: "{{thermostats|length}}"
+        sequence:
+          - action: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: 50:0b:91:32:01:03:6b:2f
+              endpoint_id: 1
+              cluster_id: 65281
+              cluster_type: in
+              attribute: 16
+              value: >-
+                {{ (((state_attr('weather.home', 'temperature' ) - 32) * 5/9)|float*100)|int }}
+  mode: single
+```
 
 You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
 
@@ -853,6 +904,66 @@ You can use any temperature source, local or remote.
 - Send weather icons codes to TH1134ZB-HC thermostat using Environment Canada codes conditions:
   - In that case you need only one automation:
     - ![show icons](automation/blueprints/update_icon_env_canada.yaml)  
+
+    sensors:
+      local_temp:
+        friendly_name: "Outside_temperature"
+        value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
+```
+- Sending time to your thermostats. This should be done once a day to keep the time display accurate.
+```
+- alias: set_time
+  triggers:
+    - trigger: time
+      at: "01:00:00" ## at 1:00 AM
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:26:6d ## add all your IEEE zigbee thermostats, one per line
+  actions:
+    - repeat:
+        count: "{{thermostats|length}}"
+        sequence:
+          - action: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01
+              cluster_type: in
+              attribute: 0x0020
+              value: "{{ (as_timestamp(utcnow()) - as_timestamp('2000-01-01'))| int }}"
+  mode: single
+```
+- Setting the little icon Eco to flash on the thermostat during peak. To stop the icon flashing make another automation with value: -128 at the end of peak period.
+```
+- id: eco flash
+  alias: eco_flash
+  triggers:
+    - trigger: time
+      at: 
+        - "06:00:00"
+        - "16:00:00"
+  condition:
+    condition: state
+    entity_id: binary_sensor.hydroqc_maison_upcoming_critical_peak
+    state: 'on'
+  variables:
+    thermostats:
+      - 50:0b:91:40:00:02:26:6d
+      - 38:5c:fb:ff:fe:d9:ea:f4
+  actions:
+    - repeat:
+        count: "{{thermostats|length}}"
+        sequence:
+          - action: zha.set_zigbee_cluster_attribute
+            data:
+              ieee: "{{ thermostats[repeat.index-1] }}"
+              endpoint_id: 1
+              cluster_id: 0xff01
+              cluster_type: in
+              attribute: 0x0071
+              value: 0
+  mode: single
+  ```
 
 # Device hard reset:
 - Thermostats:

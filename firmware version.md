@@ -57,7 +57,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
 |RM3250ZB| 0 |1.3.3 | |
-|RM3500ZB| 0 |0.3.5 | |
+|RM3500ZB| 0 |0.3.7 | |
 |MC3100ZB| 0 |0.1.1 | |
 |LM4110ZB| 0 |0.1.1 | |
 
