@@ -1,0 +1,39 @@
+blueprint:
+  name: Stop Eco logo on thermostat display.
+  description: Send code to thermostat to remove the ECO logo blinking. 
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/stop_dr_logo.yaml
+  input:
+    climate_target:
+      name: Thermostat_ieee
+      description: Target thermostat entity. Can put more then one.
+      selector:
+        target:
+          entity:
+            domain: climate
+
+# We remove the ECO logo from the thermostat screen after the peak period.
+mode: single
+
+triggers:
+  - trigger: time
+    at: 
+      - "09:10:00"
+      - "20:10:00"
+
+variables:
+  thermostats:
+    - !input climate_target
+
+actions:
+  - repeat:
+      count: "{{thermostats|length}}"
+      sequence:
+        - action: zha.set_zigbee_cluster_attribute
+          data:
+            cluster_type: in
+            ieee: "{{ thermostats[repeat.index-1] }}"
+            endpoint_id: 1
+            cluster_id: 0xff01
+            attribute: 0x0071
+            value: -128
