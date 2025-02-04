@@ -781,39 +781,39 @@ input_text:
 ```
 template:
   - triggers:
-    - trigger: time_pattern
-      hours: "/5"
+      - trigger: time_pattern
+        hours: "/5"
   - sensor:
-    - name: "Tank remaining level"
-      unit_of_measurement: "%"
-      unique_id: sensor.tank_remaining_level
-      icon: mdi:propane-tank
-      state_class: measurement
-      state: >
-        {% set gauge = states('input_text.tank_gauge') %} # must match the above input_text name
-        {% set angle = states('sensor.current_angle') | float %}
-        {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
-        {% if (gauge == "10-80") %}
-          {% set x_min = 110 | float %}
-          {% set x_max = 406 | float %}
-          {% set delta = 46 | float %}
-          {% set low = 10 | float %}
-          {% set high = 80 | float %}
-        {% else %}
-          {% set x_min = 120 | float %}
-          {% set x_max = 415 | float %}
-          {% set delta = 56 | float %} #could be 55 or 56, change value if % level is not accurate
-          {% set low = 5 | float %}
-          {% set high = 95 | float %}
-        {% endif %}
+      - name: "Tank remaining level"
+        unit_of_measurement: "%"
+        unique_id: sensor.tank_remaining_level
+        icon: mdi:propane-tank
+        state_class: measurement
+        state: >
+          {% set gauge = states('input_text.tank_gauge') %} # must match the above input_text name
+          {% set angle = states('sensor.current_angle') | float %}
+          {% set offset = states('input_number.gauge_offset') | float %} # must match the above input_number name
+          {% if (gauge == "10-80") %}
+            {% set x_min = 110 | float %}
+            {% set x_max = 406 | float %}
+            {% set delta = 46 | float %}
+            {% set low = 10 | float %}
+            {% set high = 80 | float %}
+          {% else %}
+            {% set x_min = 120 | float %}
+            {% set x_max = 415 | float %}
+            {% set delta = 56 | float %} #could be 55 or 56, change value if % level is not accurate
+            {% set low = 5 | float %}
+            {% set high = 95 | float %}
+          {% endif %}
 
-        {% if ((delta <= angle) and (70 >= angle)) %}
-          {{ (((delta-x_min)/(x_max-x_min)*(high-low))+low+offset) | round(0) }}
-        {% elif ((0 <= angle) and (delta > angle)) %}
-          {{ (((angle)+360-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
-        {% else %}
-          {{ (((angle)-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
-        {% endif %}
+          {% if ((delta <= angle) and (70 >= angle)) %}
+            {{ (((delta-x_min)/(x_max-x_min)*(high-low))+low+offset) | round(0) }}
+          {% elif ((0 <= angle) and (delta > angle)) %}
+            {{ (((angle)+360-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+          {% else %}
+            {{ (((angle)-x_min)/(x_max-x_min)*(high-low)+low+offset) | round(0) }}
+          {% endif %}
 ```
 
 # Automation examples:
