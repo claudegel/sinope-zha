@@ -740,8 +740,8 @@ This automation will create the sensor.current_angle or any other name you want.
   alias: Lecture niveau propane
   description: Lecture du niveau de réservoir à chaque heure
   triggers:
-  - trigger: time_pattern
-    hours: /1
+    - trigger: time_pattern
+      hours: /1
   condition: []
   actions:
     action:
