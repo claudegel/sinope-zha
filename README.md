@@ -741,7 +741,7 @@ This automation will create the sensor.current_angle or any other name you want.
   description: Lecture du niveau de réservoir à chaque heure
   triggers:
     - trigger: time_pattern
-      hours: /1
+      hours: "/1"
   condition: []
   actions:
     action:
