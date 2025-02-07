@@ -17,9 +17,9 @@ mode: single
 
 triggers:
   - trigger: time
-    at: 
-      - "09:10:00"
-      - "20:10:00"
+    at: "09:10:00"
+  - trigger: time
+    at: "20:10:00"
 
 variables:
   thermostats:
