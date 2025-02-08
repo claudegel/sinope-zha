@@ -1,5 +1,6 @@
 # sinope-zha
 This is a custom quirks for sinope zigbee devices for testing before it is added to zha-device-handlers. It also explain how to setup those quirks in Home Assistant to use and test them before they are merged in zha-device-handlers.
+You can use it as a regular custom_component along with ZHA. On HA start, ZHA will load his quirks and after load the sinope-zha quirks.
 
 # Home assistant configuration:
 - in /config directory create a new directory zhaquirks -> /config/zhaquirks
