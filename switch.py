@@ -243,7 +243,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x007D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
         water_temp_protection_type: Final = foundation.ZCLAttributeDef(
-            id=0x007E, type=t.enum8, access="rWp", is_manufacturer_specific=True
+            id=0x007E, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_11: Final = foundation.ZCLAttributeDef(
             id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
