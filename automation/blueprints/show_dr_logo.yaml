@@ -9,7 +9,7 @@ blueprint:
       description: Entity ID of the bynary_sensor from hydro_QC integration.
       selector:
         entity:
-          domain: bynary_sensor
+          domain: binary_sensor
     climate_target:
       name: Thermostat_ieee
       description: Target thermostat entity. Can put more then one.
