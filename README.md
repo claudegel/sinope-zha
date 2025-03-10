@@ -148,7 +148,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0201|0x001E|30|t.enum8|running_mode|0=off, 3=cool, 4=heat|read/report|
 |0x0201|0x0400|1024|t.enum8|SetOccupancy| Home: 0, away:1|read/write|
 |0x0201|0x0401|1025|t.uint16_t|main_cycle_output| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
-|0x0201|0x0402|1026|t.enum8|backlight_auto_dim_param| OnDemand: 0, Always: 1, bedroom: 2|read/write|
+|0x0201|0x0402|1026|t.enum8|backlight_auto_dim_param| On_demand: 0, Always_on: 1, Bedroom: 2|read/write|
 |0x0201|0x0404|1028|t.uint16_t|aux_cycle_output| Number of second, 15: '15_sec', 300: '5_min', 600: '10_min', 900: '15_min', 1200: '20_min', 1800: '30_min', 65535: 'off'|read/write|
 |0x0201|0x0437|1079|t.uint16_t|unknown|100|read/write/report|
 | --- | --- | --- | --- | --- | --- | ---|
