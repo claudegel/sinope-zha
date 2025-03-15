@@ -167,7 +167,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|read/report|
 |0x0702|0x0200|512|t.bitmap8|status|0=ok|read/report|
 
-- **lights and dimmer**: (SW2500ZB, DM2500ZB, DM2550ZB)
+- **lights and dimmer**: (SW2500ZB, SW2500ZB-G2, DM2500ZB, DM2500ZB-G2, DM2550ZB, DM2550ZB-G2)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
