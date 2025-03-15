@@ -38,7 +38,7 @@ You can edit the files as you like and restart HA to test your changes. Don't fo
 # Custom cluster attributes details:
 
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
-- *Thermostats:*
+- **Thermostats:** (TH1123ZB, TH1123ZB-G2, TH1124ZB,TH1124ZB-G2, TH1300ZB, TH1400ZB, TH1500ZB, TH1134ZB-HC, HP6000ZB-MA, HP6000ZB-HS, HP6000ZB-GE, OTH3600-GA-ZB)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -167,7 +167,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr	|read/report|
 |0x0702|0x0200|512|t.bitmap8|status|0=ok|read/report|
 
-- lights and dimmer: (SW2500ZB, DM2500ZB, DM2550ZB)
+- **lights and dimmer**: (SW2500ZB, DM2500ZB, DM2550ZB)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -201,7 +201,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0008|0x0000|0|t.uint8_t|CurrentLevel| 0=0%, 254=100%|read/report|
 |0x0008|0x0011|17|t.uint8_t|OnLevel| 0=0%, 254=100%|read/write|
 
-- Switch SP2600ZB, SP2610ZB
+- **Switch**: (SP2600ZB, SP2610ZB)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -218,7 +218,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff| 0=off, 1=on|report/read|
 
-- Switch RM3250ZB, Load Controller
+- **Load Controller**: (RM3250ZB)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -245,7 +245,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|watt/hr|read/report|
 
-- Switch RM3500ZB, Calypso water tank controller
+- **Calypso**: (RM3500ZB)  water tank controller
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -302,7 +302,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered|Watt/hr|read/report|
 
-- Switch MC3100ZB, multi controller
+- **multi controller**: (MC3100ZB) 
 
 |Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | --- | ---|
@@ -325,7 +325,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|read/report|
 
-- Switch valve VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
+- **Valve**: VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -344,7 +344,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0300|768|t.enum8|unit_of_measure| 7=L/h|read|
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2  = Water Metering|read|
 
-- Switch valve VA4220ZB G2, VA4221ZB G2 with flow meter
+- **Valve G2**: (VA4220ZB G2, VA4221ZB G2) with flow meter
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -392,7 +392,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2 = Water Metering|read|
 |0x0702|0x0400|1024|t.int24s|instantaneous_demand|0|report/read|
 
-- Sensors WL4200, WL4200S, WL4200C, WL4210
+- **Leak Sensors**: (WL4200, WL4200S, WL4200C, WL4210)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -415,7 +415,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
 
-- Sensors LM4110-ZB, tank level monitor
+- **Tank level monitor**: (LM4110-ZB) 
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
