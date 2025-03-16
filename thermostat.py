@@ -54,7 +54,7 @@ from zigpy.zcl.foundation import (
 
 
 class KeypadLock(t.enum8):
-    """Keypad_lockout values."""
+    """Keypad lockout values."""
 
     Unlocked = 0x00
     Locked = 0x01
@@ -62,7 +62,7 @@ class KeypadLock(t.enum8):
 
 
 class Display(t.enum8):
-    """Config_2nd_display values."""
+    """Config 2nd display values."""
 
     Auto = 0x00
     Setpoint = 0x01
@@ -71,14 +71,14 @@ class Display(t.enum8):
 
 
 class FloorMode(t.enum8):
-    """Air_floor_mode values."""
+    """Air floor mode values."""
 
     Air_by_floor = 0x01
     Floor = 0x02
 
 
 class AuxMode(t.enum8):
-    """Aux_output_mode values."""
+    """Aux output mode values."""
 
     Off = 0x00
     On_15m = 0x01
@@ -103,21 +103,21 @@ class LimitStatus(t.uint8_t):
 
 
 class SensorType(t.enum8):
-    """Temp_sensor_type values."""
+    """Temp sensor type values."""
 
     Sensor_10k = 0x00
     Sensor_12k = 0x01
 
 
 class TimeFormat(t.enum8):
-    """Time_format values."""
+    """Time format values."""
 
     Format_24h = 0x00
     Format_12h = 0x01
 
 
 class WeatherIcon(t.enum8):
-    """weather_icons values."""
+    """weather icons values."""
 
     Cloud = 0x05
     Cloud2 = 0x08
@@ -155,7 +155,7 @@ class WeatherIcon(t.enum8):
 
 
 class GfciStatus(t.enum8):
-    """Gfci_status values."""
+    """Gfci status values."""
 
     Ok = 0x00
     Error = 0x01
@@ -189,14 +189,14 @@ class CycleLength(t.uint16_t):
 
 
 class Occupancy(t.enum8):
-    """Set_occupancy values."""
+    """Set occupancy values."""
 
     Home = 0x00
     Away = 0x01
 
 
 class Backlight(t.enum8):
-    """Backlight_auto_dim_param values for G2 devices."""
+    """Backlight auto dim param values for G2 devices."""
 
     On_demand = 0x00
     Always_on = 0x01
@@ -204,7 +204,7 @@ class Backlight(t.enum8):
 
 
 class Simplebacklight(t.enum8):
-    """Backlight_auto_dim_param values for first gen devices."""
+    """Backlight auto dim param values for first gen devices."""
 
     On_demand = 0x00
     Always_on = 0x01
@@ -729,6 +729,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum( # Aux mode
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=AuxMode,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
     .sensor( # floor_limit_status
         SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -738,14 +746,6 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         ),
         translation_key="floor_limit_status",
         fallback_name="Floor limit status",
-        entity_type=EntityType.CONFIG,
-    )
-    .switch( # Aux mode
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="aux_output_mode",
-        fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
     )
     .switch( # Pump protection status
@@ -823,6 +823,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum( # Aux mode
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=AuxMode,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
     .sensor( # floor_limit_status
         SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -844,14 +852,6 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="gfci_status",
         fallback_name="Gfci status",
         entity_type=EntityType.DIAGNOSTIC,
-    )
-    .switch( # Aux mode
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="aux_output_mode",
-        fallback_name="Aux output mode",
-        entity_type=EntityType.CONFIG,
     )
     .switch( # Floor sensor type
         SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
@@ -1064,10 +1064,10 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .switch( # Aux mode
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
+    .enum( # Aux mode
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
