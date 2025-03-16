@@ -7,9 +7,30 @@ of outdoor temperature, setting occupancy on/off and setting device time.
 from typing import Final
 
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
-from zigpy.zcl import foundation
+
+from zhaquirks.const import (
+    DEVICE_TYPE,
+    ENDPOINTS,
+    INPUT_CLUSTERS,
+    MODELS_INFO,
+    OUTPUT_CLUSTERS,
+    PROFILE_ID,
+)
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+
+from zigpy.quirks import CustomCluster, CustomDevice
+from zigpy.quirks.v2 import (
+    BinarySensorDeviceClass,
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    UnitOfTemperature,
+)
 from zigpy.zcl.clusters.general import (
     Basic,
     Groups,
@@ -24,17 +45,12 @@ from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Fan, Thermostat, UserInterface
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import Array
-
-from zhaquirks.const import (
-    DEVICE_TYPE,
-    ENDPOINTS,
-    INPUT_CLUSTERS,
-    MODELS_INFO,
-    OUTPUT_CLUSTERS,
-    PROFILE_ID,
+from zigpy.zcl.foundation import (
+    Array,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+    ZCL_CLUSTER_REVISION_ATTR,
 )
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
 class KeypadLock(t.enum8):
@@ -175,16 +191,23 @@ class CycleLength(t.uint16_t):
 class Occupancy(t.enum8):
     """Set_occupancy values."""
 
-    Away = 0x00
-    Home = 0x01
+    Home = 0x00
+    Away = 0x01
 
 
 class Backlight(t.enum8):
-    """Backlight_auto_dim_param values."""
+    """Backlight_auto_dim_param values for G2 devices."""
 
     On_demand = 0x00
     Always_on = 0x01
     Bedroom = 0x02
+
+
+class Simplebacklight(t.enum8):
+    """Backlight_auto_dim_param values for first gen devices."""
+
+    On_demand = 0x00
+    Always_on = 0x01
 
 
 class CycleOutput(t.uint16_t):
@@ -201,10 +224,17 @@ class CycleOutput(t.uint16_t):
 
 
 class Language(t.enum8):
-    """Display_language values."""
+    """Display language values."""
 
     En = 0x00
     Fr = 0x01
+
+
+class TempFormat(t.enum8):
+    """Cahnge temperature display format"""
+
+    Celsius = 0x00
+    Fahrenheit = 0x01
 
 
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
@@ -229,265 +259,265 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     name: Final = "SinopeTechnologiesManufacturerCluster"
     ep_attribute: Final = "sinope_manufacturer_specific"
 
-    class AttributeDefs(foundation.BaseAttributeDefs):
+    class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+        unknown_attr_1: Final = ZCLAttributeDef(
             id=0x0001, type=t.Bool, access="rwp", is_manufacturer_specific=True
         )
-        keypad_lockout: Final = foundation.ZCLAttributeDef(
+        keypad_lockout: Final = ZCLAttributeDef(
             id=0x0002, type=KeypadLock, access="rwp", is_manufacturer_specific=True
         )
-        firmware_number: Final = foundation.ZCLAttributeDef(
+        firmware_number: Final = ZCLAttributeDef(
             id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True
         )
-        firmware_version: Final = foundation.ZCLAttributeDef(
+        firmware_version: Final = ZCLAttributeDef(
             id=0x0004,
             type=t.CharacterString,
             access="rp",
             is_manufacturer_specific=True,
         )
-        display_language: Final = foundation.ZCLAttributeDef(
+        display_language: Final = ZCLAttributeDef(
             id=0x0005, type=Language, access="rwp", is_manufacturer_specific=True
         )
-        outdoor_temp: Final = foundation.ZCLAttributeDef(
+        outdoor_temp: Final = ZCLAttributeDef(
             id=0x0010, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        outdoor_temp_timeout: Final = foundation.ZCLAttributeDef(
+        outdoor_temp_timeout: Final = ZCLAttributeDef(
             id=0x0011, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        config_2nd_display: Final = foundation.ZCLAttributeDef(
+        config_2nd_display: Final = ZCLAttributeDef(
             id=0x0012, type=Display, access="rwp", is_manufacturer_specific=True
         )
-        weather_icons: Final = foundation.ZCLAttributeDef(
+        weather_icons: Final = ZCLAttributeDef(
             id=0x0013, type=WeatherIcon, access="rwp", is_manufacturer_specific=True
         )
-        secs_since_2k: Final = foundation.ZCLAttributeDef(
+        secs_since_2k: Final = ZCLAttributeDef(
             id=0x0020, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
         )
-        current_load: Final = foundation.ZCLAttributeDef(
+        current_load: Final = ZCLAttributeDef(
             id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
-        eco_delta_setpoint: Final = foundation.ZCLAttributeDef(
+        eco_delta_setpoint: Final = ZCLAttributeDef(
             id=0x0071, type=t.int8s, access="rwp", is_manufacturer_specific=True
         )
-        eco_max_pi_heating_demand: Final = foundation.ZCLAttributeDef(
+        eco_max_pi_heating_demand: Final = ZCLAttributeDef(
             id=0x0072, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        eco_safety_temperature_delta: Final = foundation.ZCLAttributeDef(
+        eco_safety_temperature_delta: Final = ZCLAttributeDef(
             id=0x0073, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+        unknown_attr_2: Final = ZCLAttributeDef(
             id=0x0075, type=t.bitmap32, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+        unknown_attr_3: Final = ZCLAttributeDef(
             id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+        unknown_attr_4: Final = ZCLAttributeDef(
             id=0x0100, type=t.uint8_t, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_5: Final = foundation.ZCLAttributeDef(
+        unknown_attr_5: Final = ZCLAttributeDef(
             id=0x0101, type=Array, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_6: Final = foundation.ZCLAttributeDef(
+        unknown_attr_6: Final = ZCLAttributeDef(
             id=0x0102, type=t.uint8_t, access="r", is_manufacturer_specific=True
         )
-        unknown_attr_7: Final = foundation.ZCLAttributeDef(
+        unknown_attr_7: Final = ZCLAttributeDef(
             id=0x0103, type=Array, access="r", is_manufacturer_specific=True
         )
-        setpoint: Final = foundation.ZCLAttributeDef(
+        setpoint: Final = ZCLAttributeDef(
             id=0x0104, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        air_floor_mode: Final = foundation.ZCLAttributeDef(
+        air_floor_mode: Final = ZCLAttributeDef(
             id=0x0105, type=FloorMode, access="rw", is_manufacturer_specific=True
         )
-        aux_output_mode: Final = foundation.ZCLAttributeDef(
+        aux_output_mode: Final = ZCLAttributeDef(
             id=0x0106, type=AuxMode, access="rw", is_manufacturer_specific=True
         )
-        floor_temperature: Final = foundation.ZCLAttributeDef(
+        floor_temperature: Final = ZCLAttributeDef(
             id=0x0107, type=t.int16s, access="r", is_manufacturer_specific=True
         )
-        air_max_limit: Final = foundation.ZCLAttributeDef(
+        air_max_limit: Final = ZCLAttributeDef(
             id=0x0108, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        floor_min_setpoint: Final = foundation.ZCLAttributeDef(
+        floor_min_setpoint: Final = ZCLAttributeDef(
             id=0x0109, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        floor_max_setpoint: Final = foundation.ZCLAttributeDef(
+        floor_max_setpoint: Final = ZCLAttributeDef(
             id=0x010A, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        floor_sensor_type_param: Final = foundation.ZCLAttributeDef(
+        floor_sensor_type_param: Final = ZCLAttributeDef(
             id=0x010B, type=SensorType, access="rw", is_manufacturer_specific=True
         )
-        floor_limit_status: Final = foundation.ZCLAttributeDef(
+        floor_limit_status: Final = ZCLAttributeDef(
             id=0x010C, type=LimitStatus, access="rp", is_manufacturer_specific=True
         )
-        room_temperature: Final = foundation.ZCLAttributeDef(
+        room_temperature: Final = ZCLAttributeDef(
             id=0x010D, type=t.int16s, access="r", is_manufacturer_specific=True
         )
-        time_format: Final = foundation.ZCLAttributeDef(
+        time_format: Final = ZCLAttributeDef(
             id=0x0114, type=TimeFormat, access="rwp", is_manufacturer_specific=True
         )
-        gfci_status: Final = foundation.ZCLAttributeDef(
+        gfci_status: Final = ZCLAttributeDef(
             id=0x0115, type=GfciStatus, access="rp", is_manufacturer_specific=True
         )
-        hvac_mode: Final = foundation.ZCLAttributeDef(
+        hvac_mode: Final = ZCLAttributeDef(
             id=0x0116, type=SystemMode, access="r", is_manufacturer_specific=True
         )
-        unknown_attr_8: Final = foundation.ZCLAttributeDef(
+        unknown_attr_8: Final = ZCLAttributeDef(
             id=0x0117, type=Array, access="r", is_manufacturer_specific=True
         )
-        aux_connected_load: Final = foundation.ZCLAttributeDef(
+        aux_connected_load: Final = ZCLAttributeDef(
             id=0x0118, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        connected_load: Final = foundation.ZCLAttributeDef(
+        connected_load: Final = ZCLAttributeDef(
             id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        pump_protection_status: Final = foundation.ZCLAttributeDef(
+        pump_protection_status: Final = ZCLAttributeDef(
             id=0x0128, type=PumpStatus, access="rw", is_manufacturer_specific=True
         )
-        pump_protection_duration: Final = foundation.ZCLAttributeDef(
+        pump_protection_duration: Final = ZCLAttributeDef(
             id=0x012A, type=PumpDuration, access="rwp", is_manufacturer_specific=True
         )
-        current_setpoint: Final = foundation.ZCLAttributeDef(
+        current_setpoint: Final = ZCLAttributeDef(
             id=0x012B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_9: Final = foundation.ZCLAttributeDef(
+        unknown_attr_9: Final = ZCLAttributeDef(
             id=0x012C, type=Array, access="r", is_manufacturer_specific=True
         )
-        report_local_temperature: Final = foundation.ZCLAttributeDef(
+        report_local_temperature: Final = ZCLAttributeDef(
             id=0x012D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = foundation.ZCLAttributeDef(
+        unknown_attr_17: Final = ZCLAttributeDef(
             id=0x0130, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        balance_point: Final = foundation.ZCLAttributeDef(
+        balance_point: Final = ZCLAttributeDef(
             id=0x0134, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_19: Final = foundation.ZCLAttributeDef(
+        unknown_attr_19: Final = ZCLAttributeDef(
             id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        timer_off: Final = foundation.ZCLAttributeDef(
+        weather_icons_timeout: Final = ZCLAttributeDef(
             id=0x0136, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        abs_min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        abs_min_heat_setpoint_limit: Final = ZCLAttributeDef(
             id=0x0137, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_20: Final = foundation.ZCLAttributeDef(
+        unknown_attr_20: Final = ZCLAttributeDef(
             id=0x0138, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        heat_lockout_temperature: Final = foundation.ZCLAttributeDef(
+        heat_lockout_temperature: Final = ZCLAttributeDef(
             id=0x0139, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        cool_lockout_temperature: Final = foundation.ZCLAttributeDef(
+        cool_lockout_temperature: Final = ZCLAttributeDef(
             id=0x013A, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = foundation.ZCLAttributeDef(
+        unknown_attr_11: Final = ZCLAttributeDef(
             id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
-        status: Final = foundation.ZCLAttributeDef(
+        status: Final = ZCLAttributeDef(
             id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_12: Final = foundation.ZCLAttributeDef(
+        unknown_attr_12: Final = ZCLAttributeDef(
             id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True
         )
-        unknown_attr_22: Final = foundation.ZCLAttributeDef(
+        unknown_attr_22: Final = ZCLAttributeDef(
             id=0x0260, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_21: Final = foundation.ZCLAttributeDef(
+        unknown_attr_21: Final = ZCLAttributeDef(
             id=0x0261, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_24: Final = foundation.ZCLAttributeDef(
+        unknown_attr_24: Final = ZCLAttributeDef(
             id=0x0262, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_25: Final = foundation.ZCLAttributeDef(
+        unknown_attr_25: Final = ZCLAttributeDef(
             id=0x0263, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_26: Final = foundation.ZCLAttributeDef(
+        unknown_attr_26: Final = ZCLAttributeDef(
             id=0x0264, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_27: Final = foundation.ZCLAttributeDef(
+        unknown_attr_27: Final = ZCLAttributeDef(
             id=0x0265, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_28: Final = foundation.ZCLAttributeDef(
+        unknown_attr_28: Final = ZCLAttributeDef(
             id=0x0266, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        hc_model_mac_addr: Final = foundation.ZCLAttributeDef(
+        hc_model_mac_addr: Final = ZCLAttributeDef(
             id=0x0267, type=t.EUI64, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_29: Final = foundation.ZCLAttributeDef(
+        unknown_attr_29: Final = ZCLAttributeDef(
             id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_42: Final = foundation.ZCLAttributeDef(
+        unknown_attr_42: Final = ZCLAttributeDef(
             id=0x0269, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_31: Final = foundation.ZCLAttributeDef(
+        unknown_attr_31: Final = ZCLAttributeDef(
             id=0x026A, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
         )
-        min_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        min_heat_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        max_heat_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        max_heat_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026C, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        min_cool_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        min_cool_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026D, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        max_cool_setpoint_limit: Final = foundation.ZCLAttributeDef(
+        max_cool_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026E, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = foundation.ZCLAttributeDef(
+        unknown_attr_10: Final = ZCLAttributeDef(
             id=0x0280, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        cycle_length: Final = foundation.ZCLAttributeDef(
+        cycle_length: Final = ZCLAttributeDef(
             id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
-        cool_cycle_length: Final = foundation.ZCLAttributeDef(
+        cool_cycle_length: Final = ZCLAttributeDef(
             id=0x0282, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_13: Final = foundation.ZCLAttributeDef(
+        unknown_attr_13: Final = ZCLAttributeDef(
             id=0x0283, type=t.enum8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_14: Final = foundation.ZCLAttributeDef(
+        unknown_attr_14: Final = ZCLAttributeDef(
             id=0x0284, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_15: Final = foundation.ZCLAttributeDef(
+        unknown_attr_15: Final = ZCLAttributeDef(
             id=0x0285, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_16: Final = foundation.ZCLAttributeDef(
+        unknown_attr_16: Final = ZCLAttributeDef(
             id=0x0286, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_32: Final = foundation.ZCLAttributeDef(
+        unknown_attr_32: Final = ZCLAttributeDef(
             id=0xFF04, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_33: Final = foundation.ZCLAttributeDef(
+        unknown_attr_33: Final = ZCLAttributeDef(
             id=0xFF05, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_34: Final = foundation.ZCLAttributeDef(
+        unknown_attr_34: Final = ZCLAttributeDef(
             id=0xFF06, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_35: Final = foundation.ZCLAttributeDef(
+        unknown_attr_35: Final = ZCLAttributeDef(
             id=0xFF07, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_36: Final = foundation.ZCLAttributeDef(
+        unknown_attr_36: Final = ZCLAttributeDef(
             id=0xFF08, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_37: Final = foundation.ZCLAttributeDef(
+        unknown_attr_37: Final = ZCLAttributeDef(
             id=0xFF09, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_38: Final = foundation.ZCLAttributeDef(
+        unknown_attr_38: Final = ZCLAttributeDef(
             id=0xFF0A, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_39: Final = foundation.ZCLAttributeDef(
+        unknown_attr_39: Final = ZCLAttributeDef(
             id=0xFF0B, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_40: Final = foundation.ZCLAttributeDef(
+        unknown_attr_40: Final = ZCLAttributeDef(
             id=0xFF0C, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_41: Final = foundation.ZCLAttributeDef(
+        unknown_attr_41: Final = ZCLAttributeDef(
             id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
-        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
+        cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
@@ -500,70 +530,70 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     class AttributeDefs(Thermostat.AttributeDefs):
         """Sinope Manufacturer Thermostat Cluster Attributes."""
 
-        set_occupancy: Final = foundation.ZCLAttributeDef(
+        set_occupancy: Final = ZCLAttributeDef(
             id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True
         )
-        main_cycle_output: Final = foundation.ZCLAttributeDef(
+        main_cycle_output: Final = ZCLAttributeDef(
             id=0x0401, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
-        backlight_auto_dim_param: Final = foundation.ZCLAttributeDef(
+        backlight_auto_dim_param: Final = ZCLAttributeDef(
             id=0x0402, type=Backlight, access="rw", is_manufacturer_specific=True
         )
-        aux_cycle_output: Final = foundation.ZCLAttributeDef(
+        aux_cycle_output: Final = ZCLAttributeDef(
             id=0x0404, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+        unknown_attr_1: Final = ZCLAttributeDef(
             id=0x0421, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+        unknown_attr_2: Final = ZCLAttributeDef(
             id=0x0422, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+        unknown_attr_3: Final = ZCLAttributeDef(
             id=0x0423, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+        unknown_attr_4: Final = ZCLAttributeDef(
             id=0x0424, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_5: Final = foundation.ZCLAttributeDef(
+        unknown_attr_5: Final = ZCLAttributeDef(
             id=0x0425, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_6: Final = foundation.ZCLAttributeDef(
+        unknown_attr_6: Final = ZCLAttributeDef(
             id=0x0426, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_7: Final = foundation.ZCLAttributeDef(
+        unknown_attr_7: Final = ZCLAttributeDef(
             id=0x0427, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_8: Final = foundation.ZCLAttributeDef(
+        unknown_attr_8: Final = ZCLAttributeDef(
             id=0x0428, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_9: Final = foundation.ZCLAttributeDef(
+        unknown_attr_9: Final = ZCLAttributeDef(
             id=0x0429, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = foundation.ZCLAttributeDef(
+        unknown_attr_10: Final = ZCLAttributeDef(
             id=0x0430, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = foundation.ZCLAttributeDef(
+        unknown_attr_11: Final = ZCLAttributeDef(
             id=0x0431, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_12: Final = foundation.ZCLAttributeDef(
+        unknown_attr_12: Final = ZCLAttributeDef(
             id=0x0432, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_13: Final = foundation.ZCLAttributeDef(
+        unknown_attr_13: Final = ZCLAttributeDef(
             id=0x0433, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_14: Final = foundation.ZCLAttributeDef(
+        unknown_attr_14: Final = ZCLAttributeDef(
             id=0x0434, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_15: Final = foundation.ZCLAttributeDef(
+        unknown_attr_15: Final = ZCLAttributeDef(
             id=0x0435, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_16: Final = foundation.ZCLAttributeDef(
+        unknown_attr_16: Final = ZCLAttributeDef(
             id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_18: Final = foundation.ZCLAttributeDef(
+        unknown_attr_18: Final = ZCLAttributeDef(
             id=0x0437, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = foundation.ZCLAttributeDef(
+        unknown_attr_17: Final = ZCLAttributeDef(
             id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
 
@@ -576,476 +606,479 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     class AttributeDefs(ElectricalMeasurement.AttributeDefs):
         """Sinope Manufacturer ElectricalMeasurement Cluster Attributes."""
 
-        current_summation_delivered: Final = foundation.ZCLAttributeDef(
+        current_summation_delivered: Final = ZCLAttributeDef(
             id=0x0551, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
         )
-        aux_setpoint_min: Final = foundation.ZCLAttributeDef(
+        aux_setpoint_min: Final = ZCLAttributeDef(
             id=0x0552, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
-        aux_setpoint_max: Final = foundation.ZCLAttributeDef(
+        aux_setpoint_max: Final = ZCLAttributeDef(
             id=0x0553, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
 
 
-class SinopeTechnologiesThermostat(CustomDevice):
-    """SinopeTechnologiesThermostat custom device."""
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769
+    # device_version=0 input_clusters=[0, 3, 4, 5, 513, 516, 1026, 2820,
+    # 2821, 65281] output_clusters=[65281, 25]>
+    # <SimpleDescriptor endpoint=196 profile=49757 device_type=769
+    # device_version=0 input_clusters=[1] output_clusters=[]>
+    QuirkBuilder(SINOPE, "TH1123ZB")
+    .applies_to(SINOPE, "TH1124ZB")
+    .applies_to(SINOPE, "TH1500ZB")
+    .replaces(SinopeTechnologiesElectricalMeasurementCluster)
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Simplebacklight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .number( # eco delta setpoint
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769
-        # device_version=0 input_clusters=[0, 3, 4, 5, 513, 516, 1026, 2820,
-        # 2821, 65281] output_clusters=[65281, 25]>
-        MODELS_INFO: [
-            (SINOPE, "TH1123ZB"),
-            (SINOPE, "TH1124ZB"),
-            (SINOPE, "TH1500ZB"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    ElectricalMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [Ota.cluster_id, SINOPE_MANUFACTURER_CLUSTER_ID],
-            },
-            # <SimpleDescriptor endpoint=196 profile=49757 device_type=769
-            # device_version=0 input_clusters=[1] output_clusters=[]>
-            196: {
-                PROFILE_ID: 0xC25D,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [PowerConfiguration.cluster_id],
-                OUTPUT_CLUSTERS: [],
-            },
-        },
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
+    # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2821, 65281]
+    # output_clusters=[10, 65281, 25]>
+    QuirkBuilder(SINOPE, "TH1400ZB")
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Pump protection duration
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=PumpDuration,
+        translation_key="pump_protection_duration",
+        fallback_name="Pump protection duration",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Simplebacklight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .sensor( # floor_limit_status
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        reporting_config=ReportingConfig(
+            min_interval=10, max_interval=3600, reportable_change=1
+        ),
+        translation_key="floor_limit_status",
+        fallback_name="Floor limit status",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Aux mode
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Pump protection status
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="pump_protection_status",
+        fallback_name="Pump protection status",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesElectricalMeasurementCluster,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            },
-            196: {INPUT_CLUSTERS: [PowerConfiguration.cluster_id]},
-        }
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
+    # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
+    # output_clusters=[10, 25, 65281]>
+    QuirkBuilder(SINOPE, "TH1300ZB")
+    .replaces(SinopeTechnologiesElectricalMeasurementCluster)
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config air floor mode
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.air_floor_mode.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=FloorMode,
+        translation_key="air_floor_mode",
+        fallback_name="Air floor mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Pump protection duration
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=PumpDuration,
+        translation_key="pump_protection_duration",
+        fallback_name="Pump protection duration",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Simplebacklight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .sensor( # floor_limit_status
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        reporting_config=ReportingConfig(
+            min_interval=10, max_interval=3600, reportable_change=1
+        ),
+        translation_key="floor_limit_status",
+        fallback_name="Floor limit status",
+        entity_type=EntityType.DIAGNOSTIC,
+    )
+    .sensor( # Gfci status
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        reporting_config=ReportingConfig(
+            min_interval=10, max_interval=3600, reportable_change=1
+        ),
+        translation_key="gfci_status",
+        fallback_name="Gfci status",
+        entity_type=EntityType.DIAGNOSTIC,
+    )
+    .switch( # Aux mode
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Floor sensor type
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="floor_sensor_type",
+        fallback_name="Floor sensor type",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
+    # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
+    # output_clusters=[10, 25, 65281]>
+    QuirkBuilder(SINOPE, "TH1123ZB")
+    .applies_to(SINOPE, "TH1124ZB")
+    .applies_to(SINOPE, "TH1500ZB")
+    .applies_to(SINOPE, "OTH3600-GA-ZB")
+    .replaces(SinopeTechnologiesElectricalMeasurementCluster)
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Simplebacklight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
-class SinopeTH1400ZB(CustomDevice):
-    """TH1400ZB thermostat."""
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
+    # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
+    # output_clusters=[3, 10, 25]>
+    QuirkBuilder(SINOPE, "TH1123ZB-G2")
+    .applies_to(SINOPE, "TH1124ZB-G2")
+    .replaces(SinopeTechnologiesElectricalMeasurementCluster)
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Backlight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
-        # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2821, 65281]
-        # output_clusters=[10, 65281, 25]>
-        MODELS_INFO: [(SINOPE, "TH1400ZB")],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        },
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=775 device_version=1
+    # input_clusters=[0, 3, 4, 5, 8, 513, 514, 516, 1026, 2821, 65281]
+    # output_clusters=[25]>
+    QuirkBuilder(SINOPE, "HP6000ZB-GE")
+    .applies_to(SINOPE, "HP6000ZB-HS")
+    .applies_to(SINOPE, "HP6000ZB-MA")
+    .replaces(SinopeTechnologiesThermostatCluster, endpoint_id=1)
+    .replaces(SinopeTechnologiesManufacturerCluster, endpoint_id=1)
+    .replaces(SinopeTechnologiesThermostatCluster, endpoint_id=2)
+    .replaces(SinopeTechnologiesManufacturerCluster, endpoint_id=2)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
 
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        }
-    }
-
-
-class SinopeTH1300ZB(CustomDevice):
-    """TH1300ZB thermostat."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
-        # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
-        # output_clusters=[10, 25, 65281]>
-        MODELS_INFO: [(SINOPE, "TH1300ZB")],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesElectricalMeasurementCluster,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        }
-    }
-
-
-class SinopeLineThermostats(CustomDevice):
-    """TH1123ZB, TH1124ZB, TH1500ZB and OTH3600-GA-ZB thermostats."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
-        # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
-        # output_clusters=[10, 25, 65281]>
-        MODELS_INFO: [
-            (SINOPE, "TH1123ZB"),
-            (SINOPE, "TH1124ZB"),
-            (SINOPE, "TH1500ZB"),
-            (SINOPE, "OTH3600-GA-ZB"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesElectricalMeasurementCluster,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-            }
-        }
-    }
-
-
-class SinopeG2Thermostats(CustomDevice):
-    """TH1123ZB-G2 and TH1124ZB-G2 thermostats."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
-        # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
-        # output_clusters=[3, 10, 25]>
-        MODELS_INFO: [
-            (SINOPE, "TH1123ZB-G2"),
-            (SINOPE, "TH1124ZB-G2"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesElectricalMeasurementCluster,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        }
-    }
-
-
-class SinopeHPThermostats(CustomDevice):
-    """HP6000ZB-GE, HP6000ZB-HS and HP6000ZB-MA thermostats."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=775 device_version=1
-        # input_clusters=[0, 3, 4, 5, 8, 513, 514, 516, 1026, 2821, 65281]
-        # output_clusters=[25]>
-        MODELS_INFO: [
-            (SINOPE, "HP6000ZB-GE"),
-            (SINOPE, "HP6000ZB-HS"),
-            (SINOPE, "HP6000ZB-MA"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.MINI_SPLIT_AC,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    LevelControl.cluster_id,
-                    Thermostat.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [Ota.cluster_id],
-            },
-            2: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.MINI_SPLIT_AC,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    LevelControl.cluster_id,
-                    Thermostat.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [Ota.cluster_id],
-            },
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    LevelControl.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [Ota.cluster_id],
-            },
-            2: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    LevelControl.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [Ota.cluster_id],
-            },
-        }
-    }
-
-
-class SinopeHCThermostats(CustomDevice):
-    """TH1134ZB-HC thermostats."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
-        # input_clusters=[0, 3, 4, 5, 513, 514, 516, 1026, 1794, 2820, 2821, 65281]
-        # output_clusters=[3, 10, 25]>
-        MODELS_INFO: [(SINOPE, "TH1134ZB-HC")],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.THERMOSTAT,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Thermostat.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    ElectricalMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    Identify.cluster_id,
-                    Groups.cluster_id,
-                    Scenes.cluster_id,
-                    Fan.cluster_id,
-                    UserInterface.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Metering.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeTechnologiesElectricalMeasurementCluster,
-                    SinopeTechnologiesThermostatCluster,
-                    SinopeTechnologiesManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Time.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        }
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
+    # input_clusters=[0, 3, 4, 5, 513, 514, 516, 1026, 1794, 2820, 2821, 65281]
+    # output_clusters=[3, 10, 25]>
+    QuirkBuilder(SINOPE, "TH1134ZB-HC")
+    .replaces(SinopeTechnologiesElectricalMeasurementCluster)
+    .replaces(SinopeTechnologiesThermostatCluster)
+    .replaces(SinopeTechnologiesManufacturerCluster)
+    .enum( # Keypad lock
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=KeypadLock,
+        translation_key="keypad_lockout",
+        fallback_name="Keypad lockout",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Config second display
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Display,
+        translation_key="config_2nd_display",
+        fallback_name="Config 2nd display",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Display language
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.display_language.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=Language,
+        translation_key="display_language",
+        fallback_name="Display language",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Weather icons
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=WeatherIcon,
+        translation_key="weather_icons",
+        fallback_name="Weather icons",
+        entity_type=EntityType.DIAGNOSTIC,
+    )
+    .enum( # Config backlight auto dim
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=Backlight,
+        translation_key="backlight_auto_dim",
+        fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Temperature format
+        attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
+        cluster_id=UserInterface.cluster_id,
+        enum_class=TempFormat,
+        translation_key="temperature_display_mode",
+        fallback_name="Temperature display mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Aux mode
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .switch( # Time format
+        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
+    .add_to_registry()
+)
