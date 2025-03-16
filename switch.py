@@ -417,14 +417,6 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         translation_key="current_summ_delivered",
         fallback_name="Current summ delivered",
     )
-    .sensor( # Device status
-        SinopeManufacturerCluster.AttributeDefs.status.name,
-        SinopeManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        entity_type=EntityType.DIAGNOSTIC,
-        translation_key="status",
-        fallback_name="Device status",
-    )
     .add_to_registry()
 )
 
@@ -907,14 +899,6 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         ),
         translation_key="current_summ_delivered",
         fallback_name="Current summ delivered",
-    )
-    .sensor( # Device status
-        SinopeManufacturerCluster.AttributeDefs.status.name,
-        SinopeManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
-        fallback_name="Device status",
-        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
