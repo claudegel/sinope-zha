@@ -288,10 +288,10 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0230, type=FlowAlarm, access="rw", is_manufacturer_specific=True
         )
         alarm_options: Final = foundation.ZCLAttributeDef(
-            id=0x0231, type=Array, access="r", is_manufacturer_specific=True
+            id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True
         )
         flow_meter_config: Final = foundation.ZCLAttributeDef(
-            id=0x0240, type=AlarmAction, access="rw", is_manufacturer_specific=True
+            id=0x0240, type=Array, access="rw", is_manufacturer_specific=True
         )
         valve_countdown: Final = foundation.ZCLAttributeDef(
             id=0x0241, type=t.uint32_t, access="rw", is_manufacturer_specific=True
