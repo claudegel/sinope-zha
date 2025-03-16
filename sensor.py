@@ -4,12 +4,45 @@ It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S and LM4110-ZB
 """
 
+import logging
 from typing import Final
 
+from zhaquirks.const import (
+    DEVICE_TYPE,
+    ENDPOINTS,
+    INPUT_CLUSTERS,
+    MODELS_INFO,
+    OUTPUT_CLUSTERS,
+    PROFILE_ID,
+)
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.switch import (
+    SinopeTechnologiesMeteringCluster,
+    SinopeTechnologiesBasicCluster,
+    EnergySource,
+)
+
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster, CustomDevice
 import zigpy.types as t
-from zigpy.zcl import foundation
+
+from zigpy.quirks import CustomCluster, CustomDevice
+from zigpy.quirks.v2 import (
+    BinarySensorDeviceClass,
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    UnitOfTemperature,
+    UnitOfTime,
+    UnitOfEnergy,
+    UnitOfElectricPotential,
+    PERCENTAGE,
+    DEGREE,
+)
+
 from zigpy.zcl.clusters.general import (
     AnalogInput,
     Basic,
@@ -21,16 +54,12 @@ from zigpy.zcl.clusters.general import (
 from zigpy.zcl.clusters.homeautomation import Diagnostic
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
-
-from zhaquirks.const import (
-    DEVICE_TYPE,
-    ENDPOINTS,
-    INPUT_CLUSTERS,
-    MODELS_INFO,
-    OUTPUT_CLUSTERS,
-    PROFILE_ID,
+from zigpy.zcl.clusters.smartenergy import Metering
+from zigpy.zcl.foundation import (
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+    ZCL_CLUSTER_REVISION_ATTR,
 )
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
 class LeakStatus(t.enum8):
@@ -47,43 +76,43 @@ class SinopeManufacturerCluster(CustomCluster):
     name: Final = "SinopeManufacturerCluster"
     ep_attribute: Final = "sinope_manufacturer_specific"
 
-    class AttributeDefs(foundation.BaseAttributeDefs):
+    class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        firmware_number: Final = foundation.ZCLAttributeDef(
+        firmware_number: Final = ZCLAttributeDef(
             id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
         )
-        firmware_version: Final = foundation.ZCLAttributeDef(
+        firmware_version: Final = ZCLAttributeDef(
             id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
         )
-        unknown_attr_1: Final = foundation.ZCLAttributeDef(
+        unknown_attr_1: Final = ZCLAttributeDef(
             id=0x0030, type=t.uint8_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_2: Final = foundation.ZCLAttributeDef(
+        unknown_attr_2: Final = ZCLAttributeDef(
             id=0x0031, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        min_temperature_limit: Final = foundation.ZCLAttributeDef(
+        min_temperature_limit: Final = ZCLAttributeDef(
             id=0x0032, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        max_temperature_limit: Final = foundation.ZCLAttributeDef(
+        max_temperature_limit: Final = ZCLAttributeDef(
             id=0x0033, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        device_status: Final = foundation.ZCLAttributeDef(
+        device_status: Final = ZCLAttributeDef(
             id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_3: Final = foundation.ZCLAttributeDef(
+        unknown_attr_3: Final = ZCLAttributeDef(
             id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
         )
-        battery_type: Final = foundation.ZCLAttributeDef(
+        battery_type: Final = ZCLAttributeDef(
             id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_4: Final = foundation.ZCLAttributeDef(
+        unknown_attr_4: Final = ZCLAttributeDef(
             id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
         )
-        status: Final = foundation.ZCLAttributeDef(
+        status: Final = ZCLAttributeDef(
             id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
         )
-        cluster_revision: Final = foundation.ZCL_CLUSTER_REVISION_ATTR
+        cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
@@ -94,172 +123,211 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer IasZone Cluster Attributes."""
 
-        leak_status: Final = foundation.ZCLAttributeDef(
+        leak_status: Final = ZCLAttributeDef(
             id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
         )
 
 
-class SinopeTechnologiesSensor(CustomDevice):
-    """SinopeTechnologiesSensor custom device."""
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=1026
+    # device_version=0 input_clusters=[0, 1, 3, 1026, 1280, 2821, 65281]
+    # output_clusters=[3, 25]>
+    QuirkBuilder(SINOPE, "WL4200")
+    .applies_to(SINOPE, "WL4200S")
+    .replaces(SinopeTechnologiesIasZoneCluster)
+    .replaces(SinopeManufacturerCluster)
+    .enum( # power source
+        attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
+        cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
+        enum_class=EnergySource,
+        translation_key="power_source",
+        fallback_name="Power source",
+        entity_type=EntityType.STANDARD,
+    )
+    .sensor( # battery percent
+        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=43200, reportable_change=1
+        ),
+        translation_key="battery_percentage_remaining",
+        fallback_name="Battery percentage remaining",
+    )
+    .sensor( # battery voltage
+        PowerConfiguration.AttributeDefs.battery_voltage.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=43200, reportable_change=1
+        ),
+        translation_key="battery_voltage",
+        fallback_name="Battery voltage",
+    )
+    .sensor( # local temperature
+        TemperatureMeasurement.AttributeDefs.measured_value.name,
+        SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=3600, reportable_change=300
+        ),
+        translation_key="measured_temperature",
+        fallback_name="Measured temperature",
+    )
+    .add_to_registry()
+)
 
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=1026
-        # device_version=0 input_clusters=[0, 1, 3, 1026, 1280, 2821, 65281]
-        # output_clusters=[3, 25]>
-        MODELS_INFO: [
-            (SINOPE, "WL4200"),
-            (SINOPE, "WL4200S"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.IAS_ZONE,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    IasZone.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        },
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=1026
+    # device_version=0 input_clusters=[0, 1, 3, 20, 1026, 1280, 2821, 65281]
+    # output_clusters=[3, 25]>
+    QuirkBuilder(SINOPE, "WL4200")
+    .applies_to(SINOPE, "WL4200S")
+    .replaces(SinopeTechnologiesIasZoneCluster)
+    .replaces(SinopeManufacturerCluster)
+    .binary_sensor(# Device status
+        "device_status",
+        SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        device_class=BinarySensorDeviceClass.TAMPER,
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="device_status",
+        fallback_name="Device status",
+    )
+    .binary_sensor(# Leak status
+        "leak_status",
+        SinopeTechnologiesIasZoneCluster.cluster_id,
+        endpoint_id=1,
+        device_class=BinarySensorDeviceClass.TAMPER,
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="leak_status",
+        fallback_name="Leak status",
+    )
+    .enum( # Power source
+        attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
+        cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
+        enum_class=EnergySource,
+        translation_key="power_source",
+        fallback_name="Power source",
+        entity_type=EntityType.STANDARD,
+    )
+    .number( # Checkin interval
+        PollControl.AttributeDefs.checkin_interval.name,
+        PollControl.cluster_id,
+        step=60,
+        min_value=3600,
+        max_value=21600,
+        unit=UnitOfTime.SECONDS,
+        translation_key="checkin_interval",
+        fallback_name="Checkin interval",
+    )
+    .sensor( # battery percent
+        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=43200, reportable_change=1
+        ),
+        translation_key="battery_percentage_remaining",
+        fallback_name="Battery percentage remaining",
+    )
+    .sensor( # battery voltage
+        PowerConfiguration.AttributeDefs.battery_voltage.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=43200, reportable_change=1
+        ),
+        translation_key="battery_voltage",
+        fallback_name="Battery voltage",
+    )
+    .sensor( # Local temperature
+        TemperatureMeasurement.AttributeDefs.measured_value.name,
+        SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=3600, reportable_change=300
+        ),
+        translation_key="measured_temperature",
+        fallback_name="Measured temperature",
+    )
+    .add_to_registry()
+)
 
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.IAS_ZONE,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    SinopeTechnologiesIasZoneCluster,
-                    Diagnostic.cluster_id,
-                    SinopeManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        }
-    }
-
-
-class SinopeTechnologiesSensor2(CustomDevice):
-    """SinopeTechnologiesSensor2 custom device."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=1026
-        # device_version=0 input_clusters=[0, 1, 3, 20, 1026, 1280, 2821, 65281]
-        # output_clusters=[3, 25]>
-        MODELS_INFO: [
-            (SINOPE, "WL4200"),
-            (SINOPE, "WL4200S"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.IAS_ZONE,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    PollControl.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    IasZone.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.IAS_ZONE,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    PollControl.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    SinopeTechnologiesIasZoneCluster,
-                    Diagnostic.cluster_id,
-                    SinopeManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Identify.cluster_id,
-                    Ota.cluster_id,
-                ],
-            }
-        }
-    }
-
-
-class SinopeTechnologiesLevelMonitor(CustomDevice):
-    """SinopeTechnologiesLevelMonitor custom device."""
-
-    signature = {
-        # <SimpleDescriptor endpoint=1 profile=260 device_type=0
-        # device_version=0 input_clusters=[0, 1, 3, 12, 32, 1026, 2821, 65281]
-        # output_clusters=[25]>
-        MODELS_INFO: [
-            (SINOPE, "LM4110-ZB"),
-        ],
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.ON_OFF_SWITCH,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    AnalogInput.cluster_id,
-                    PollControl.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SINOPE_MANUFACTURER_CLUSTER_ID,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Ota.cluster_id,
-                ],
-            }
-        },
-    }
-
-    replacement = {
-        ENDPOINTS: {
-            1: {
-                PROFILE_ID: zha_p.PROFILE_ID,
-                DEVICE_TYPE: zha_p.DeviceType.METER_INTERFACE,
-                INPUT_CLUSTERS: [
-                    Basic.cluster_id,
-                    PowerConfiguration.cluster_id,
-                    Identify.cluster_id,
-                    AnalogInput.cluster_id,
-                    PollControl.cluster_id,
-                    TemperatureMeasurement.cluster_id,
-                    Diagnostic.cluster_id,
-                    SinopeManufacturerCluster,
-                ],
-                OUTPUT_CLUSTERS: [
-                    Ota.cluster_id,
-                ],
-            }
-        }
-    }
+(
+    # <SimpleDescriptor endpoint=1 profile=260 device_type=0
+    # device_version=0 input_clusters=[0, 1, 3, 12, 32, 1026, 2821, 65281]
+    # output_clusters=[25]>
+    QuirkBuilder(SINOPE, "LM4110-ZB")
+    .replaces(SinopeManufacturerCluster)
+    .binary_sensor( # status
+        "status",
+        SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        device_class=BinarySensorDeviceClass.TAMPER,
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="status",
+        fallback_name="Status",
+    )
+    .sensor( # Device temperature
+        TemperatureMeasurement.AttributeDefs.measured_value.name,
+        TemperatureMeasurement.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        reporting_config=ReportingConfig(
+            min_interval=60, max_interval=3678, reportable_change=1
+        ),
+        translation_key="outside_temperature",
+        fallback_name="Outside temperature",
+    )
+    .sensor( # Battery percent
+        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
+        reporting_config=ReportingConfig(
+            min_interval=0, max_interval=64800, reportable_change=1
+        ),
+        translation_key="battery_percentage_remaining",
+        fallback_name="Battery percentage remaining",
+    )
+    .sensor( # Battery voltage
+        PowerConfiguration.AttributeDefs.battery_voltage.name,
+        PowerConfiguration.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        reporting_config=ReportingConfig(
+            min_interval=60, max_interval=43200, reportable_change=1
+        ),
+        translation_key="battery_voltage",
+        fallback_name="Battery voltage",
+    )
+    .sensor( # Gauge angle
+        AnalogInput.AttributeDefs.present_value.name,
+        AnalogInput.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=DEGREE,
+        device_class=SensorDeviceClass.VOLUME_STORAGE,
+        reporting_config=ReportingConfig(
+            min_interval=5, max_interval=3600, reportable_change=1
+        ),
+        translation_key="gauge_angle",
+        fallback_name="Gauge angle",
+    )
+    .add_to_registry()
+)
