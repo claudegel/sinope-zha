@@ -213,6 +213,12 @@ class SinopeManufacturerCluster(CustomCluster):
         firmware_number: Final = ZCLAttributeDef(
             id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
         )
+        firmware_version: Final = ZCLAttributeDef(
+            id=0x0004,
+            type=t.CharacterString,
+            access="r",
+            is_manufacturer_specific=True,
+        )
         outdoor_temp: Final = ZCLAttributeDef(
             id=0x0010, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
@@ -622,7 +628,7 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         enum_class=AlarmAction,
         translation_key="alarm_options",
         fallback_name="Alarm options",
-        entity_type=EntityType.DIAGNOSTIC,
+        entity_type=EntityType.CONFIG,
     )
     .enum( # energy source
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
@@ -638,7 +644,7 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         enum_class=FlowAlarm,
         translation_key="alarm_flow",
         fallback_name="Alarm flow",
-        entity_type=EntityType.DIAGNOSTIC,
+        entity_type=EntityType.CONFIG,
     )
     .enum( # Abnormal Flow action
         attribute_name=SinopeManufacturerCluster.AttributeDefs.abnormal_flow_action.name,
@@ -646,7 +652,29 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         enum_class=AbnormalAction,
         translation_key="abnormal_flow_action",
         fallback_name="Abnormal flow action",
-        entity_type=EntityType.DIAGNOSTIC,
+        entity_type=EntityType.CONFIG,
+    )
+    .number( # Abnormal Flow Duration
+        SinopeManufacturerCluster.AttributeDefs.abnormal_flow_duration.name,
+        SinopeManufacturerCluster.cluster_id,
+        step=10,
+        min_value=900,
+        max_value=86400,
+        unit=UnitOfTime.SECONDS,
+        translation_key="abnormal_flow_duration",
+        fallback_name="Abnormal flow duration",
+        entity_type=EntityType.CONFIG,
+    )
+    .number( # Valve countdown
+        SinopeManufacturerCluster.AttributeDefs.valve_countdown.name,
+        SinopeManufacturerCluster.cluster_id,
+        step=10,
+        min_value=300,
+        max_value=86400,
+        unit=UnitOfTime.SECONDS,
+        translation_key="valve_countdown",
+        fallback_name="Valve countdown",
+        entity_type=EntityType.CONFIG,
     )
     .sensor( # Flow rate
         SinopeTechnologiesFlowMeasurementCluster.AttributeDefs.measured_value.name,
