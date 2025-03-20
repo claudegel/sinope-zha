@@ -526,7 +526,7 @@ Following are the cluster/attributes set for reproting in Neviweb:
 | |0xff01|0x013B| |0|65535| |null|
 
 # Setting the flow meter model for your VA422xZB valve 2n gen.
-To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter:
+To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter: (It is possible that ZHA will throw an error for the read_after_write portion but the attribut will be updated correctly).
 - FS4220: (3/4 inch)
 ```
 service: zha_toolkit.attr_write
@@ -537,7 +537,7 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
+  read_before_write: false
   read_after_write: true
 ```
 - FS4221: (one inch)
@@ -550,7 +550,7 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
-  read_before_write: true
+  read_before_write: false
   read_after_write: true
 ```
 - FS4222: (1.5 inch)
@@ -563,7 +563,7 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
+  read_before_write: false
   read_after_write: true
 ```
 - No flow meter:
@@ -576,7 +576,7 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
+  read_before_write: false
   read_after_write: true
 ```
 
