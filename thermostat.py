@@ -317,13 +317,13 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x0100, type=t.uint8_t, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_5: Final = ZCLAttributeDef(
-            id=0x0101, type=Array, access="rp", is_manufacturer_specific=True
+            id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_6: Final = ZCLAttributeDef(
             id=0x0102, type=t.uint8_t, access="r", is_manufacturer_specific=True
         )
         unknown_attr_7: Final = ZCLAttributeDef(
-            id=0x0103, type=Array, access="r", is_manufacturer_specific=True
+            id=0x0103, type=t.LVList, access="r", is_manufacturer_specific=True
         )
         setpoint: Final = ZCLAttributeDef(
             id=0x0104, type=t.int16s, access="rw", is_manufacturer_specific=True
@@ -365,7 +365,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x0116, type=SystemMode, access="r", is_manufacturer_specific=True
         )
         unknown_attr_8: Final = ZCLAttributeDef(
-            id=0x0117, type=Array, access="r", is_manufacturer_specific=True
+            id=0x0117, type=t.LVList, access="r", is_manufacturer_specific=True
         )
         aux_connected_load: Final = ZCLAttributeDef(
             id=0x0118, type=t.uint16_t, access="rw", is_manufacturer_specific=True
@@ -383,7 +383,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x012B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_9: Final = ZCLAttributeDef(
-            id=0x012C, type=Array, access="r", is_manufacturer_specific=True
+            id=0x012C, type=t.LVList, access="r", is_manufacturer_specific=True
         )
         report_local_temperature: Final = ZCLAttributeDef(
             id=0x012D, type=t.int16s, access="rp", is_manufacturer_specific=True
