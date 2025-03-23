@@ -261,13 +261,13 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x00B0, type=t.Bool, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_13: Final = foundation.ZCLAttributeDef(
-            id=0x0101, type=Array, access="rp", is_manufacturer_specific=True
+            id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_14: Final = foundation.ZCLAttributeDef(
             id=0x012A, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_15: Final = foundation.ZCLAttributeDef(
-            id=0x012C, type=Array, access="rp", is_manufacturer_specific=True
+            id=0x012C, type=t.LVList, access="rp", is_manufacturer_specific=True
         )
         status: Final = foundation.ZCLAttributeDef(
             id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
@@ -291,7 +291,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True
         )
         flow_meter_config: Final = foundation.ZCLAttributeDef(
-            id=0x0240, type=Array, access="rw", is_manufacturer_specific=True
+            id=0x0240, type=t.LVList, access="rw", is_manufacturer_specific=True
         )
         valve_countdown: Final = foundation.ZCLAttributeDef(
             id=0x0241, type=t.uint32_t, access="rw", is_manufacturer_specific=True
