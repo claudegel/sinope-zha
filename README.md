@@ -537,8 +537,8 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
-  read_after_write: true
+  read_before_write: false
+  read_after_write: false
 ```
 - FS4221: (one inch)
 ```
@@ -550,8 +550,8 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
-  read_before_write: true
-  read_after_write: true
+  read_before_write: false
+  read_after_write: false
 ```
 - FS4222: (1.5 inch)
 ```
@@ -563,8 +563,8 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
-  read_after_write: true
+  read_before_write: false
+  read_after_write: false
 ```
 - No flow meter:
 ```
@@ -576,8 +576,8 @@ data:
   attribute: 0x0240
   attr_type: 0x48
   attr_val: [32, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-  read_before_write: true
-  read_after_write: true
+  read_before_write: false
+  read_after_write: false
 ```
 
 ## Light switch and dimmer double tap, long press reporting : 
