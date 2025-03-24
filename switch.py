@@ -176,6 +176,13 @@ class ValveStatus(t.bitmap8):
     On = 0x02
 
 
+class FlowMeter(t.LVList):
+    No_flow_meter = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    FS4220 = [194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
+    FS4221 = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
+    FS4222 = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+
+
 class UnitOfMeasure(t.enum8):
     """Unit_of_measure."""
 
@@ -319,7 +326,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True
         )
         flow_meter_config: Final = ZCLAttributeDef(
-            id=0x0240, type=t.LVList, access="rw", is_manufacturer_specific=True
+            id=0x0240, type=FlowMeter, access="rw", is_manufacturer_specific=True
         )
         valve_countdown: Final = ZCLAttributeDef(
             id=0x0241, type=t.uint32_t, access="rw", is_manufacturer_specific=True
