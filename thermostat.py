@@ -661,6 +661,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum( # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
     .number( # eco delta setpoint
         SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -670,14 +678,6 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
-    )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="time_format",
-        fallback_name="Time format",
-        entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
 )
@@ -729,6 +729,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
     .enum( # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -754,14 +762,6 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         endpoint_id=1,
         translation_key="pump_protection_status",
         fallback_name="Pump protection status",
-        entity_type=EntityType.CONFIG,
-    )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="time_format",
-        fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
@@ -823,6 +823,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
     .enum( # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -859,14 +867,6 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         endpoint_id=1,
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
-        entity_type=EntityType.CONFIG,
-    )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="time_format",
-        fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
@@ -915,10 +915,10 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
+    .enum(  # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
         translation_key="time_format",
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
@@ -967,10 +967,10 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
+    .enum(  # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
         translation_key="time_format",
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
@@ -1064,20 +1064,20 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # Time format
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=TimeFormat,
+        translation_key="time_format",
+        fallback_name="Time format",
+        entity_type=EntityType.CONFIG,
+    )
     .enum( # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
-        entity_type=EntityType.CONFIG,
-    )
-    .switch( # Time format
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="time_format",
-        fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
     .add_to_registry()

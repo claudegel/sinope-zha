@@ -201,7 +201,7 @@ class SinopeManufacturerCluster(CustomCluster):
     AbnormalAction: Final = AbnormalAction
     ColdStatus: Final = ColdStatus
     FlowDuration: Final = FlowDuration
-#    FlowMeter: Final = FlowMeter
+    FlowMeter: Final = FlowMeter
     InputDelay: Final = InputDelay
 
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
