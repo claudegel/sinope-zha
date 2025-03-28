@@ -277,7 +277,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0101|257|Array| |read/report|
 |0xff01|0x012A|298|t.enum8|unknown|60|read/write/report|
 |0xff01|0x012C|300|Array|unknown|  |read/report|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
+|0xff01|0x0200|512|t.bitmap32|status| ok=0x00000000, leak cable disconnected=0x00000040, temperature sensor disconnected=0x00000020|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|1|read/report|
 |0xff01|0x0203|515|t.enum8|unknown|12|read/report|
 |0xff01|0x0280|640|t.int16s|max_measured_value|5300|read/write/report|
@@ -287,7 +287,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0284|644|t.uint16_t|coldLoadPickupRemainingTime|65535=off countdown| |
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0500|0x0002|2|t.uint16_t|ZoneStatus|0=no leak, 1=leak|read|
+|0x0500|0x0002|2|t.uint16_t|ZoneStatus|48=no leak, 49=temp sensor disconnected, 50=leak sensor disconnected|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -382,7 +382,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0404|0x0003|3|t.uint16_t|tolerance|?|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0500|0x0000|0|t.enum8|zone_state|1=enrolled, 0=not enrolled|read|
-|0x0500|0x0002|2|t.bitmap16|zone_status|56=flow?|read|
+|0x0500|0x0002|2|t.bitmap16|zone_status|48=ok, 50=flow meter disconnected, 56=low battery, 58=flow and low batt|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|flowVolumeDelivered|L/h|report/read|
 |0x0702|0x0200|512|t.bitmap8|status|0=off, 1=off/armed, 2=on|read|
