@@ -86,6 +86,14 @@ class AuxMode(t.enum8):
     Exp_module = 0x03
 
 
+class DeviceStatus(t.bitmap32):
+    """Device general status."""
+
+    Ok = 0x00000000
+    Floor_sensor = 0x00000020
+    Temp_sensor = 0x00000040
+
+
 class PumpStatus(t.uint8_t):
     """Pump protection status."""
 
@@ -254,6 +262,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     SystemMode: Final = SystemMode
     PumpDuration: Final = PumpDuration
     CycleLength: Final = CycleLength
+    DeviceStatus: Final = DeviceStatus
 
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
     name: Final = "SinopeTechnologiesManufacturerCluster"
@@ -416,7 +425,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
         status: Final = ZCLAttributeDef(
-            id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
+            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_12: Final = ZCLAttributeDef(
             id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True
@@ -729,7 +738,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Time format
+    .enum( # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -823,7 +832,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Time format
+    .enum( # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -915,7 +924,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Time format
+    .enum( # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -967,7 +976,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Time format
+    .enum( # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -1064,7 +1073,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Time format
+    .enum( # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
