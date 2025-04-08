@@ -450,6 +450,18 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     .applies_to(SINOPE, "SP2610ZB")
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
+    .sensor( # Current summ delivered
+        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+        SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=60
+        ),
+        translation_key="current_summ_delivered",
+        fallback_name="Current summ delivered",
+    )
     .add_to_registry()
 )
 
@@ -934,5 +946,17 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     .applies_to(SINOPE, "SP2610ZB")
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
+    .sensor( # current summ delivered
+        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+        SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=60
+        ),
+        translation_key="current_summ_delivered",
+        fallback_name="Current summ delivered",
+    )
     .add_to_registry()
 )
