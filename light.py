@@ -46,6 +46,7 @@ from zigpy.quirks.v2 import (
     SensorStateClass,
 )
 from zigpy.quirks.v2.homeassistant import (
+    UnitOfEnergy,
     UnitOfTime,
 )
 import zigpy.types as t
@@ -98,6 +99,13 @@ class DoubleFull(t.enum8):
     On = 0x01
 
 
+class DeviceStatus(t.bitmap32):
+    """Device general status."""
+
+    Ok = 0x00000000
+    Temp_sensor = 0x00000040
+
+
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
@@ -105,6 +113,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
     PhaseControl: Final = PhaseControl
     DoubleFull: Final = DoubleFull
     Action: Final = ButtonAction
+    DeviceStatus: Final = DeviceStatus
 
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
     name: Final = "SinopeTechnologiesManufacturerCluster"
@@ -174,7 +183,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
         status: Final = ZCLAttributeDef(
-            id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
+            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
@@ -291,6 +300,16 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
+    .number( # Connected load
+        LightManufacturerCluster.AttributeDefs.connected_load.name,
+        LightManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=5000,
+        unit=UnitOfEnergy.WATT_HOUR,
+        translation_key="connected_load",
+        fallback_name="Connected load",
+    )
     .number( # Timer
         LightManufacturerCluster.AttributeDefs.timer.name,
         LightManufacturerCluster.cluster_id,
@@ -338,6 +357,16 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
+    )
+    .number( # Connected load
+        LightManufacturerCluster.AttributeDefs.connected_load.name,
+        LightManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=5000,
+        unit=UnitOfEnergy.WATT_HOUR,
+        translation_key="connected_load",
+        fallback_name="Connected load",
     )
     .number( # Timer
         LightManufacturerCluster.AttributeDefs.timer.name,
@@ -395,12 +424,14 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Phase control",
         entity_type=EntityType.STANDARD,
     )
-    .switch( # Double up full
-        LightManufacturerCluster.AttributeDefs.double_up_full.name,
+    .number( # Minimum intensity
+        LightManufacturerCluster.AttributeDefs.min_intensity.name,
         LightManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        translation_key="double_up_full",
-        fallback_name="Double up full",
+        step=1,
+        min_value=1,
+        max_value=255,
+        translation_key="min_intensity",
+        fallback_name="Minimum on level",
     )
     .number( # Timer
         LightManufacturerCluster.AttributeDefs.timer.name,
@@ -411,15 +442,6 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         unit=UnitOfTime.SECONDS,
         translation_key="timer",
         fallback_name="Timer",
-    )
-    .number( # Minimum intensity
-        LightManufacturerCluster.AttributeDefs.min_intensity.name,
-        LightManufacturerCluster.cluster_id,
-        step=1,
-        min_value=1,
-        max_value=255,
-        translation_key="min_on_level",
-        fallback_name="Minimum on level",
     )
     .sensor( # Timer countdown
         LightManufacturerCluster.AttributeDefs.timer_countdown.name,
