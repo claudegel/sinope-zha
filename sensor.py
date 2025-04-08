@@ -69,8 +69,27 @@ class LeakStatus(t.enum8):
     Leak = 0x01
 
 
+class DeviceStatus(t.bitmap32):
+    """Device general status."""
+
+    Ok = 0x00000000
+    Temp_sensor = 0x00000020
+
+
+class ZoneStatus(t.uint16_t):
+    """IAS zone status"""
+
+    Ok = 0x0030
+    Connector_1 = 0x0031
+    Connector_2 = 0x0032
+    Low_battery = 0x0038
+    Connector_low_bat = 0x003a
+
+
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
+
+    DeviceStatus: Final = DeviceStatus
 
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
     name: Final = "SinopeManufacturerCluster"
@@ -110,7 +129,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
         )
         status: Final = ZCLAttributeDef(
-            id=0x0200, type=t.bitmap32, access="rp", is_manufacturer_specific=True
+            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
@@ -119,10 +138,14 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     """SinopeTechnologiesIasZoneCluster custom cluster."""
 
     LeakStatus: Final = LeakStatus
+    ZoneStatus: Final = ZoneStatus
 
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer IasZone Cluster Attributes."""
 
+        zone_status: Final = ZCLAttributeDef(
+            id=0x0002, type=ZoneStatus, access="p", is_manufacturer_specific=True
+        )
         leak_status: Final = ZCLAttributeDef(
             id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
         )
@@ -144,18 +167,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         fallback_name="Power source",
         entity_type=EntityType.STANDARD,
     )
-    .sensor( # battery percent
-        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
-        PowerConfiguration.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=PERCENTAGE,
-        device_class=SensorDeviceClass.BATTERY,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
-        translation_key="battery_percentage_remaining",
-        fallback_name="Battery percentage remaining",
-    )
     .sensor( # battery voltage
         PowerConfiguration.AttributeDefs.battery_voltage.name,
         PowerConfiguration.cluster_id,
@@ -167,18 +178,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         ),
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
-    )
-    .sensor( # local temperature
-        TemperatureMeasurement.AttributeDefs.measured_value.name,
-        SinopeTechnologiesMeteringCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=UnitOfTemperature.CELSIUS,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=3600, reportable_change=300
-        ),
-        translation_key="measured_temperature",
-        fallback_name="Measured temperature",
     )
     .add_to_registry()
 )
@@ -200,15 +199,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         translation_key="device_status",
         fallback_name="Device status",
     )
-    .binary_sensor(# Leak status
-        "leak_status",
-        SinopeTechnologiesIasZoneCluster.cluster_id,
-        endpoint_id=1,
-        device_class=BinarySensorDeviceClass.TAMPER,
-        entity_type=EntityType.DIAGNOSTIC,
-        translation_key="leak_status",
-        fallback_name="Leak status",
-    )
     .enum( # Power source
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
         cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
@@ -227,18 +217,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         translation_key="checkin_interval",
         fallback_name="Checkin interval",
     )
-    .sensor( # battery percent
-        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
-        PowerConfiguration.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=PERCENTAGE,
-        device_class=SensorDeviceClass.BATTERY,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
-        translation_key="battery_percentage_remaining",
-        fallback_name="Battery percentage remaining",
-    )
     .sensor( # battery voltage
         PowerConfiguration.AttributeDefs.battery_voltage.name,
         PowerConfiguration.cluster_id,
@@ -250,18 +228,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         ),
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
-    )
-    .sensor( # Local temperature
-        TemperatureMeasurement.AttributeDefs.measured_value.name,
-        SinopeTechnologiesMeteringCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=UnitOfTemperature.CELSIUS,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=3600, reportable_change=300
-        ),
-        translation_key="measured_temperature",
-        fallback_name="Measured temperature",
     )
     .add_to_registry()
 )
@@ -280,30 +246,6 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         entity_type=EntityType.DIAGNOSTIC,
         translation_key="status",
         fallback_name="Status",
-    )
-    .sensor( # Device temperature
-        TemperatureMeasurement.AttributeDefs.measured_value.name,
-        TemperatureMeasurement.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=UnitOfTemperature.CELSIUS,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        reporting_config=ReportingConfig(
-            min_interval=60, max_interval=3678, reportable_change=1
-        ),
-        translation_key="outside_temperature",
-        fallback_name="Outside temperature",
-    )
-    .sensor( # Battery percent
-        PowerConfiguration.AttributeDefs.battery_percentage_remaining.name,
-        PowerConfiguration.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit=PERCENTAGE,
-        device_class=SensorDeviceClass.BATTERY,
-        reporting_config=ReportingConfig(
-            min_interval=0, max_interval=64800, reportable_change=1
-        ),
-        translation_key="battery_percentage_remaining",
-        fallback_name="Battery percentage remaining",
     )
     .sensor( # Battery voltage
         PowerConfiguration.AttributeDefs.battery_voltage.name,
