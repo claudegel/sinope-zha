@@ -8,13 +8,8 @@ To view the different files you need wireshark and the following key to decode d
 In the file with wireshark look for the following text:
 
 - OTA: Image Block Request
-
 - OTA: Image Block Response
-
 - OTA: Image Page Request
-
 - OTA: Query Next Image Request
-
 - OTA: Query Next Image Response
-
 - OTA: Upgrade End Response 
