@@ -9,9 +9,9 @@ In the file with wireshark look for the following steps:
 
 - OTA: Query Next Image Request
 - OTA: Query Next Image Response 
- payload should be:
-- File Version: 0x01020001, firmware 1.2.0 exemple
-- Image Size xxxxxx [Bytes], file size
+ - payload should be:
+ - File Version: 0x01020001, firmware 1.2.0 exemple
+ - Image Size xxxxxx [Bytes], file size
 - OTA: Image Block Request
 - OTA: Image Block Response
 - OTA: Image Page Request
