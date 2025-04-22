@@ -7,17 +7,17 @@ To view the different files you need wireshark and the following key to decode d
 
 In the file with wireshark look for the following steps:
 
--1 OTA: Query Next Image Request
--2 OTA: Query Next Image Response 
+- OTA: Query Next Image Request
+- OTA: Query Next Image Response 
  payload should be:
 - File Version: 0x01020001, firmware 1.2.0 exemple
 - Image Size xxxxxx [Bytes], file size
-3- OTA: Image Block Request
-4- OTA: Image Block Response
-5- OTA: Image Page Request
-6- OTA: Image Block Response
-7- OTA: Image Block Request
-8- OTA: Image Block Response
+- OTA: Image Block Request
+- OTA: Image Block Response
+- OTA: Image Page Request
+- OTA: Image Block Response
+- OTA: Image Block Request
+- OTA: Image Block Response
 ...
-fin1- OTA: Upgrade End Request
-fin2- OTA: Upgrade End Response
+- OTA: Upgrade End Request
+- OTA: Upgrade End Response
