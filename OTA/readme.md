@@ -7,6 +7,7 @@ This repository contains Neviweb ZigBee captures that include over-the-air (OTA)
 - [Wireshark](https://www.wireshark.org/) - For analyzing capture files
 - [zigpy-cli](https://github.com/zigpy/zigpy-cli) - For reconstructing OTA images
 - [tshark](https://www.wireshark.org/docs/man-pages/tshark.html) - Command-line utility for Wireshark (required by zigpy-cli)
+- [editcap](https://www.wireshark.org/docs/man-pages/editcap.html) - Command-line utility for Wireshark to split pcapng file in smaller files
 
 ## Decryption Keys
 
@@ -33,6 +34,9 @@ When analyzing the capture files with Wireshark, look for the following sequence
 7. **Multiple Request/Response cycles** - Transferring all blocks
 8. **OTA: Upgrade End Request** - Device confirming full reception of the update
 9. **OTA: Upgrade End Response** - Server confirming successful transfer
+
+During the update you can follow the process by checking the file offset value in each OTA: Image Block Response. 
+Once you know the last block number you can split the pcapng file it it is very large by using Wireshark editcap command.
 
 ## Reconstructing OTA Images
 
