@@ -991,9 +991,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     # <SimpleDescriptor endpoint=1 profile=260 device_type=775 device_version=1
     # input_clusters=[0, 3, 4, 5, 8, 513, 514, 516, 1026, 2821, 65281]
     # output_clusters=[25]>
+    # <SimpleDescriptor endpoint=2 profile=260 device_type=775 device_version=1
+    # input_clusters=[0, 3, 4, 5, 8, 513, 514, 516, 1026, 2821, 65281]
+    # output_clusters=[25]>
     QuirkBuilder(SINOPE, "HP6000ZB-GE")
     .applies_to(SINOPE, "HP6000ZB-HS")
     .applies_to(SINOPE, "HP6000ZB-MA")
+    .adds_endpoint(1, device_type=zha.DeviceType.MINI_SPLIT_AC)
+    .adds_endpoint(2, device_type=zha.DeviceType.MINI_SPLIT_AC)
     .replaces(SinopeTechnologiesThermostatCluster, endpoint_id=1)
     .replaces(SinopeTechnologiesManufacturerCluster, endpoint_id=1)
     .replaces(SinopeTechnologiesThermostatCluster, endpoint_id=2)
