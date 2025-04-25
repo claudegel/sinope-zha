@@ -758,6 +758,8 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     # input_clusters=[0, 1, 3, 4, 5, 6, 15, 1026, 1029, 2821, 65281]
     # output_clusters=[25]>
     QuirkBuilder(SINOPE, "MC3100ZB")
+    .adds_endpoint(1, device_type=zha.DeviceType.ON_OFF_OUTPUT)
+    .adds_endpoint(2, device_type=zha.DeviceType.ON_OFF_OUTPUT)
     .replaces(SinopeManufacturerCluster, endpoint_id=1)
     .replaces(SinopeManufacturerCluster, endpoint_id=2)
     .number( # Timer 1
