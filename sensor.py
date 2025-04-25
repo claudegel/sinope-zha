@@ -247,6 +247,18 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         translation_key="status",
         fallback_name="Status",
     )
+    .sensor( # Device temperature
+        TemperatureMeasurement.AttributeDefs.measured_value.name,
+        TemperatureMeasurement.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        reporting_config=ReportingConfig(
+            min_interval=60, max_interval=3678, reportable_change=1
+        ),
+        translation_key="outside_temperature",
+        fallback_name="Outside temperature",
+    )
     .sensor( # Battery voltage
         PowerConfiguration.AttributeDefs.battery_voltage.name,
         PowerConfiguration.cluster_id,
