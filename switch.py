@@ -418,8 +418,8 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     ValveStatus: Final = ValveStatus
     UnitOfMeasure: Final = UnitOfMeasure
 
-    DIVISOR = 0x0302
-    _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
+#    DIVISOR = 0x0302
+#    _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
 
     class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
@@ -450,18 +450,18 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     .applies_to(SINOPE, "SP2610ZB")
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
-    .sensor( # Current summ delivered
-        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
-        SinopeTechnologiesMeteringCluster.cluster_id,
-        state_class=SensorStateClass.TOTAL_INCREASING,
-        unit=UnitOfEnergy.KILO_WATT_HOUR,
-        device_class=SensorDeviceClass.ENERGY,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=60
-        ),
-        translation_key="current_summ_delivered",
-        fallback_name="Current summ delivered",
-    )
+#    .sensor( # Current summ delivered
+#        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+#        SinopeTechnologiesMeteringCluster.cluster_id,
+#        state_class=SensorStateClass.TOTAL_INCREASING,
+#        unit=UnitOfEnergy.KILO_WATT_HOUR,
+#        device_class=SensorDeviceClass.ENERGY,
+#        reporting_config=ReportingConfig(
+#            min_interval=59, max_interval=1799, reportable_change=60
+#        ),
+#        translation_key="current_summ_delivered",
+#        fallback_name="Current summ delivered",
+#    )
     .add_to_registry()
 )
 
@@ -758,8 +758,8 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     # input_clusters=[0, 1, 3, 4, 5, 6, 15, 1026, 1029, 2821, 65281]
     # output_clusters=[25]>
     QuirkBuilder(SINOPE, "MC3100ZB")
-    .adds_endpoint(1, device_type=zha.DeviceType.ON_OFF_OUTPUT)
-    .adds_endpoint(2, device_type=zha.DeviceType.ON_OFF_OUTPUT)
+    .adds_endpoint(1, device_type=zha_p.DeviceType.ON_OFF_OUTPUT)
+    .adds_endpoint(2, device_type=zha_p.DeviceType.ON_OFF_OUTPUT)
     .replaces(SinopeManufacturerCluster, endpoint_id=1)
     .replaces(SinopeManufacturerCluster, endpoint_id=2)
     .number( # Timer 1
@@ -948,17 +948,17 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     .applies_to(SINOPE, "SP2610ZB")
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
-    .sensor( # current summ delivered
-        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
-        SinopeTechnologiesMeteringCluster.cluster_id,
-        state_class=SensorStateClass.TOTAL_INCREASING,
-        unit=UnitOfEnergy.KILO_WATT_HOUR,
-        device_class=SensorDeviceClass.ENERGY,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=60
-        ),
-        translation_key="current_summ_delivered",
-        fallback_name="Current summ delivered",
-    )
+#    .sensor( # current summ delivered
+#        SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+#        SinopeTechnologiesMeteringCluster.cluster_id,
+#        state_class=SensorStateClass.TOTAL_INCREASING,
+#        unit=UnitOfEnergy.KILO_WATT_HOUR,
+#        device_class=SensorDeviceClass.ENERGY,
+#        reporting_config=ReportingConfig(
+#            min_interval=59, max_interval=1799, reportable_change=60
+#        ),
+#        translation_key="current_summ_delivered",
+#        fallback_name="Current summ delivered",
+#    )
     .add_to_registry()
 )
