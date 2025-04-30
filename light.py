@@ -106,6 +106,18 @@ class DeviceStatus(t.bitmap32):
     Temp_sensor = 0x00000040
 
 
+class SinopeLightLedColors(t.enum32):
+    """Color values for Sinope light switch status LEDs."""
+
+    Lim = 0x0AFFDC
+    Amber = 0x000A4B
+    Fushia = 0x0100A5
+    Perle = 0x64FFFF
+    Blue = 0xFFFF00
+    Green = 0x00FF00
+    Red = 0xFF0000
+
+
 class SinopeTechnologiesManufacturerCluster(CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
@@ -307,9 +319,25 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
+    .enum( # On led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="on_led_color",
+        fallback_name="On led color",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Off led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="off_led_color",
+        fallback_name="Off led color",
+        entity_type=EntityType.CONFIG,
+    )
     .number( # Connected load
-        LightManufacturerCluster.AttributeDefs.connected_load.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.connected_load.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=0,
         max_value=5000,
@@ -318,8 +346,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Connected load",
     )
     .number( # Timer
-        LightManufacturerCluster.AttributeDefs.timer.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=0,
         max_value=86400,
@@ -328,8 +356,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer",
     )
     .sensor( # Timer countdown
-        LightManufacturerCluster.AttributeDefs.timer_countdown.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfTime.SECONDS,
         translation_key="timer_countdown",
@@ -337,12 +365,12 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor( # Device status
-        LightManufacturerCluster.AttributeDefs.status.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_type=EntityType.DIAGNOSTIC,
         translation_key="status",
         fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -373,19 +401,36 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
+    .enum( # On led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="on_led_color",
+        fallback_name="On led color",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Off led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="off_led_color",
+        fallback_name="Off led color",
+        entity_type=EntityType.CONFIG,
+    )
     .number( # Connected load
-        LightManufacturerCluster.AttributeDefs.connected_load.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.connected_load.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=0,
         max_value=5000,
         unit=UnitOfEnergy.WATT_HOUR,
         translation_key="connected_load",
         fallback_name="Connected load",
+        entity_type=EntityType.STANDARD,
     )
     .number( # Timer
-        LightManufacturerCluster.AttributeDefs.timer.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=0,
         max_value=86400,
@@ -394,8 +439,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer",
     )
     .sensor( # Timer countdown
-        LightManufacturerCluster.AttributeDefs.timer_countdown.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfTime.SECONDS,
         translation_key="timer_countdown",
@@ -403,12 +448,12 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor( # Device status
-        LightManufacturerCluster.AttributeDefs.status.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_type=EntityType.DIAGNOSTIC,
         translation_key="status",
         fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -448,9 +493,25 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Phase control",
         entity_type=EntityType.STANDARD,
     )
+    .enum( # On led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="on_led_color",
+        fallback_name="On led color",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum( # Off led color
+        attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        enum_class=SinopeLightLedColors,
+        translation_key="off_led_color",
+        fallback_name="Off led color",
+        entity_type=EntityType.CONFIG,
+    )
     .number( # Minimum intensity
-        LightManufacturerCluster.AttributeDefs.min_intensity.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.min_intensity.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=1,
         max_value=255,
@@ -458,8 +519,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Minimum on level",
     )
     .number( # Timer
-        LightManufacturerCluster.AttributeDefs.timer.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=0,
         max_value=86400,
@@ -468,8 +529,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer",
     )
     .sensor( # Timer countdown
-        LightManufacturerCluster.AttributeDefs.timer_countdown.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfTime.SECONDS,
         translation_key="timer_countdown",
@@ -477,12 +538,12 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor( # Device status
-        LightManufacturerCluster.AttributeDefs.status.name,
-        LightManufacturerCluster.cluster_id,
+        attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_type=EntityType.DIAGNOSTIC,
         translation_key="status",
         fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
