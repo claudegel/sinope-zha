@@ -894,6 +894,16 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     # input_clusters=[0, 2, 3, 4, 5, 6, 1026, 1280, 1794, 2820, 2821, 65281]
     # output_clusters=[10, 25]>
     QuirkBuilder(SINOPE, "RM3500ZB")
+    .replaces_endpoint(1, device_type=zha_p.DeviceType.ON_OFF_OUTPUT)
+    .adds(Basic, endpoint_id=1)
+    .adds(Identify, endpoint_id=1)
+    .adds(Groups, endpoint_id=1)
+    .adds(Scenes, endpoint_id=1)
+    .adds(OnOff, endpoint_id=1)
+    .adds(TemperatureMeasurement, endpoint_id=1)
+    .adds(Metering, endpoint_id=1)
+    .adds(ElectricalMeasurement, endpoint_id=1)
+    .adds(Diagnostic, endpoint_id=1)
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(SinopeTechnologiesIasZoneCluster)
     .replaces(SinopeManufacturerCluster)
