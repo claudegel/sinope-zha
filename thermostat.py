@@ -30,6 +30,7 @@ from zigpy.quirks.v2 import (
 )
 from zigpy.quirks.v2.homeassistant import (
     UnitOfTemperature,
+    UnitOfTime,
 )
 from zigpy.zcl.clusters.general import (
     Basic,
@@ -679,14 +680,22 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.CONFIG,
     )
     .number( # eco delta setpoint
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
         min_value=-128,
         max_value=10,
         unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
+    )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -755,8 +764,8 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.CONFIG,
     )
     .sensor( # floor_limit_status
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         reporting_config=ReportingConfig(
             min_interval=10, max_interval=3600, reportable_change=1
@@ -766,12 +775,20 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.CONFIG,
     )
     .switch( # Pump protection status
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         endpoint_id=1,
         translation_key="pump_protection_status",
         fallback_name="Pump protection status",
         entity_type=EntityType.CONFIG,
+    )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -849,8 +866,8 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.CONFIG,
     )
     .sensor( # floor_limit_status
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         reporting_config=ReportingConfig(
             min_interval=10, max_interval=3600, reportable_change=1
@@ -860,8 +877,8 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor( # Gfci status
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         reporting_config=ReportingConfig(
             min_interval=10, max_interval=3600, reportable_change=1
@@ -871,12 +888,20 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         entity_type=EntityType.DIAGNOSTIC,
     )
     .switch( # Floor sensor type
-        SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
-        SinopeTechnologiesManufacturerCluster.cluster_id,
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         endpoint_id=1,
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
+    )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -932,6 +957,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
+    )
     .add_to_registry()
 )
 
@@ -984,6 +1017,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
+    )
     .add_to_registry()
 )
 
@@ -1018,6 +1059,14 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="config_2nd_display",
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
+    )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -1060,7 +1109,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         enum_class=WeatherIcon,
         translation_key="weather_icons",
         fallback_name="Weather icons",
-        entity_type=EntityType.DIAGNOSTIC,
+        entity_type=EntityType.CONFIG,
     )
     .enum( # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
@@ -1093,6 +1142,24 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
+    )
+    .number( # weather icons timeout
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons_timeout.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=10,
+        min_value=0,
+        max_value=86400,
+        translation_key="icons_timeout",
+        fallback_name="Icons timeout",
+        unit=UnitOfTime.SECONDS,
+    )
+    .sensor( # Device status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        translation_key="status",
+        fallback_name="Device status",
+        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
