@@ -1198,7 +1198,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
         min_value=0,
-        max_value=86400,
+        max_value=18000,
         translation_key="icons_timeout",
         fallback_name="Icons timeout",
         unit=UnitOfTime.SECONDS,
