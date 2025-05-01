@@ -782,6 +782,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Pump protection status",
         entity_type=EntityType.CONFIG,
     )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
+    )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -895,6 +905,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
     )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
+    )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -957,6 +977,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
+    )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -1017,6 +1047,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
+    )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -1059,6 +1099,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="config_2nd_display",
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
+    )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
     )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
@@ -1152,6 +1202,16 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="icons_timeout",
         fallback_name="Icons timeout",
         unit=UnitOfTime.SECONDS,
+    )
+    .number( # eco delta setpoint
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=-128,
+        max_value=10,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="eco_delta_setpoint",
+        fallback_name="Eco delta setpoint",
     )
     .sensor( # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
