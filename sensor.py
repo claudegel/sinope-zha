@@ -239,6 +239,14 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     # device_version=0 input_clusters=[0, 1, 3, 12, 32, 1026, 2821, 65281]
     # output_clusters=[25]>
     QuirkBuilder(SINOPE, "LM4110-ZB")
+    .replaces_endpoint(1, device_type=zha_p.DeviceType.METER_INTERFACE)
+    .adds(Basic, endpoint_id=1)
+    .adds(PowerConfiguration, endpoint_id=1)
+    .adds(Identify, endpoint_id=1)
+    .adds(AnalogInput, endpoint_id=1)
+    .adds(PollControl, endpoint_id=1)
+    .adds(TemperatureMeasurement, endpoint_id=1)
+    .adds(Diagnostic, endpoint_id=1)
     .replaces(SinopeManufacturerCluster)
     .sensor( # Device temperature
         attribute_name=TemperatureMeasurement.AttributeDefs.measured_value.name,
