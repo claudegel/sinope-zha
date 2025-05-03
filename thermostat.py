@@ -17,7 +17,8 @@ from zhaquirks.const import (
     OUTPUT_CLUSTERS,
     PROFILE_ID,
 )
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope import SINOPE,
+SINOPE_MANUFACTURER_CLUSTER_ID
 
 from zigpy.quirks import CustomCluster, CustomDevice
 from zigpy.quirks.v2 import (
@@ -47,10 +48,9 @@ from zigpy.zcl.clusters.hvac import Fan, Thermostat, UserInterface
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (
-    Array,
+    ZCL_CLUSTER_REVISION_ATTR,
     BaseAttributeDefs,
     ZCLAttributeDef,
-    ZCL_CLUSTER_REVISION_ATTR,
 )
 
 
@@ -240,7 +240,7 @@ class Language(t.enum8):
 
 
 class TempFormat(t.enum8):
-    """Cahnge temperature display format"""
+    """Change temperature display format."""
 
     Celsius = 0x00
     Fahrenheit = 0x01
@@ -639,7 +639,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesElectricalMeasurementCluster)
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -647,7 +647,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -655,7 +655,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Simplebacklight,
@@ -663,7 +663,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -671,7 +671,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -679,7 +679,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -689,7 +689,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -707,7 +707,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     QuirkBuilder(SINOPE, "TH1400ZB")
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -715,7 +715,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -723,7 +723,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Pump protection duration
+    .enum(  # Pump protection duration
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=PumpDuration,
@@ -731,7 +731,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Pump protection duration",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Simplebacklight,
@@ -739,7 +739,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -747,7 +747,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -755,7 +755,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Aux mode
+    .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=AuxMode,
@@ -763,7 +763,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
     )
-    .sensor( # floor_limit_status
+    .sensor(  # floor_limit_status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -774,7 +774,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Floor limit status",
         entity_type=EntityType.CONFIG,
     )
-    .switch( # Pump protection status
+    .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         endpoint_id=1,
@@ -782,7 +782,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Pump protection status",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -792,7 +792,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -811,7 +811,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesElectricalMeasurementCluster)
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -819,7 +819,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -827,7 +827,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config air floor mode
+    .enum(  # Config air floor mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.air_floor_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=FloorMode,
@@ -835,7 +835,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Air floor mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Pump protection duration
+    .enum(  # Pump protection duration
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=PumpDuration,
@@ -843,7 +843,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Pump protection duration",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Simplebacklight,
@@ -851,7 +851,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -859,7 +859,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -867,7 +867,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Aux mode
+    .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=AuxMode,
@@ -875,7 +875,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
     )
-    .sensor( # floor_limit_status
+    .sensor(  # floor_limit_status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -886,7 +886,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Floor limit status",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .sensor( # Gfci status
+    .sensor(  # Gfci status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -897,7 +897,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Gfci status",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .switch( # Floor sensor type
+    .switch(  # Floor sensor type
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         endpoint_id=1,
@@ -905,7 +905,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -915,7 +915,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -937,7 +937,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesElectricalMeasurementCluster)
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -945,7 +945,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -953,7 +953,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Simplebacklight,
@@ -961,7 +961,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -969,7 +969,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -977,7 +977,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -987,7 +987,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1007,7 +1007,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesElectricalMeasurementCluster)
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -1015,7 +1015,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -1023,7 +1023,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Backlight,
@@ -1031,7 +1031,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -1039,7 +1039,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -1047,7 +1047,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -1057,7 +1057,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1084,7 +1084,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesManufacturerCluster, endpoint_id=1)
     .replaces(SinopeTechnologiesThermostatCluster, endpoint_id=2)
     .replaces(SinopeTechnologiesManufacturerCluster, endpoint_id=2)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -1092,7 +1092,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -1100,7 +1100,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -1110,7 +1110,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -1129,7 +1129,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
     .replaces(SinopeTechnologiesElectricalMeasurementCluster)
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -1137,7 +1137,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Keypad lockout",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config second display
+    .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Display,
@@ -1145,7 +1145,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Config 2nd display",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Display language
+    .enum(  # Display language
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.display_language.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=Language,
@@ -1153,7 +1153,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Display language",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Weather icons
+    .enum(  # Weather icons
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=WeatherIcon,
@@ -1161,7 +1161,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Weather icons",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Config backlight auto dim
+    .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
         enum_class=Backlight,
@@ -1169,7 +1169,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Temperature format
+    .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
         cluster_id=UserInterface.cluster_id,
         enum_class=TempFormat,
@@ -1177,7 +1177,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Temperature display mode",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Time format
+    .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=TimeFormat,
@@ -1185,7 +1185,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Aux mode
+    .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         enum_class=AuxMode,
@@ -1193,7 +1193,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
     )
-    .number( # weather icons timeout
+    .number(  # weather icons timeout
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons_timeout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
@@ -1203,7 +1203,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         fallback_name="Icons timeout",
         unit=UnitOfTime.SECONDS,
     )
-    .number( # eco delta setpoint
+    .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -1213,7 +1213,7 @@ class SinopeTechnologiesElectricalMeasurementCluster(
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
