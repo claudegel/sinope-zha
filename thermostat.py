@@ -17,8 +17,7 @@ from zhaquirks.const import (
     OUTPUT_CLUSTERS,
     PROFILE_ID,
 )
-from zhaquirks.sinope import SINOPE,
-SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 from zigpy.quirks import CustomCluster, CustomDevice
 from zigpy.quirks.v2 import (
