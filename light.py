@@ -7,6 +7,37 @@ DM2550ZB-G2.
 import logging
 from typing import Any, Final, Optional, Union
 
+import zigpy.profiles.zha as zha_p
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
+import zigpy.types as t
+from zigpy.zcl.clusters.general import (
+    Basic,
+    Groups,
+    Identify,
+    LevelControl,
+    OnOff,
+    Scenes,
+)
+from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
+from zigpy.zcl.clusters.smartenergy import Metering
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    Direction,
+    GeneralCommand,
+    ZCLAttributeDef,
+    ZCLCommandDef,
+    ZCLHeader,
+)
+
 from zhaquirks import EventableCluster
 from zhaquirks.const import (
     ATTRIBUTE_ID,
@@ -17,12 +48,6 @@ from zhaquirks.const import (
     COMMAND_M_MULTI_PRESS_COMPLETE,
     COMMAND_M_SHORT_RELEASE,
     DESCRIPTION,
-    DEVICE_TYPE,
-    ENDPOINTS,
-    INPUT_CLUSTERS,
-    MODELS_INFO,
-    OUTPUT_CLUSTERS,
-    PROFILE_ID,
     TURN_OFF,
     TURN_ON,
     VALUE,
@@ -37,42 +62,6 @@ from zhaquirks.sinope import (
     CustomDeviceTemperatureCluster,
 )
 
-import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster, CustomDevice
-from zigpy.quirks.v2 import (
-    EntityType,
-    QuirkBuilder,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    UnitOfEnergy,
-    UnitOfTime,
-)
-import zigpy.types as t
-from zigpy.zcl.clusters.general import (
-    Basic,
-    DeviceTemperature,
-    Groups,
-    Identify,
-    LevelControl,
-    OnOff,
-    Ota,
-    Scenes,
-    Time,
-)
-from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
-from zigpy.zcl.clusters.smartenergy import Metering
-
-from zigpy.zcl.foundation import (
-    BaseAttributeDefs,
-    Direction,
-    GeneralCommand,
-    ZCL_CLUSTER_REVISION_ATTR,
-    ZCLAttributeDef,
-    ZCLCommandDef,
-    ZCLHeader,
-)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -311,7 +300,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -319,7 +308,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
-    .enum( # On led color
+    .enum(  # On led color
         attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -327,7 +316,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="On led color",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Off led color
+    .enum(  # Off led color
         attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -335,7 +324,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Off led color",
         entity_type=EntityType.CONFIG,
     )
-    .number( # Connected load
+    .number(  # Connected load
         attribute_name=LightManufacturerCluster.AttributeDefs.connected_load.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -345,7 +334,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="connected_load",
         fallback_name="Connected load",
     )
-    .number( # Timer
+    .number(  # Timer
         attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -355,7 +344,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="timer",
         fallback_name="Timer",
     )
-    .sensor( # Timer countdown
+    .sensor(  # Timer countdown
         attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -364,13 +353,26 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer countdown",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="status",
         fallback_name="Device status",
         entity_type=EntityType.DIAGNOSTIC,
+    )
+    .sensor(  # Current summ delivered
+        attribute_name=LightManufacturerCluster.AttributeDefs.current_summation_delivered.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=60
+        ),
+        translation_key="current_summation_delivered",
+        fallback_name="Current summation delivered",
+        entity_type=EntityType.STANDARD,
     )
     .add_to_registry()
 )
@@ -393,7 +395,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -401,7 +403,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
-    .enum( # On led color
+    .enum(  # On led color
         attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -409,7 +411,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="On led color",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Off led color
+    .enum(  # Off led color
         attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -417,7 +419,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Off led color",
         entity_type=EntityType.CONFIG,
     )
-    .number( # Connected load
+    .number(  # Connected load
         attribute_name=LightManufacturerCluster.AttributeDefs.connected_load.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -428,7 +430,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Connected load",
         entity_type=EntityType.STANDARD,
     )
-    .number( # Timer
+    .number(  # Timer
         attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -438,7 +440,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="timer",
         fallback_name="Timer",
     )
-    .sensor( # Timer countdown
+    .sensor(  # Timer countdown
         attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -447,13 +449,26 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer countdown",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="status",
         fallback_name="Device status",
         entity_type=EntityType.DIAGNOSTIC,
+    )
+    .sensor(  # Current summ delivered
+        attribute_name=LightManufacturerCluster.AttributeDefs.current_summation_delivered.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=60
+        ),
+        translation_key="current_summation_delivered",
+        fallback_name="Current summation delivered",
+        entity_type=EntityType.STANDARD,
     )
     .add_to_registry()
 )
@@ -477,7 +492,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
-    .enum( # Keypad lock
+    .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=KeypadLock,
@@ -485,7 +500,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Keypad lockout",
         entity_type=EntityType.STANDARD,
     )
-    .enum( # Phase control
+    .enum(  # Phase control
         attribute_name=LightManufacturerCluster.AttributeDefs.phase_control.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=PhaseControl,
@@ -493,7 +508,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Phase control",
         entity_type=EntityType.STANDARD,
     )
-    .enum( # On led color
+    .enum(  # On led color
         attribute_name=LightManufacturerCluster.AttributeDefs.on_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -501,7 +516,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="On led color",
         entity_type=EntityType.CONFIG,
     )
-    .enum( # Off led color
+    .enum(  # Off led color
         attribute_name=LightManufacturerCluster.AttributeDefs.off_led_color.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         enum_class=SinopeLightLedColors,
@@ -509,7 +524,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Off led color",
         entity_type=EntityType.CONFIG,
     )
-    .number( # Minimum intensity
+    .number(  # Minimum intensity
         attribute_name=LightManufacturerCluster.AttributeDefs.min_intensity.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -518,7 +533,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="min_intensity",
         fallback_name="Minimum on level",
     )
-    .number( # Timer
+    .number(  # Timer
         attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
@@ -528,7 +543,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="timer",
         fallback_name="Timer",
     )
-    .sensor( # Timer countdown
+    .sensor(  # Timer countdown
         attribute_name=LightManufacturerCluster.AttributeDefs.timer_countdown.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
@@ -537,7 +552,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         fallback_name="Timer countdown",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .sensor( # Device status
+    .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
