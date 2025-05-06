@@ -62,7 +62,6 @@ from zhaquirks.sinope import (
     CustomDeviceTemperatureCluster,
 )
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
