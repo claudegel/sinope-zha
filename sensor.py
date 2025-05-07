@@ -38,14 +38,6 @@ from zigpy.zcl.foundation import (
     ZCLAttributeDef,
 )
 
-from zhaquirks.const import (
-    DEVICE_TYPE,
-    ENDPOINTS,
-    INPUT_CLUSTERS,
-    MODELS_INFO,
-    OUTPUT_CLUSTERS,
-    PROFILE_ID,
-)
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
 
