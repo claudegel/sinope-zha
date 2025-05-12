@@ -376,6 +376,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .add_to_registry()
 )
 
+
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
     # input_clusters=[0, 2, 3, 4, 5, 6, 8, 1794, 2821, 65281]
@@ -470,6 +471,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     )
     .add_to_registry()
 )
+
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
