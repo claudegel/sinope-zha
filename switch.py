@@ -253,7 +253,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0060, type=t.uint16_t, access="r", is_manufacturer_specific=True
         )
         current_load: Final = ZCLAttributeDef(
-            id=0x0070, type=t.bitmap8, access="r", is_manufacturer_specific=True
+            id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
         unknown_attr_7: Final = ZCLAttributeDef(
             id=0x0074, type=t.enum8, access="rw", is_manufacturer_specific=True
@@ -286,16 +286,16 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x007E, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_11: Final = ZCLAttributeDef(
-            id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
+            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
         )
         current_summation_delivered: Final = ZCLAttributeDef(
             id=0x0090, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
         timer: Final = ZCLAttributeDef(
-            id=0x00A0, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
+            id=0x00A0, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
         timer_countdown: Final = ZCLAttributeDef(
-            id=0x00A1, type=t.uint32_t, access="rp", is_manufacturer_specific=True
+            id=0x00A1, type=t.uint32_t, access="r", is_manufacturer_specific=True
         )
         unknown_attr_12: Final = ZCLAttributeDef(
             id=0x00B0, type=t.Bool, access="rp", is_manufacturer_specific=True
