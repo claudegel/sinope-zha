@@ -224,15 +224,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|unknown|0, 1|read/write|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
-|0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
-|0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
+|0xff01|0x0003|3|t.uint16_t|firmware_number|378|read|
+|0xff01|0x0004|4|t.CharacterString|firmware_version|378|read|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read|
 |0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
-|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read/report|
+|0xff01|0x0074|116|t.enum8|Unknown|0, 1,255=undefined|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
 |0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|read/report|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000 |read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000 |read/report|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|	1=on, 0=off|read/report|
@@ -249,17 +250,18 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
-|0xff01|0x0003|3|t.uint16_t|firmware_number| |read/write/report|
-|0xff01|0x0004|4|t.CharacterString|firmware_version|1|read|
+|0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
+|0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write/report|
+|0xff01|0x0003|3|t.uint16_t|firmware_number|378|read/report|
+|0xff01|0x0004|4|t.CharacterString|firmware_version|378|read/report|
 |0xff01|0x0010|16|t.int16s|unknown|400| |
 |0xff01|0x0013|19|t.enum8|unknown|1,2,3,4,16,21|read/write|
-|0xff01|0x0035|53|t.uint16_t|unknown|0|read/report|
-|0xff01|0x0037|55|t.uint16_t|unknown|744|read/write/report|
-|0xff01|0x0038|56|t.enum8|unknown|0|read/report|
+|0xff01|0x0035|53|t.uint16_t|unknown|0,22|read/report|
+|0xff01|0x0037|55|t.uint16_t|unknown|744, 1000|read/write/report|
+|0xff01|0x0038|56|t.enum8|unknown|0, 2|read/report|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
-|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read|
-|0xff01|0x0074|116|t.enum8|unknown|255|read/write/report|
+|0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read/report|
+|0xff01|0x0074|116|t.enum8|unknown|0,1,255|read/write/report|
 |0xff01|0x0076|118|t.uint8_t|drConfigWaterTempMin|0=off, 45 to 55 celsius|read/write/report|
 |0xff01|0x0077|119|t.uint8_t|drConfigWaterTempTime|2|read/write/report|
 |0xff01|0x0078|120|t.uint16_t|drWTTimeOn|240|read/write/report|
@@ -268,19 +270,19 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x007B|123|t.uint16_t|unknown|288|read/write/report|
 |0xff01|0x007C|124|t.int16s|min_measured_temp|water temp celsius*100|read/report|
 |0xff01|0x007D|125|t.int16s|max_measured_temp|water temp celsius*100|read/report|
-|0xff01|0x007E|126|t.enum8|water_temp_protection_type|0|read/write/report|
+|0xff01|0x007E|126|t.enum8|water_temp_protection_type|0,1|read/write/report|
 |0xff01|0c0080|128|t.uint32_t|unknown|0|read/report|
 |0xff01|0x0090|144|t.uint32_t|CurrentSummationDelivered|kwh|read/report|
 |0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write/report|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read/report|
-|0xff01|0x00B0|176|t.Bool|unknown|1|read/report|
-|0xff01|0x0101|257|Array| |read/report|
+|0xff01|0x00B0|176|t.Bool|unknown|0,1|read/report|
+|0xff01|0x0101|257|t.LVList| |read/report|
 |0xff01|0x012A|298|t.enum8|unknown|60|read/write/report|
-|0xff01|0x012C|300|Array|unknown|  |read/report|
-|0xff01|0x0200|512|t.bitmap32|status| ok=0x00000000, leak cable disconnected=0x00000040, temperature sensor disconnected=0x00000020|read/report|
+|0xff01|0x012C|300|t.LVList|unknown|  |read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status| ok=0x00000000, leak cable disconnected=0x00000040, temperature sensor disconnected=0x00000020|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|1|read/report|
 |0xff01|0x0203|515|t.enum8|unknown|12|read/report|
-|0xff01|0x0280|640|t.int16s|max_measured_value|5300|read/write/report|
+|0xff01|0x0280|640|t.int16s|max_measured_value|5300, 10000|read/write/report|
 |0xff01|0x0281|641|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0282|642|t.uint16_t|unknown|0|read/write/report|
 |0xff01|0x0283|643|t.uint8_t|ColdLoadPickupStatus| 1, 2|read/report|
