@@ -453,7 +453,7 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
         cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
         state_class=SensorStateClass.TOTAL_INCREASING,
-        unit=UnitOfEnergy.KILO_WATT_HOUR,
+        unit=UnitOfEnergy.WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
         reporting_config=ReportingConfig(
             min_interval=59, max_interval=1799, reportable_change=60
