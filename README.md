@@ -330,6 +330,13 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |2|0x0402|0x0000|0|t.int16s|Measured value, outside temperature|celsius*100|read/report|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0405|0x0000|0|t.uint16_t|measured value, relative humidity|%|read/report|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x0B05|0x011D|285|t.int8s|rssi|-45|read/report|
+| --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0x000F|0x0055|85|t.Bool|present_value|true=1, false=0|read/write/report|
+|2|0x000F|0x0055|85|t.Bool|present_value|true=1, false=0|read/write/report|
+|1|0x000F|0x006F|111|t.bitmap8|status-flag|0x00=false, 0x01=true|read/report|
+|2|0x000F|0x006F|111|t.bitmap8|status-flag|0x00=false, 0x01=true|read/report|
 
 - **Valve**: VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
