@@ -92,7 +92,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0139|313|t.int16s|heat_lockout_temperature|-32768=off, celsius*100|report/read/write|
 |0xff01|0x013A|314|t.int16s|cool_lockout_temperature|-32768=off, celsius*100|read/write/report|
 |0xff01|0x013B|315|t.bitmab8|unknown|0,4|read/report|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000|read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000|read/report|
 |0xff01|0x0202|514|t.enum8|unknown|0,1,2,6|read|
 |0xff01|0x0260|608|t.bitmap16|unknown|0, 7967|read/write/report|
 |0xff01|0x0261|609|t.bitmap16|unknown|0|read/write/report|
@@ -191,7 +191,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |0xff01|0x00A1|161|t.uint32_t|Timer_countdown|Seconds remaining on timer|read|
 |0xff01|0x0119|281|t.uint16_t|ConnectedLoad| None: 0, watt|read/write|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| report/read|
+|0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000| report/read|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0702|0x0000|0|t.uint48_t|CurrentSummationDelivered| Sum of delivered watt/hr|read/report|
@@ -311,12 +311,16 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|read/report|
 |1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|read/report|
 | --- | --- | --- | --- | --- | --- | --- | ---|
+|1|0xff01|0x0070|112|t.bitmap8|current_load|0-24 Wh|read/report|
+|1|0xff01|0x0074|116|t.enum8|Unknown|0,1,255=undefined|read/write/report|
 |1|0xff01|0x00A0|160|t.uint32_t|Timer|Time, 1 to 10800 seconds|read/write|
 |2|0xff01|0x00A0|160|t.uint32_t|Timer2|Time, 1 to 10800 seconds|read/write|
+|1|0xff01|0x0200|512|t.bitmap32|dev_status|0|read/report|
 |1|0xff01|0x02A0|672|t.uint32_t|input_on_delay|seconds, 0=off, 0 to 10800|read/write|
 |1|0xff01|0x02A1|673|t.uint32_t|input_off_delay|seconds, 0=off, 0 to 10800|read/write|
 |2|0xff01|0x02A0|672|t.uint32_t|input_on_delay|seconds, 0=off, 0 to 10800|read/write|
 |2|0xff01|0x02A1|673|t.uint32_t|input_off_delay|seconds, 0=off, 0 to 10800|read/write|
+|1|0xff01|0x00B0|175|t,Bool|Unknown|0,1|read/report|
 |1|0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |report/read|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
@@ -335,7 +339,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|read/report|
 |0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000|read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status/alarm| 0x00000000|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -360,7 +364,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
-|0xff01|0x0200|512|t.bitmap32|status/alarm| 0x00000000|read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000|read/report|
 |0xff01|0x0230|560|t.enum8|alarm_flow_threshold|0=off,1=on|read/write|
 |0xff01|0x0231|561|t.enum8|alarm_options|0=nothing,1=alarm,2=close,3=close and alarm,4=no flowmeter|read|
 |0xff01|0x0240|576|Array|flow_meter_config|12 elements (uint8)|read/write|
@@ -408,7 +412,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72, 133|read|
 |0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read|
-|0xff01|0x0200|512|t.bitmap32|status|0x00000000|read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|read/report|
@@ -433,7 +437,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|Unknown|60|report/read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown|0|read/report|
-|0xff01|0x0200|512|t.bitmap32|status| 0x00000000| read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000| read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision| |report/read|
 
 Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055. There is no % value. In neviweb this is calculated depending on gauge type 5-95 or 10-80. If you need to set an alarm at 20% tank capacity then target angle 182 for 5-95 and 10-80 gauge. For 30% value 5-95 = 221 and 10-80 = 216. 
