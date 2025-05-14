@@ -66,10 +66,20 @@ class ZoneStatus(t.uint16_t):
     Connector_low_bat = 0x003A
 
 
+class SensorStatus(t.uint16_t):
+    """Sensor probe state."""
+
+    Disconected = 0x0021
+    Ok = 0x004E
+    Min_temp_alert = 0x004F
+    Max_temp_alert = 0x0051
+
+
 class SinopeManufacturerCluster(CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
 
     DeviceStatus: Final = DeviceStatus
+    SensorStatus: Final = SensorStatus
 
     cluster_id: Final[t.uint16_t] = SINOPE_MANUFACTURER_CLUSTER_ID
     name: Final = "SinopeManufacturerCluster"
@@ -99,8 +109,8 @@ class SinopeManufacturerCluster(CustomCluster):
         device_status: Final = ZCLAttributeDef(
             id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_3: Final = ZCLAttributeDef(
-            id=0x0035, type=t.uint16_t, access="r", is_manufacturer_specific=True
+        sensor_status: Final = ZCLAttributeDef(
+            id=0x0035, type=SensorStatus, access="r", is_manufacturer_specific=True
         )
         battery_type: Final = ZCLAttributeDef(
             id=0x0036, type=t.uint16_t, access="rw", is_manufacturer_specific=True
@@ -160,6 +170,26 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         translation_key="checkin_interval",
         fallback_name="Checkin interval",
     )
+    .number(  # Min temperature limit
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.min_temperature_limit.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        step=1,
+        min_value=300,
+        max_value=1500,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="min_temperature_limit",
+        fallback_name="Min temperature limit",
+    )
+    .number(  # Max temperature limit
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.max_temperature_limit.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        step=1,
+        min_value=1500,
+        max_value=5000,
+        unit=UnitOfTemperature.CELSIUS,
+        translation_key="max_temperature_limit",
+        fallback_name="Max temperature limit",
+    )
     .sensor(  # battery voltage
         attribute_name=PowerConfiguration.AttributeDefs.battery_voltage.name,
         cluster_id=PowerConfiguration.cluster_id,
@@ -178,17 +208,19 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
         cluster_id=SinopeTechnologiesIasZoneCluster.cluster_id,
         endpoint_id=1,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
         translation_key="zone_status",
         fallback_name="Zone status",
         entity_type=EntityType.DIAGNOSTIC,
     )
-    .sensor(  # Device status
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.status.name,
+    .sensor(  # Sensor status
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.sensor_status.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=1,
         state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
-        fallback_name="Device status",
+        suggested_display_precision=0,
+        translation_key="sensor_status",
+        fallback_name="Sensor status",
         entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
