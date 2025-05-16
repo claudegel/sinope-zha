@@ -506,7 +506,8 @@ Following are the cluster/attributes set for reproting in Neviweb:
 |status|0x0001|0x003e|0x1b|60|43688|1| 
 |remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
 |battery voltage|0x0001|0x0020|0x20|60|43646|1|
-|present value, angle|0x000c|0x0055|0x39|5|3757|1|
+|battery alarm|0x003E|0x1B|60|43688|1|
+|present value, angle|0x000c|0x0055|0x39|5|3666|1|Value of -2 = probe disconected
 |device temperature|0x0402|0x0000|0x29|60|3678|1|(only if temperature goes below 5oC)
 
 - Calypso RM3500ZB:
