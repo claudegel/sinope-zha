@@ -820,8 +820,8 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
         entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor(  # Battery status
-        attribute_name=PowerConfiguration.AttributeDefs.battery_alarm_state.name,
-        cluster_id=PowerConfiguration.cluster_id,
+        attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
+        cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=0,
         translation_key="battery_alarm_state",
