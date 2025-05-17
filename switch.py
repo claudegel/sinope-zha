@@ -444,15 +444,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         )
 
 
-class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
-    """Custom flow measurement cluster that divides value by 10."""
-
-    def _update_attribute(self, attrid, value):
-        if attrid == self.AttributeDefs.measured_value.id:
-            value = value / 10
-        super()._update_attribute(attrid, value)
-
-
 (
     # <SimpleDescriptor(endpoint=1, profile=260,
     # device_type=81, device_version=0,
@@ -552,7 +543,6 @@ class SinopeTechnologiesFlowMeasurementCluster(CustomCluster, FlowMeasurement):
     .replaces(SinopeTechnologiesBasicCluster)
     .replaces(SinopeTechnologiesPowerConfigurationCluster)
     .replaces(SinopeTechnologiesIasZoneCluster)
-    .replaces(SinopeTechnologiesFlowMeasurementCluster)
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
     .enum(  # energy source
