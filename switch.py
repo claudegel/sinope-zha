@@ -35,11 +35,7 @@ from zigpy.zcl.clusters.general import (
     Scenes,
 )
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
-from zigpy.zcl.clusters.measurement import (
-    FlowMeasurement,
-    RelativeHumidity,
-    TemperatureMeasurement,
-)
+from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (
@@ -420,7 +416,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         """Sinope Manufacturer ias Cluster Attributes."""
 
         battery_alarm_state: Final = ZCLAttributeDef(
-            id=0x003e, type=BatteryStatus, access="rp", is_manufacturer_specific=True
+            id=0x003E, type=BatteryStatus, access="rp", is_manufacturer_specific=True
         )
 
 
