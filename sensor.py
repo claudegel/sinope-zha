@@ -69,7 +69,7 @@ class ZoneStatus(t.uint16_t):
 class SensorStatus(t.uint16_t):
     """Sensor probe state."""
 
-    Disconected = 0x0021
+    Disconnected = 0x0021
     Ok = 0x004E
     Min_temp_alert = 0x004F
     Max_temp_alert = 0x0051
@@ -164,15 +164,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         battery_alarm_state: Final = ZCLAttributeDef(
             id=0x003e, type=BatteryStatus, access="rp", is_manufacturer_specific=True
         )
-
-
-class SinopeTechnologiesTemperatureMeasurementCluster(CustomCluster, TemperatureMeasurement):
-    """Custom flow measurement cluster that divides value by 10."""
-
-    def _update_attribute(self, attrid, value):
-        if attrid == self.AttributeDefs.measured_value.id:
-            value = value / 100
-        super()._update_attribute(attrid, value)
 
 
 (
@@ -271,9 +262,9 @@ class SinopeTechnologiesTemperatureMeasurementCluster(CustomCluster, Temperature
     .adds(Identify, endpoint_id=1)
     .adds(AnalogInput, endpoint_id=1)
     .adds(PollControl, endpoint_id=1)
+    .adds(TemperatureMeasurement, endpoint_id=1)
     .adds(Diagnostic, endpoint_id=1)
     .replaces(SinopeTechnologiesPowerConfigurationCluster)
-    .replaces(SinopeTechnologiesTemperatureMeasurementCluster)
     .replaces(SinopeManufacturerCluster)
     .sensor(  # Battery status
         attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
