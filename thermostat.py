@@ -63,7 +63,7 @@ class DeviceStatus(t.bitmap32):
     Temp_sensor = 0x00000040
 
 
-class PumpStatus(t.uint8_t):
+class PumpStatus(t.enum_factory(t.uint8_t, "manufacturer_specific")):
     """Pump protection status."""
 
     Off = 0x00
