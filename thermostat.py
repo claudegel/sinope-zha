@@ -63,7 +63,7 @@ class DeviceStatus(t.bitmap32):
     Temp_sensor = 0x00000040
 
 
-class PumpStatus(t.enum_factory(t.uint8_t, "manufacturer_specific")):
+class PumpStatus(t.uint8_t):
     """Pump protection status."""
 
     Off = 0x00
@@ -766,10 +766,19 @@ sinope_base_quirk = (
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
     )
-    .enum(  # Pump protection status
+#    .enum(  # Pump protection status
+#        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
+#        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+#        enum_class=PumpStatus,
+#        translation_key="pump_protection_status",
+#        fallback_name="Pump protection status",
+#        entity_type=EntityType.CONFIG,
+#    )
+    .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        enum_class=PumpStatus,
+        off_value: 0
+        on_value: 1
         translation_key="pump_protection_status",
         fallback_name="Pump protection status",
         entity_type=EntityType.CONFIG,
