@@ -777,8 +777,8 @@ sinope_base_quirk = (
     .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        off_value: 0
-        on_value: 1
+        off_value: 0,
+        on_value: 1,
         translation_key="pump_protection_status",
         fallback_name="Pump protection status",
         entity_type=EntityType.CONFIG,
