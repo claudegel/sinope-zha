@@ -42,7 +42,8 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |VA4200ZB| 0 |1.3.2 | |
 |WL4200| 0 |1.0.2 | |
 |WL4200S| 0 |1.2.5 |With remote sensor|
-|WL4210C| | |With perimeter cable
+|WL4210C| 0 | 0.2.3 |With perimeter cable|
+|WL4210| 0 | 0.2.3 | No remote sensor |
 
 - Plug:
 
@@ -59,7 +60,7 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 |RM3250ZB| 0 |1.3.3 | |
 |RM3500ZB| 0 |0.3.7 | |
 |MC3100ZB| 0 |0.1.1 | |
-|LM4110ZB| 0 |0.1.1 | |
+|LM4110ZB| 0 |0.1.3 | |
 
 - Gateway:
 
