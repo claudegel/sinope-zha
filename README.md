@@ -227,12 +227,12 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0003|3|t.uint16_t|firmware_number|378|read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version|378|read|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|	watt/hr|read|
-|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write|
-|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
 |0xff01|0x0070|112|t.bitmap8|CurrentLoad|watt/hr|read/report|
 |0xff01|0x0074|116|t.enum8|Unknown|0, 1,255=undefined|read/write|
 |0xff01|0x0080|128|t.uint32_t|Unknown| |read|
 |0xff01|0x0090|144|t.uint32_t|currentSummationDelivered|watt/hr|read/report|
+|0xff01|0x00A0|160|t.uint32_t|Timer| Time, 1 to 86400 seconds|read/write|
+|0xff01|0x00A1|161|t.uint32_t|Timer_countDown| Seconds remaining on timer|read|
 |0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000 |read/report|
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read/report|
 | --- | --- | --- | --- | --- | --- | ---|
