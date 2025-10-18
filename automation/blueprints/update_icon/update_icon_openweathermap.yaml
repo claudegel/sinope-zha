@@ -2,7 +2,7 @@ blueprint:
   name: Thermostat icon update via Openweathermap (day/night)
   description: Change thermostat icon based on weather condition code and time of day. Requires Openweathermap and Sun integrations.
   domain: automation
-  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_openweathermap.yaml
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon/update_icon_openweathermap.yaml
   input:
     weather_entity:
       name: Weather Icon Code Sensor
