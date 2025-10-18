@@ -1,0 +1,46 @@
+blueprint:
+  name: Show Eco logo on thermostat display at the beginning of peak periods.
+  description: >
+    Send code to thermostat to display the ECO logo during peak periods.
+    Requires a binary_sensor from Hydro-Québec integration and one or more thermostat number entities.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/show_dr_logo/show_dr_logo.yaml
+  input:
+    condition_target:
+      name: Hydro-Québec Peak Period Sensor
+      description: Entity ID of the binary_sensor from Hydro-Québec integration
+      selector:
+        entity:
+          domain: binary_sensor
+    number_target:
+      name: Thermostat Number Entity (eco_delta_setpoint)
+      description: One or more thermostat number entities to activate ECO logo
+      selector:
+        target:
+          entity:
+            domain: number
+
+mode: single
+
+trigger:
+  - platform: time
+    at: "05:00:00"
+  - platform: time
+    at: "15:00:00"
+
+variables:
+  numbers: !input number_target
+
+condition:
+  - condition: state
+    entity_id: !input condition_target
+    state: "on"
+
+action:
+  - repeat:
+      count: "{{ numbers | count }}"
+      sequence:
+        - service: number.set_value
+          data:
+            entity_id: "{{ numbers[repeat.index - 1] }}"
+            value: 0

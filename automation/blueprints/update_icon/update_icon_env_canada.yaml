@@ -1,28 +1,29 @@
 blueprint:
-  name: thermostat icon update via Environement Canada weather conditions codes.
-  description: Change thermostat icon when weather condition code changes. Your Environment Canada icon code source should be set to your_city_icon_code.
+  name: Thermostat icon update via Environment Canada weather condition codes
+  description: >
+    Change thermostat icon when Environment Canada weather condition code changes.
+    Your Environment Canada icon code source should be set to your_city_icon_code.
   domain: automation
   source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_env_canada.yaml
   input:
     weather_entity:
-      name: Your City Weather Icon Code source
-      description: Entity ID of the weather icon code sensor
+      name: Weather Icon Code Sensor
+      description: Entity ID of the Environment Canada weather icon code sensor
       selector:
         entity:
           domain: sensor
-    climate_target:
-      name: Thermostat_ieee
-      description: Target thermostat entity
+    select_target:
+      name: Thermostat Select Entity
+      description: One or more select entities to update with the weather icon
       selector:
         target:
           entity:
-            domain: climate
+            domain: select
 
-# If weather code change we update the thermostat,
 mode: single
 
-triggers:
-  - trigger: state
+trigger:
+  - platform: state
     entity_id: !input weather_entity
 
 variables:
@@ -67,18 +68,13 @@ variables:
     "47": Cloudlightning
     "48": Cloudrain
 
-  thermostats:
-    - !input climate_target
+  selects: !input select_target
 
-actions:
+action:
   - repeat:
-      count: "{{thermostats|length}}"
+      count: "{{ selects | count }}"
       sequence:
-        - action: zha.set_zigbee_cluster_attribute
+        - service: select.select_option
           data:
-            cluster_type: in
-            ieee: "{{ thermostats[repeat.index-1] }}"
-            endpoint_id: 1
-            cluster_id: 0xff01
-            attribute: 0x0013
-            value: "{{ weather_change.get(states(!input weather_entity), 'Hide') }}"
+            entity_id: "{{ selects[repeat.index - 1] }}"
+            option: "{{ weather_change.get(states(!input weather_entity), 'Hide') }}"

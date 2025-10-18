@@ -1,0 +1,39 @@
+blueprint:
+  name: Stop Eco logo on thermostat display at the end of the peak period.
+  description: Send code to thermostat to remove the ECO logo blinking.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/show_dr_logo/stop_dr_logo.yaml
+  input:
+    condition_target:
+      name: Hydro-Québec Peak Period Sensor
+      description: Entity ID of the binary_sensor from Hydro-Québec integration
+      selector:
+        entity:
+          domain: binary_sensor
+    number_target:
+      name: Thermostat Number Entity (eco_delta_setpoint)
+      description: Target thermostat entity. Can put more then one.
+      selector:
+        target:
+          entity:
+            domain: number
+
+mode: single
+
+triggers:
+  - platform: time
+    at: "09:10:00"
+  - platform: time
+    at: "20:10:00"
+
+variables:
+  numbers: !input number_target
+
+action:
+  - repeat:
+      count: "{{ numbers | count }}"
+      sequence:
+        - service: number.set_value
+          data:
+            entity_id: "{{ numbers[repeat.index - 1] }}"
+            value: -128

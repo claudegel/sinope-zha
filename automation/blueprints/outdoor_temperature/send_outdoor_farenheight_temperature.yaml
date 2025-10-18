@@ -1,0 +1,40 @@
+blueprint:
+  name: Update second display with outdoor temperature (Fahrenheit)
+  description: >
+    Converts outdoor temperature from Fahrenheit to Celsius and sends it to the thermostat's second display.
+    The thermostat will reconvert and round it internally if configured that way.
+
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/outdoor_temperature/send_outdoor_farenheight_temperature.yaml
+  input:
+    weather_entity:
+      name: Outdoor Temperature Sensor (Fahrenheit)
+      description: Entity ID of the outdoor temperature sensor (in Fahrenheit)
+      selector:
+        entity:
+          domain: sensor
+    number_target:
+      name: Thermostat Number Entity
+      description: One or more number entities to update with the converted temperature
+      selector:
+        target:
+          entity:
+            domain: number
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input weather_entity
+
+variables:
+  numbers: !input number_target
+
+action:
+  - repeat:
+      count: "{{ numbers | count }}"
+      sequence:
+        - service: number.set_value
+          data:
+            entity_id: "{{ numbers[repeat.index - 1] }}"
+            value: "{{ ((trigger.to_state.state | float - 32) / 1.8 * 100) | int }}"
