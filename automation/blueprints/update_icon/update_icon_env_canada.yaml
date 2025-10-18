@@ -1,0 +1,80 @@
+blueprint:
+  name: Thermostat icon update via Environment Canada weather condition codes
+  description: >
+    Change thermostat icon when Environment Canada weather condition code changes.
+    Your Environment Canada icon code source should be set to your_city_icon_code.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/update_icon_env_canada.yaml
+  input:
+    weather_entity:
+      name: Weather Icon Code Sensor
+      description: Entity ID of the Environment Canada weather icon code sensor
+      selector:
+        entity:
+          domain: sensor
+    select_target:
+      name: Thermostat Select Entity
+      description: One or more select entities to update with the weather icon
+      selector:
+        target:
+          entity:
+            domain: select
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input weather_entity
+
+variables:
+  weather_change:
+    "00": Sun
+    "01": Sun2
+    "02": Cloudsun
+    "03": Cloudsun2
+    "06": Cloudrainsun
+    "07": Cloudlightning2
+    "08": Cloudsnow2
+    "10": Cloud2
+    "11": Cloudrain2
+    "12": Cloudrain3
+    "13": Cloudrain
+    "14": Cloudsnow
+    "15": Cloudsnow
+    "16": Cloudsnow4
+    "17": Cloudsnow3
+    "18": Cloudsnow3
+    "19": Cloudlightning
+    "23": Cloudfog
+    "24": Cloudfog
+    "25": Cloudsnow5
+    "26": Cloudsnow3
+    "27": Cloud
+    "28": Cloud3
+    "30": Moonstar
+    "31": Cloudmoon
+    "32": Cloudmoon2
+    "33": Cloudmoon3
+    "36": Cloudrainmoon
+    "37": Cloudrainmoon3
+    "38": Cloudsnow6
+    "39": Cloudrainmoon2
+    "40": Cloudsnow5
+    "41": Cloudfog
+    "42": Cloudfog
+    "44": Cloudfog
+    "45": Cloudfog
+    "46": Cloudlightning
+    "47": Cloudlightning
+    "48": Cloudrain
+
+  selects: !input select_target
+
+action:
+  - repeat:
+      count: "{{ selects | count }}"
+      sequence:
+        - service: select.select_option
+          data:
+            entity_id: "{{ selects[repeat.index - 1] }}"
+            option: "{{ weather_change.get(states(!input weather_entity), 'Hide') }}"
