@@ -1,0 +1,39 @@
+blueprint:
+  name: Update second display to show outdoor temperature
+  description: >
+    Send outdoor temperature to thermostat second display. You need a sensor from Openweathermap,
+    Environment Canada or any good local temperature source. Temperature is updated each time the sensor updates.
+  domain: automation
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/send_oudoor_temperature.yaml
+  input:
+    weather_entity:
+      name: Outdoor Temperature Sensor
+      description: Entity ID of the outdoor temperature sensor
+      selector:
+        entity:
+          domain: sensor
+    number_target:
+      name: Thermostat Number Entity
+      description: One or more number entities to update with the outdoor temperature
+      selector:
+        target:
+          entity:
+            domain: number
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input weather_entity
+
+variables:
+  numbers: !input number_target
+
+action:
+  - repeat:
+      count: "{{ numbers | count }}"
+      sequence:
+        - service: number.set_value
+          data:
+            entity_id: "{{ numbers[repeat.index - 1] }}"
+            value: "{{ (trigger.to_state.state | float * 100) | int }}"
