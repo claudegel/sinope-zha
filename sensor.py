@@ -7,39 +7,22 @@ Supported devices are WL4200, WL4200S and LM4110-ZB
 from typing import Final
 
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    DEGREE,
-    UnitOfElectricPotential,
-    UnitOfTemperature,
-    UnitOfTime,
-)
 import zigpy.types as t
-from zigpy.zcl.clusters.general import (
-    AnalogInput,
-    Basic,
-    Identify,
-    PollControl,
-    PowerConfiguration,
-)
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.switch import (EnergySource,
+                                     SinopeTechnologiesBasicCluster)
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorDeviceClass, SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
+                                           UnitOfTemperature, UnitOfTime)
+from zigpy.zcl.clusters.general import (AnalogInput, Basic, Identify,
+                                        PollControl, PowerConfiguration)
 from zigpy.zcl.clusters.homeautomation import Diagnostic
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 
 class LeakStatus(t.enum8):
@@ -162,7 +145,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         """Sinope Manufacturer ias Cluster Attributes."""
 
         battery_alarm_state: Final = ZCLAttributeDef(
-            id=0x003e, type=BatteryStatus, access="rp", is_manufacturer_specific=True
+            id=0x003E, type=BatteryStatus, access="rp", is_manufacturer_specific=True
         )
 
 

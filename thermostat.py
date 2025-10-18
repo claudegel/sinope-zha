@@ -7,19 +7,17 @@ of outdoor temperature, setting occupancy on/off and setting device time.
 from typing import Final
 
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import EntityType, QuirkBuilder, ReportingConfig, SensorStateClass
-from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTemperature, UnitOfTime
 import zigpy.types as t
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfTemperature,
+                                           UnitOfTime)
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 
 class KeypadLock(t.enum8):
@@ -766,14 +764,14 @@ sinope_base_quirk = (
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
     )
-#    .enum(  # Pump protection status
-#        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
-#        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-#        enum_class=PumpStatus,
-#        translation_key="pump_protection_status",
-#        fallback_name="Pump protection status",
-#        entity_type=EntityType.CONFIG,
-#    )
+    #    .enum(  # Pump protection status
+    #        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
+    #        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+    #        enum_class=PumpStatus,
+    #        translation_key="pump_protection_status",
+    #        fallback_name="Pump protection status",
+    #        entity_type=EntityType.CONFIG,
+    #    )
     .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
