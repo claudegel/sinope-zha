@@ -4,7 +4,7 @@ blueprint:
     Send outdoor temperature to thermostat second display. You need a sensor from Openweathermap,
     Environment Canada or any good local temperature source. Temperature is updated each time the sensor updates.
   domain: automation
-  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/send_oudoor_temperature.yaml
+  source_url: https://github.com/claudegel/sinope-zha/tree/master/automation/blueprints/outdoor_temperature/send_outdoor_temperature.yaml
   input:
     weather_entity:
       name: Outdoor Temperature Sensor
