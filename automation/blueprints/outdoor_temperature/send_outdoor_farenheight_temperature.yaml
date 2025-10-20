@@ -28,7 +28,7 @@ trigger:
     entity_id: !input weather_entity
 
 variables:
-  numbers: !input number_target
+  numbers: "{{ number_target.entity_id }}"
 
 action:
   - repeat:
