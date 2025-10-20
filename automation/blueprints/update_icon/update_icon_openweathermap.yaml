@@ -112,7 +112,7 @@ variables:
     "803": Cloudmoon3
     "804": Cloud2
 
-  selects: !input select_target
+  selects: "{{ select_target.entity_id }}"
 
 conditions:
   - condition: template
