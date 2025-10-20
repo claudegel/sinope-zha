@@ -29,7 +29,7 @@ trigger:
     at: "15:00:00"
 
 variables:
-  numbers: !input number_target
+  numbers: "{{ number_target.entity_id }}"
 
 condition:
   - condition: state
