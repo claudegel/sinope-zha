@@ -27,7 +27,7 @@ triggers:
     at: "20:10:00"
 
 variables:
-  numbers: !input number_target
+  numbers: "{{ number_target.entity_id }}"
 
 action:
   - repeat:
