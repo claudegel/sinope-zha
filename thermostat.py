@@ -629,6 +629,14 @@ sinope_base_quirk = (
         fallback_name="Time format",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # cycle length
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=CycleLength,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
+        entity_type=EntityType.CONFIG,
+    )
     .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
