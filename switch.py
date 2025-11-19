@@ -380,8 +380,7 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True
         )
         flow_meter_config: Final = ZCLAttributeDef(
-            id=0x0240, type=FlowMeter, access="rw", is_manufacturer_specific=True,
-            enum=FlowMeterEnum
+            id=0x0240, type=FlowMeter, access="rw", is_manufacturer_specific=True
         )
         alarm_disable_countdown: Final = ZCLAttributeDef(
             id=0x0241, type=t.uint32_t, access="rw", is_manufacturer_specific=True
