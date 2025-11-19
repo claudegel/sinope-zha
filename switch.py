@@ -687,7 +687,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     .sensor(  # Zone status
         attribute_name=SinopeTechnologiesIasZoneCluster.AttributeDefs.zone_status.name,
         cluster_id=SinopeTechnologiesIasZoneCluster.cluster_id,
-        enum_class=ZoneStatusEnum,
         translation_key="zone_status",
         fallback_name="Zone status",
         entity_type=EntityType.DIAGNOSTIC,
