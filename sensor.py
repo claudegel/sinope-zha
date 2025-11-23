@@ -263,7 +263,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     .add_to_registry()
 )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=0
     # device_version=0 input_clusters=[0, 1, 3, 12, 32, 1026, 2821, 65281]

@@ -551,7 +551,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     .add_to_registry()
 )
 
-
 (
     # <SimpleDescriptor(endpoint=1, profile=260,
     # device_type=2, device_version=0,
@@ -601,7 +600,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor(endpoint=1, profile=260,
@@ -740,7 +738,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor(endpoint=1, profile=260,
@@ -904,7 +901,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor(endpoint=1, profile=260,
