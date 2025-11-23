@@ -8,16 +8,27 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfTemperature,
-                                           UnitOfTime)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    PERCENTAGE,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
+
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 
 
 class ManufacturerReportingMixin:
@@ -744,7 +755,6 @@ sinope_base_quirk = (
     .skip_configuration()
 )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=0
     # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 2820, 2821, 65281]
@@ -778,7 +788,6 @@ sinope_base_quirk = (
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
@@ -855,7 +864,6 @@ sinope_base_quirk = (
     .add_to_registry()
 )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
     # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
@@ -928,7 +936,6 @@ sinope_base_quirk = (
     .add_to_registry()
 )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
     # input_clusters=[0, 3, 4, 5, 513, 516, 1026, 1794, 2820, 2821, 65281]
@@ -955,7 +962,6 @@ sinope_base_quirk = (
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=775 device_version=1
@@ -1029,7 +1035,6 @@ sinope_base_quirk = (
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=769 device_version=1
