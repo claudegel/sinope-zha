@@ -194,7 +194,7 @@ class CycleLength(t.uint16_t):
 
 
 class CycleLengthEnum(t.enum16):
-    """"Convert CycleLength to enum."""
+    """ "Convert CycleLength to enum."""
 
     Sec_15 = CycleLength.Sec_15
     Min_15 = CycleLength.Min_15
