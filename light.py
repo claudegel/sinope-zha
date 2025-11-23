@@ -27,8 +27,36 @@ from zigpy.zcl.clusters.general import (Basic, Groups, Identify, LevelControl,
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  Direction, GeneralCommand, ZCLAttributeDef,
-                                  ZCLCommandDef, ZCLHeader)
+                                  BaseCommandDefs, GeneralCommand,
+                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
+
+
+class ManufacturerReportingMixin:
+    """Mixin to configure the attributes reporting in manufacturer cluster."""
+
+    MANUFACTURER_REPORTING = {
+        # attribut_id: (min_interval, max_interval, reportable_change)
+        0x0054: (0, 0, 1),  # action_report
+        0x0058: (0, 0, 1),  # double_up_full
+        0x0090: (3, 602, 1),  # current_summation_delivered
+        0x0200: (60, 43688, 1),  # status
+        # ... add other attributes
+    }
+
+    async def configure_reporting_all(self):
+        """Configure reporting of all configured attributes."""
+        for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            try:
+                await self.configure_reporting(
+                    attribute=attr_id,
+                    min_interval=min_i,
+                    max_interval=max_i,
+                    reportable_change=change,
+                )
+                self.debug(f"Reporting configured for attr {hex(attr_id)}")
+            except Exception as e:
+                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -155,14 +183,18 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
-    server_commands = {
-        0x54: ZCLCommandDef(
-            "button_press",
-            {"command": t.uint8_t},
-            direction=Direction.Server_to_Client,
+    async def bind(self):
+        await super().bind()
+        await self.configure_reporting_all()
+
+    class ServerCommandDefs(BaseCommandDefs):
+        """Server command definitions."""
+
+        button_press = ZCLCommandDef(
+            id=0x54,
+            schema={"command": t.uint8_t},
             is_manufacturer_specific=True,
         )
-    }
 
     def handle_cluster_general_request(
         self,

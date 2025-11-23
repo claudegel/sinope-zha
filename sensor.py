@@ -25,6 +25,31 @@ from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
 
+class ManufacturerReportingMixin:
+    """Mixin to configure the attributes reporting in manufacturer cluster."""
+
+    MANUFACTURER_REPORTING = {
+        # attribut_id: (min_interval, max_interval, reportable_change)
+        0x0034: (10, 0, 1),  # device_status
+        0x0200: (10, 0, 1),  # status
+        # ... add other attributes
+    }
+
+    async def configure_reporting_all(self):
+        """Configure reporting of all configured attributes."""
+        for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            try:
+                await self.configure_reporting(
+                    attribute=attr_id,
+                    min_interval=min_i,
+                    max_interval=max_i,
+                    reportable_change=change,
+                )
+                self.debug(f"Reporting configured for attr {hex(attr_id)}")
+            except Exception as e:
+                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+
+
 class LeakStatus(t.enum8):
     """Leak_status values."""
 
@@ -112,6 +137,10 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
+
+    async def bind(self):
+        await super().bind()
+        await self.configure_reporting_all()
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):

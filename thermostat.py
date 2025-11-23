@@ -20,6 +20,36 @@ from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
 
+class ManufacturerReportingMixin:
+    """Mixin to configure the attributes reporting in manufacturer cluster."""
+
+    MANUFACTURER_REPORTING = {
+        # attribut_id: (min_interval, max_interval, reportable_change)
+        0x0002: (10, 300, 1),  # keypad_lockout
+        0x012B: (10, 300, 1),  # current_setpoint
+        0x0070: (10, 43268, 1),  # current_load
+        0x010C: (10, 3600, 1),  # floor_limit_status
+        0x012D: (19, 300, 25),  # report_local_temperature
+        0x0115: (10, 3600, 1),  # gfci_status
+        0x0200: (10, 0, 1),  # status
+        # ... add other attributes
+    }
+
+    async def configure_reporting_all(self):
+        """Configure reporting of all configured attributes."""
+        for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            try:
+                await self.configure_reporting(
+                    attribute=attr_id,
+                    min_interval=min_i,
+                    max_interval=max_i,
+                    reportable_change=change,
+                )
+                self.debug(f"Reporting configured for attr {hex(attr_id)}")
+            except Exception as e:
+                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+
+
 class KeypadLock(t.enum8):
     """Keypad lockout values."""
 
@@ -163,6 +193,13 @@ class CycleLength(t.uint16_t):
     Min_15 = 0x0384
 
 
+class CycleLengthEnum(t.enum16):
+    """Convert CycleLength to enum."""
+
+    Sec_15 = CycleLength.Sec_15
+    Min_15 = CycleLength.Min_15
+
+
 class Occupancy(t.enum8):
     """Set occupancy values."""
 
@@ -196,6 +233,19 @@ class CycleOutput(t.uint16_t):
     Min_25 = 0x05DC
     Min_30 = 0x0708
     Off = 0xFFFF
+
+
+class CycleOutputEnum(t.enum16):
+    """Convert CycleOutput to enum."""
+
+    Sec_15 = CycleOutput.Sec_15
+    Min_5 = CycleOutput.Min_5
+    Min_10 = CycleOutput.Min_10
+    Min_15 = CycleOutput.Min_15
+    Min_20 = CycleOutput.Min_20
+    Min_25 = CycleOutput.Min_25
+    Min_30 = CycleOutput.Min_30
+    Off = CycleOutput.Off
 
 
 class Language(t.enum8):
@@ -495,6 +545,10 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
+    async def bind(self):
+        await super().bind()
+        await self.configure_reporting_all()
+
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     """SinopeTechnologiesThermostatCluster custom cluster."""
@@ -714,6 +768,14 @@ sinope_base_quirk = (
         fallback_name="Backlight auto dim",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # main cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=CycleLengthEnum,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
+        entity_type=EntityType.CONFIG,
+    )
     .add_to_registry()
 )
 
@@ -756,6 +818,14 @@ sinope_base_quirk = (
         fallback_name="Aux output mode",
         entity_type=EntityType.CONFIG,
     )
+    .enum(  # cycle length
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=CycleLengthEnum,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
+        entity_type=EntityType.CONFIG,
+    )
     .enum(  # Floor sensor type
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -764,14 +834,6 @@ sinope_base_quirk = (
         fallback_name="Floor sensor type",
         entity_type=EntityType.CONFIG,
     )
-    #    .enum(  # Pump protection status
-    #        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
-    #        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-    #        enum_class=PumpStatus,
-    #        translation_key="pump_protection_status",
-    #        fallback_name="Pump protection status",
-    #        entity_type=EntityType.CONFIG,
-    #    )
     .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -881,6 +943,14 @@ sinope_base_quirk = (
         enum_class=Backlight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum(  # main cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=CycleLengthEnum,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
         entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
@@ -998,6 +1068,14 @@ sinope_base_quirk = (
         enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
+        entity_type=EntityType.CONFIG,
+    )
+    .enum(  # main cycle length
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=CycleLengthEnum,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
         entity_type=EntityType.CONFIG,
     )
     .number(  # weather icons timeout
