@@ -10,46 +10,23 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
+from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
+                              CustomDeviceTemperatureCluster)
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    BinarySensorDeviceClass,
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    PERCENTAGE,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfTemperature,
-    UnitOfTime,
-)
-from zigpy.zcl.clusters.general import (
-    Basic,
-    BinaryInput,
-    Groups,
-    Identify,
-    OnOff,
-    PowerConfiguration,
-    Scenes,
-)
+from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+                             ReportingConfig, SensorDeviceClass,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
+                                           UnitOfEnergy, UnitOfTemperature,
+                                           UnitOfTime)
+from zigpy.zcl.clusters.general import (Basic, BinaryInput, Groups, Identify,
+                                        OnOff, PowerConfiguration, Scenes)
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import (
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-    CustomDeviceTemperatureCluster,
-)
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 
 class ManufacturerReportingMixin:
@@ -543,6 +520,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         unit_of_measure: Final = ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
         )
+
 
 (
     # <SimpleDescriptor(endpoint=1, profile=260,

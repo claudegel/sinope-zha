@@ -8,27 +8,16 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    PERCENTAGE,
-    UnitOfTemperature,
-    UnitOfTime,
-)
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfTemperature,
+                                           UnitOfTime)
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 
 class ManufacturerReportingMixin:
