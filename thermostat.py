@@ -20,6 +20,36 @@ from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
 
+class ManufacturerReportingMixin:
+    """Mixin to configure the attributes reporting in manufacturer cluster."""
+
+    MANUFACTURER_REPORTING = {
+        # attribut_id: (min_interval, max_interval, reportable_change)
+        0x0002: (10, 300, 1),  # keypad_lockout
+        0x012B: (10, 300, 1),  # current_setpoint
+        0x0070: (10, 43268, 1),  # current_load
+        0x010C: (10, 3600, 1),  # floor_limit_status
+        0x012D: (19, 300, 25),  # report_local_temperature
+        0x0115: (10, 3600, 1),  # gfci_status
+        0x0200: (10, 0, 1),  # status
+        # ... add other attributes
+    }
+
+    async def configure_reporting_all(self):
+        """Configure reporting of all configured attributes."""
+        for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            try:
+                await self.configure_reporting(
+                    attribute=attr_id,
+                    min_interval=min_i,
+                    max_interval=max_i,
+                    reportable_change=change,
+                )
+                self.debug(f"Reporting configured for attr {hex(attr_id)}")
+            except Exception as e:
+                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+
+
 class KeypadLock(t.enum8):
     """Keypad lockout values."""
 
@@ -66,13 +96,6 @@ class PumpStatus(t.uint8_t):
 
     Off = 0x00
     On = 0x01
-
-
-class PumpStatusEnum(t.enum8):
-    """Convert PumpStatus into enum."""
-
-    Off = PumpStatus.Off
-    On = PumpStatus.On
 
 
 class LimitStatus(t.uint8_t):
@@ -521,6 +544,10 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
             id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
+
+    async def bind(self):
+        await super().bind()
+        await self.configure_reporting_all()
 
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
