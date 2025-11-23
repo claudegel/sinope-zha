@@ -8,21 +8,41 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import (EnergySource,
-                                     SinopeTechnologiesBasicCluster)
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorDeviceClass, SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
-                                           UnitOfTemperature, UnitOfTime)
-from zigpy.zcl.clusters.general import (AnalogInput, Basic, Identify,
-                                        PollControl, PowerConfiguration)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    DEGREE,
+    UnitOfElectricPotential,
+    UnitOfTemperature,
+    UnitOfTime,
+)
+from zigpy.zcl.clusters.general import (
+    AnalogInput,
+    Basic,
+    Identify,
+    PollControl,
+    PowerConfiguration,
+)
 from zigpy.zcl.clusters.homeautomation import Diagnostic
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
+
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.switch import (
+    EnergySource,
+    SinopeTechnologiesBasicCluster,
+)
 
 
 class ManufacturerReportingMixin:
@@ -177,7 +197,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
             id=0x003E, type=BatteryStatus, access="rp", is_manufacturer_specific=True
         )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=1026
     # device_version=0 input_clusters=[0, 1, 3, 1026, 1280, 2821, 65281]
@@ -262,7 +281,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=0
