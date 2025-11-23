@@ -8,27 +8,58 @@ import logging
 from typing import Any, Final, Optional, Union
 
 import zigpy.profiles.zha as zha_p
-import zigpy.types as t
-from zhaquirks import EventableCluster
-from zhaquirks.const import (ATTRIBUTE_ID, ATTRIBUTE_NAME, BUTTON,
-                             COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
-                             COMMAND_M_MULTI_PRESS_COMPLETE,
-                             COMMAND_M_SHORT_RELEASE, DESCRIPTION, TURN_OFF,
-                             TURN_ON, VALUE, ZHA_SEND_EVENT)
-from zhaquirks.sinope import (ATTRIBUTE_ACTION, LIGHT_DEVICE_TRIGGERS, SINOPE,
-                              SINOPE_MANUFACTURER_CLUSTER_ID, ButtonAction,
-                              CustomDeviceTemperatureCluster)
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorDeviceClass, SensorStateClass)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
 from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
-from zigpy.zcl.clusters.general import (Basic, Groups, Identify, LevelControl,
-                                        OnOff, Scenes)
+import zigpy.types as t
+from zigpy.zcl.clusters.general import (
+    Basic,
+    Groups,
+    Identify,
+    LevelControl,
+    OnOff,
+    Scenes,
+)
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  BaseCommandDefs, GeneralCommand,
-                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    BaseCommandDefs,
+    GeneralCommand,
+    ZCLAttributeDef,
+    ZCLHeader,
+)
+
+from zhaquirks import EventableCluster
+from zhaquirks.const import (
+    ATTRIBUTE_ID,
+    ATTRIBUTE_NAME,
+    BUTTON,
+    COMMAND_M_INITIAL_PRESS,
+    COMMAND_M_LONG_RELEASE,
+    COMMAND_M_MULTI_PRESS_COMPLETE,
+    COMMAND_M_SHORT_RELEASE,
+    DESCRIPTION,
+    TURN_OFF,
+    TURN_ON,
+    VALUE,
+    ZHA_SEND_EVENT,
+)
+from zhaquirks.sinope import (
+    ATTRIBUTE_ACTION,
+    LIGHT_DEVICE_TRIGGERS,
+    SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
+    ButtonAction,
+    CustomDeviceTemperatureCluster,
+)
 
 
 class ManufacturerReportingMixin:
@@ -376,7 +407,6 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .add_to_registry()
 )
 
-
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
     # input_clusters=[0, 2, 3, 4, 5, 6, 8, 1794, 2821, 65281]
@@ -471,7 +501,6 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     )
     .add_to_registry()
 )
-
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=260 device_version=1
