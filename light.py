@@ -26,9 +26,9 @@ from zigpy.zcl.clusters.general import (Basic, Groups, Identify, LevelControl,
                                         OnOff, Scenes)
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, ZCLCommandDef,
-                                  BaseAttributeDefs, BaseCommandDefs,
-                                  GeneralCommand, ZCLAttributeDef, ZCLHeader)
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  BaseCommandDefs, GeneralCommand,
+                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
 
 
 class ManufacturerReportingMixin:
