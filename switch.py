@@ -29,6 +29,39 @@ from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
 
+class ManufacturerReportingMixin:
+    """Mixin to configure the attributes reporting in manufacturer cluster."""
+
+    MANUFACTURER_REPORTING = {
+        # attribut_id: (min_interval, max_interval, reportable_change)
+        0x0010: (19, 300, 25),  # outdoor_temp
+        0x0070: (60, 3678, 1),  # current_load
+        0x0076: (0, 86400, 1),  # dr_config_water_temp_min
+        0x0077: (0, 86400, 1),  # dr_config_water_temp_time
+        0x007C: (19, 300, 25),  # min_measured_temp
+        0x007D: (19, 300, 25),  # max_measured_temp
+        0x0090: (59, 1799, 60),  # current_summation_delivered
+        0x0200: (60, 43688, 1),  # dev_status
+        0x0280: (19, 300, 25),  # max_measured_value
+        0x0283: (0, 86400, 1),  # cold_load_pickup_status
+        # ... add other attributes
+    }
+
+    async def configure_reporting_all(self):
+        """Configure reporting of all configured attributes."""
+        for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            try:
+                await self.configure_reporting(
+                    attribute=attr_id,
+                    min_interval=min_i,
+                    max_interval=max_i,
+                    reportable_change=change,
+                )
+                self.debug(f"Reporting configured for attr {hex(attr_id)}")
+            except Exception as e:
+                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+
+
 class KeypadLock(t.enum8):
     """Keypad_lockout values."""
 
@@ -419,6 +452,10 @@ class SinopeManufacturerCluster(CustomCluster):
             id=0x02A1, type=InputDelay, access="rwp", is_manufacturer_specific=True
         )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
+
+    async def bind(self):
+        await super().bind()
+        await self.configure_reporting_all()
 
 
 class SinopeTechnologiesBasicCluster(CustomCluster, Basic):
