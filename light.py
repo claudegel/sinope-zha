@@ -102,7 +102,7 @@ class SinopeLightLedColors(t.enum32):
     Red = 0xFF0000
 
 
-class SinopeTechnologiesManufacturerCluster(CustomCluster):
+class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
     """SinopeTechnologiesManufacturerCluster manufacturer cluster."""
 
     KeypadLock: Final = KeypadLock
@@ -184,6 +184,7 @@ class SinopeTechnologiesManufacturerCluster(CustomCluster):
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
     async def bind(self):
+        """Bind the cluster and configure reporting."""
         await super().bind()
         await self.configure_reporting_all()
 
