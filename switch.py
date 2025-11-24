@@ -276,7 +276,7 @@ class BatteryStatus(t.bitmap32):
     Low = 0x00000001
 
 
-class SinopeManufacturerCluster(CustomCluster):
+class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
     """SinopeManufacturerCluster manufacturer cluster."""
 
     KeypadLock: Final = KeypadLock
@@ -454,6 +454,7 @@ class SinopeManufacturerCluster(CustomCluster):
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
     async def bind(self):
+        """Bind the cluster and configure reporting."""
         await super().bind()
         await self.configure_reporting_all()
 
