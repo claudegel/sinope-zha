@@ -412,11 +412,11 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
-|0xff01|0x0031|49|t.uint16_t|unknown|696, 774|read/write|
+|0xff01|0x0031|49|t.uint16_t|Probe_type|696=external, 774=fix|read/write|
 |0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
-|0xff01|0x0035|53|t.uint16_t|unknown|29, 71, 72, 133|read|
+|0xff01|0x0035|53|t.uint16_t|sensor_status|24-29=unknown, 31-35 = probe disconnected, 71-78= ok, 79=min temp alert, 81=max temp alert,133=unknown alert|read|
 |0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read/report|
 |0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
