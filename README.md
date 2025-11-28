@@ -412,7 +412,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
-|0xff01|0x0031|49|t.uint16_t|Probe_type|696=external, 774=fix|read/write|
+|0xff01|0x0031|49|t.uint16_t|Probe_type ?|696=external, 774=fix|read/write|
 |0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
