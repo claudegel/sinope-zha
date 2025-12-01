@@ -419,7 +419,6 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0035|53|t.uint16_t|sensor_status|24-29=unknown, 31-35 = probe disconnected, 71-78= ok, 79=min temp alert, 81=max temp alert,133=unknown alert|read|
 |0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read/report|
-|0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|read/report|
