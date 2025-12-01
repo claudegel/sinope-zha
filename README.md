@@ -405,20 +405,19 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0702|0x0306|774|t.bitmap8|metering_device_type|2 = Water Metering|read|
 |0x0702|0x0400|1024|t.int24s|instantaneous_demand|0|report/read|
 
-- **Leak Sensors**: (WL4200, WL4200S, WL4200C, WL4210)
+- **Leak Sensors**: (WL4200, WL4200S, WL4200C)
 
 |Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0030|48|t.uint8_t|unknown|0|read/write|
-|0xff01|0x0031|49|t.uint16_t|Probe_type ?|696=external, 774=fix|read/write|
+|0xff01|0x0031|49|t.uint16_t|unknown|696, 774, 1000|read/write|
 |0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
 |0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
 |0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
 |0xff01|0x0035|53|t.uint16_t|sensor_status|24-29=unknown, 31-35 = probe disconnected, 71-78= ok, 79=min temp alert, 81=max temp alert,133=unknown alert|read|
 |0xff01|0x0036|54|t.uint16_t|battery_type|7|read/write|
-|0xff01|0x0038|56|t.enum8|conected_probe|0=disconected, 1= connected|read/report
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read/report|
 |0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
 |0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
@@ -427,6 +426,36 @@ I'll list here all the custom cluster attribute with explanation about how to us
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius * 100|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0002|2|t.bitmap16|zone_status|48=ok, 49=Leak_detected, 50=Probe_disconected, 51=leak_and_probe, 56=Low_battery, 58=Connector_low_bat|read/report|
+|0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
+
+
+- **Leak Sensors**: (WL4210)
+
+|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+| --- | --- | --- | --- | --- | --- | ---|
+|0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
+|0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
+|0xff01|0x0030|48|t.uint8_t|unknown|0|read/write/report|
+|0xff01|0x0031|49|t.uint16_t|unknown|696, 774, 1000|read/write/report|
+|0xff01|0x0032|50|t.int16s|min_temperature_limit|300, celsius*100|read/write|
+|0xff01|0x0033|51|t.int16s|max_temperature_limit|5000, celsius*100|read/write|
+|0xff01|0x0034|52|t.bitmap8|device_status|0|read/report|
+|0xff01|0x0035|53|t.uint16_t|sensor_status|14= ?, 24-29=unknown, 31-35 = probe disconnected, 71-78= ok, 79=min temp alert, 81=max temp alert,133=unknown alert|read/report|
+|0xff01|0x0036|54|t.uint16_t|battery_type|7=|read/write/report|
+|0xff01|0x0037|55|t.uint16_t|unknown|1000|read/write/report|
+|0xff01|0x0038|56|t.enum8|probe_connected|0=disconected, 1=connected|read/report|
+|0xff01|0x0039|57|t.enum8|probe_type|0=internal, 1=external_probe|read/write/report|
+|0xff01|0x0080|128|t.uint32_t|unknown|16973824|read/report|
+|0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
+|0xff01|0x020A|522|t.uint32_t|unknown|0|read/report|
+|0xff01|0xfffd|65533|t.uint16_t|cluster_revision|1|read|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0001|0x0020|32|t.uint8_t|Battery_voltage|voltage * 10|read/report|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0402|0x0000|0|t.uint16_t|MeasuredValue, Temperature|celsius * 100|read/report|
+| --- | --- | --- | --- | --- | --- | ---|
+|0x0500|0x0002|2|t.bitmap16|zone_status|48=ok, 49=Leak_detected, 50=Probe_disconected, 51=leak_and_probe, 56=Low_battery, 58=Connector_low_bat|read/report|
 |0x0500|0x0030|48|t.uint16_t|leak_alarm| 0=no leak, 1=leak|read|
 
 - **Tank level monitor**: (LM4110-ZB) 
