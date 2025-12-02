@@ -19,7 +19,6 @@ from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
                                            UnitOfTime)
 from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
                                         PowerConfiguration)
-from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
