@@ -33,7 +33,15 @@ You should see the following:
 ```
 
 # Editing the quirks:
-You can edit the files as you like and restart HA to test your changes. Don't forget to delete the ```__pycache__``` folder in /config/zhaquirks before restarting HA so your changes will be added.
+You can edit the files as you like and restart HA to test your changes. If it work please contribute.
+
+# ZHA-V2:
+
+Sinope-zha is now implementing V2 for ZHA. This imply many changes:
+- No need to use ieee in your automations. Most important attributes are now implemented as sensor, number, select, binary_sensor and button.
+  You can send data directly to them.
+- Temperature in your automation can be sent as normal °C, no need to send °C * 100. The convertion is done automatically in both direction
+- You can configure your device directly in device page in ZHA.
 
 # Custom cluster attributes details:
 
@@ -480,7 +488,7 @@ Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055
 
 # Devices reporting
 
-Device reporting allow device to report any changes that occur on some cluster attributes. If your device was connected to Neviweb before you don't need to activate reporting, except for light and dimmer double tap and long press reporting. If your device is bran new then it should be necessary to implement device reporting. To proceed you can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** or higher, and following example below:
+Device reporting allow device to report any changes that occur on some cluster attributes. It is done automatically by ZHA. If it is not working, no reporting, it is possible that the binding fail between your device and your Zigbee gateway. in that case you'll need to proceed manually. You can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** or higher, and following example below:
 
 Following are the cluster/attributes set for reproting in Neviweb:
 
