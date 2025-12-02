@@ -19,13 +19,9 @@ from zhaquirks.sinope import (ATTRIBUTE_ACTION, LIGHT_DEVICE_TRIGGERS, SINOPE,
                               SINOPE_MANUFACTURER_CLUSTER_ID, ButtonAction,
                               CustomDeviceTemperatureCluster)
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+from zigpy.quirks.v2 import (QuirkBuilder, ReportingConfig,
                              SensorDeviceClass, SensorStateClass)
 from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
-from zigpy.zcl.clusters.general import (Basic, Groups, Identify, LevelControl,
-                                        OnOff, Scenes)
-from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
-from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   BaseCommandDefs, GeneralCommand,
                                   ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
