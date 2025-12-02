@@ -18,12 +18,8 @@ from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
                              ReportingConfig, SensorDeviceClass,
                              SensorStateClass)
 from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
-                                           UnitOfEnergy, UnitOfTemperature,
-                                           UnitOfTime)
-from zigpy.zcl.clusters.general import (Basic, BinaryInput, Groups, Identify,
-                                        OnOff, PowerConfiguration, Scenes)
-from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
-from zigpy.zcl.clusters.measurement import TemperatureMeasurement
+                                           UnitOfEnergy, UnitOfTime)
+from zigpy.zcl.clusters.general import (Basic, BinaryInput, PowerConfiguration)
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
