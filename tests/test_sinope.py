@@ -3,26 +3,19 @@
 from unittest import mock
 
 import pytest
+import zhaquirks
 import zigpy.types as t
+from zhaquirks.const import (COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
+                             COMMAND_M_MULTI_PRESS_COMPLETE,
+                             COMMAND_M_SHORT_RELEASE, TURN_OFF, TURN_ON)
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.light import (LightManufacturerCluster,
+                                    SinopeTechnologiesManufacturerCluster)
 from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import DeviceTemperature, PowerConfiguration
 from zigpy.zcl.clusters.smartenergy import Metering
 
 from tests.common import ClusterListener
-import zhaquirks
-from zhaquirks.const import (
-    COMMAND_M_INITIAL_PRESS,
-    COMMAND_M_LONG_RELEASE,
-    COMMAND_M_MULTI_PRESS_COMPLETE,
-    COMMAND_M_SHORT_RELEASE,
-    TURN_OFF,
-    TURN_ON,
-)
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.light import (
-    LightManufacturerCluster,
-    SinopeTechnologiesManufacturerCluster,
-)
 
 zhaquirks.setup()
 

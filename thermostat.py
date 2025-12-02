@@ -8,16 +8,45 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
+from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfTemperature,
-                                           UnitOfTime)
+from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
+from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
+
+STATUS_MAP = {
+    0x00000000: "Ok",
+    0x00000020: "Floor_sensor",
+    0x00000040: "Temp_sensor",
+    0x00000060: "Both_sensor",
+}
+
+FLOOR_MAP = {
+    0x00: "Ok",
+    0x01: "Low_reached",
+    0x02: "Max_reached",
+    0x03: "Max_air_reached",
+}
+
+
+def device_status_converter(value):
+    """Convert sensor_status value to name."""
+
+    if value is None:
+        return None
+    return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
+
+def floor_status_converter(value):
+    """Convert sensor_status value to name."""
+
+    if value is None:
+        return None
+    return FLOOR_MAP.get(int(value), f"Unmapped({value})")
 
 
 class ManufacturerReportingMixin:
@@ -26,7 +55,7 @@ class ManufacturerReportingMixin:
     MANUFACTURER_REPORTING = {
         # attribut_id: (min_interval, max_interval, reportable_change)
         0x0002: (10, 300, 1),  # keypad_lockout
-        0x012B: (10, 300, 1),  # current_setpoint
+        0x012B: (10, 300, 25),  # current_setpoint
         0x0070: (10, 43268, 1),  # current_load
         0x010C: (10, 3600, 1),  # floor_limit_status
         0x012D: (19, 300, 25),  # report_local_temperature
@@ -89,6 +118,7 @@ class DeviceStatus(t.bitmap32):
     Ok = 0x00000000
     Floor_sensor = 0x00000020
     Temp_sensor = 0x00000040
+    Both_sensor = 0x00000060
 
 
 class PumpStatus(t.uint8_t):
@@ -658,7 +688,6 @@ sinope_base_quirk = (
         enum_class=KeypadLock,
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
@@ -666,7 +695,6 @@ sinope_base_quirk = (
         enum_class=Display,
         translation_key="config_2nd_display",
         fallback_name="Config 2nd display",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Temperature format
         attribute_name=UserInterface.AttributeDefs.temperature_display_mode.name,
@@ -674,7 +702,6 @@ sinope_base_quirk = (
         enum_class=TempFormat,
         translation_key="temperature_display_mode",
         fallback_name="Temperature display mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Time format
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.time_format.name,
@@ -682,7 +709,6 @@ sinope_base_quirk = (
         enum_class=TimeFormat,
         translation_key="time_format",
         fallback_name="Time format",
-        entity_type=EntityType.CONFIG,
     )
     .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
@@ -690,7 +716,7 @@ sinope_base_quirk = (
         step=1,
         min_value=-128,
         max_value=100,
-        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
@@ -714,13 +740,14 @@ sinope_base_quirk = (
         translation_key="eco_safety_temperature_delta",
         fallback_name="Eco safety temperature delta",
     )
-    .number(  # outdor temperature
+    .number(  # outdoor temperature
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
-        min_value=-32768,
-        max_value=3500,
-        unit=UnitOfTemperature.CELSIUS,
+        min_value=-327.68,
+        max_value=40.0,
+        multiplier=0.01,
+        device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="outdoor_temp",
         fallback_name="Outdoor temperature",
     )
@@ -730,17 +757,18 @@ sinope_base_quirk = (
         step=10,
         min_value=3600,
         max_value=18000,
+        unit=UnitOfTime.SECONDS,
         translation_key="outdoor_temp_timeout",
         fallback_name="Outdoor temp timeout",
-        unit=UnitOfTime.SECONDS,
     )
     .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=device_status_converter,
         translation_key="status",
         fallback_name="Device status",
-        entity_type=EntityType.DIAGNOSTIC,
     )
     .skip_configuration()
 )
@@ -766,7 +794,6 @@ sinope_base_quirk = (
         enum_class=Simplebacklight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # main cycle length
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
@@ -774,7 +801,6 @@ sinope_base_quirk = (
         enum_class=CycleLengthEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
-        entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
 )
@@ -791,7 +817,6 @@ sinope_base_quirk = (
         enum_class=FloorMode,
         translation_key="air_floor_mode",
         fallback_name="Air floor mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Pump protection duration
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
@@ -799,7 +824,6 @@ sinope_base_quirk = (
         enum_class=PumpDuration,
         translation_key="pump_protection_duration",
         fallback_name="Pump protection duration",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
@@ -807,7 +831,6 @@ sinope_base_quirk = (
         enum_class=Simplebacklight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
@@ -815,7 +838,6 @@ sinope_base_quirk = (
         enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # cycle length
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
@@ -823,7 +845,6 @@ sinope_base_quirk = (
         enum_class=CycleLengthEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Floor sensor type
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
@@ -831,25 +852,21 @@ sinope_base_quirk = (
         enum_class=SensorType,
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
-        entity_type=EntityType.CONFIG,
     )
     .switch(  # Pump protection status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         translation_key="pump_protection_status",
         fallback_name="Pump protection status",
-        entity_type=EntityType.CONFIG,
     )
     .sensor(  # floor_limit_status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        reporting_config=ReportingConfig(
-            min_interval=10, max_interval=3600, reportable_change=1
-        ),
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=floor_status_converter,
         translation_key="floor_limit_status",
         fallback_name="Floor limit status",
-        entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
 )
@@ -867,7 +884,6 @@ sinope_base_quirk = (
         enum_class=FloorMode,
         translation_key="air_floor_mode",
         fallback_name="Air floor mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Pump protection duration
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_duration.name,
@@ -875,7 +891,6 @@ sinope_base_quirk = (
         enum_class=PumpDuration,
         translation_key="pump_protection_duration",
         fallback_name="Pump protection duration",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
@@ -883,7 +898,6 @@ sinope_base_quirk = (
         enum_class=Simplebacklight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
@@ -891,7 +905,6 @@ sinope_base_quirk = (
         enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Floor sensor type
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_sensor_type_param.name,
@@ -899,29 +912,22 @@ sinope_base_quirk = (
         enum_class=SensorType,
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
-        entity_type=EntityType.CONFIG,
     )
     .sensor(  # floor_limit_status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        reporting_config=ReportingConfig(
-            min_interval=10, max_interval=3600, reportable_change=1
-        ),
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=floor_status_converter,
         translation_key="floor_limit_status",
         fallback_name="Floor limit status",
-        entity_type=EntityType.DIAGNOSTIC,
     )
     .sensor(  # Gfci status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
-        reporting_config=ReportingConfig(
-            min_interval=10, max_interval=3600, reportable_change=1
-        ),
         translation_key="gfci_status",
-        fallback_name="Gfci status",
-        entity_type=EntityType.DIAGNOSTIC,
+        fallback_name="GFCI status",
     )
     .add_to_registry()
 )
@@ -940,7 +946,6 @@ sinope_base_quirk = (
         enum_class=Backlight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # main cycle length
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
@@ -948,7 +953,6 @@ sinope_base_quirk = (
         enum_class=CycleLengthEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
-        entity_type=EntityType.CONFIG,
     )
     .add_to_registry()
 )
@@ -975,7 +979,6 @@ sinope_base_quirk = (
         enum_class=KeypadLock,
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Config second display
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.config_2nd_display.name,
@@ -983,7 +986,6 @@ sinope_base_quirk = (
         enum_class=Display,
         translation_key="config_2nd_display",
         fallback_name="Config 2nd display",
-        entity_type=EntityType.CONFIG,
     )
     .number(  # eco delta setpoint
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
@@ -991,7 +993,7 @@ sinope_base_quirk = (
         step=1,
         min_value=-128,
         max_value=100,
-        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
@@ -1021,7 +1023,6 @@ sinope_base_quirk = (
         state_class=SensorStateClass.MEASUREMENT,
         translation_key="status",
         fallback_name="Device status",
-        entity_type=EntityType.DIAGNOSTIC,
     )
     .add_to_registry()
 )
@@ -1039,7 +1040,6 @@ sinope_base_quirk = (
         enum_class=Language,
         translation_key="display_language",
         fallback_name="Display language",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Weather icons
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons.name,
@@ -1047,7 +1047,6 @@ sinope_base_quirk = (
         enum_class=WeatherIcon,
         translation_key="weather_icons",
         fallback_name="Weather icons",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Config backlight auto dim
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.backlight_auto_dim_param.name,
@@ -1055,7 +1054,6 @@ sinope_base_quirk = (
         enum_class=Backlight,
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # Aux mode
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
@@ -1063,7 +1061,6 @@ sinope_base_quirk = (
         enum_class=AuxMode,
         translation_key="aux_output_mode",
         fallback_name="Aux output mode",
-        entity_type=EntityType.CONFIG,
     )
     .enum(  # main cycle length
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
@@ -1071,7 +1068,6 @@ sinope_base_quirk = (
         enum_class=CycleLengthEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
-        entity_type=EntityType.CONFIG,
     )
     .number(  # weather icons timeout
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons_timeout.name,
@@ -1079,9 +1075,9 @@ sinope_base_quirk = (
         step=10,
         min_value=3600,
         max_value=18000,
+        unit=UnitOfTime.SECONDS,
         translation_key="icons_timeout",
         fallback_name="Icons timeout",
-        unit=UnitOfTime.SECONDS,
     )
     .add_to_registry()
 )
