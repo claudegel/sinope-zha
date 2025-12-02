@@ -8,50 +8,26 @@ VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 from enum import Enum
 from typing import Final
 
-from homeassistant.components.number import NumberDeviceClass
-
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    BinarySensorDeviceClass,
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    PERCENTAGE,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfTemperature,
-    UnitOfTime,
-)
 import zigpy.types as t
-from zigpy.zcl.clusters.general import (
-    Basic,
-    BinaryInput,
-    Groups,
-    Identify,
-    OnOff,
-    PowerConfiguration,
-    Scenes,
-)
+from homeassistant.components.number import NumberDeviceClass
+from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
+                              CustomDeviceTemperatureCluster)
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+                             ReportingConfig, SensorDeviceClass,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
+                                           UnitOfEnergy, UnitOfTemperature,
+                                           UnitOfTime)
+from zigpy.zcl.clusters.general import (Basic, BinaryInput, Groups, Identify,
+                                        OnOff, PowerConfiguration, Scenes)
 from zigpy.zcl.clusters.homeautomation import Diagnostic, ElectricalMeasurement
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import (
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-    CustomDeviceTemperatureCluster,
-)
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 STATUS_MAP = {
     0x00000000: "Ok",
@@ -73,6 +49,7 @@ BATTERY_MAP = {
     0x00000001: "Low",
 }
 
+
 def dev_status_converter(value):
     """Convert dev_status value to name."""
 
@@ -80,12 +57,14 @@ def dev_status_converter(value):
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
 
+
 def zone_status_converter(value):
     """Convert zone_status value to name."""
 
     if value is None:
         return None
     return ZONE_MAP.get(int(value), f"Unmapped({value})")
+
 
 def battery_alarm_converter(value):
     """Convert battery_alarm_state value to name."""
@@ -577,6 +556,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         unit_of_measure: Final = ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
         )
+
 
 (
     # <SimpleDescriptor(endpoint=1, profile=260,

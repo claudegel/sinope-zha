@@ -6,43 +6,25 @@ Supported devices are WL4200, WL4200S, WL4210 and LM4110-ZB
 
 from typing import Final
 
-from homeassistant.components.number import NumberDeviceClass, NumberMode
-
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    BinarySensorDeviceClass,
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    DEGREE,
-    UnitOfElectricPotential,
-    UnitOfTemperature,
-    UnitOfTime,
-)
 import zigpy.types as t
-from zigpy.zcl.clusters.general import (
-    AnalogInput,
-    Basic,
-    Identify,
-    PollControl,
-    PowerConfiguration,
-)
+from homeassistant.components.number import NumberDeviceClass, NumberMode
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.switch import (EnergySource,
+                                     SinopeTechnologiesBasicCluster)
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+                             ReportingConfig, SensorDeviceClass,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
+                                           UnitOfTemperature, UnitOfTime)
+from zigpy.zcl.clusters.general import (AnalogInput, Basic, Identify,
+                                        PollControl, PowerConfiguration)
 from zigpy.zcl.clusters.homeautomation import Diagnostic
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 SENSOR_MAP = {
     0x000E: "No_sensor",  # 14
@@ -79,12 +61,14 @@ PROBE_MAP = {
     0x01: "external probe",  # 1
 }
 
+
 def sensor_status_converter(value):
     """Convert sensor_status value to name."""
 
     if value is None:
         return None
     return SENSOR_MAP.get(int(value), f"Unmapped({value})")
+
 
 def zone_status_converter(value):
     """Convert zone_status value to name."""
@@ -93,12 +77,14 @@ def zone_status_converter(value):
         return None
     return ZONE_MAP.get(int(value), f"Unmapped({value})")
 
+
 def status_converter(value):
     """Convert status value to name."""
 
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
 
 def probe_converter(value):
     """Convert probe type value to name."""
@@ -289,6 +275,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         battery_alarm_state: Final = ZCLAttributeDef(
             id=0x003E, type=BatteryStatus, access="rp", is_manufacturer_specific=True
         )
+
 
 (
     # <SimpleDescriptor endpoint=1 profile=260 device_type=1026

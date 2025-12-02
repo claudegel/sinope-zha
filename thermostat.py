@@ -6,22 +6,19 @@ of outdoor temperature, setting occupancy on/off and setting device time.
 
 from typing import Final
 
-from homeassistant.components.number import NumberDeviceClass
-
 import zigpy.profiles.zha as zha_p
-from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import EntityType, QuirkBuilder, ReportingConfig, SensorStateClass
-from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTemperature, UnitOfTime
 import zigpy.types as t
+from homeassistant.components.number import NumberDeviceClass
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.quirks import CustomCluster
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfTemperature,
+                                           UnitOfTime)
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 STATUS_MAP = {
     0x00000000: "Ok",
@@ -37,12 +34,14 @@ FLOOR_MAP = {
     0x03: "Max_air_reached",
 }
 
+
 def device_status_converter(value):
     """Convert sensor_status value to name."""
 
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
 
 def floor_status_converter(value):
     """Convert sensor_status value to name."""
