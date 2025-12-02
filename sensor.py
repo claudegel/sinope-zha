@@ -13,14 +13,12 @@ from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zhaquirks.sinope.switch import (EnergySource,
                                      SinopeTechnologiesBasicCluster)
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder,
                              ReportingConfig, SensorDeviceClass,
                              SensorStateClass)
 from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
-                                           UnitOfTemperature, UnitOfTime)
-from zigpy.zcl.clusters.general import (AnalogInput, Basic, Identify,
-                                        PollControl, PowerConfiguration)
-from zigpy.zcl.clusters.homeautomation import Diagnostic
+                                           UnitOfTime)
+from zigpy.zcl.clusters.general import (AnalogInput, PollControl, PowerConfiguration)
 from zigpy.zcl.clusters.measurement import TemperatureMeasurement
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
