@@ -107,9 +107,9 @@ class AuxMode(t.enum8):
     """Aux output mode values."""
 
     Off = 0x00
-    On_15m = 0x01
-    On_15s = 0x02
-    Exp_module = 0x03
+    On_15min = 0x01
+    On_15sec = 0x02
+    Expan_module = 0x03
 
 
 class DeviceStatus(t.bitmap32):
@@ -226,8 +226,8 @@ class CycleLength(t.uint16_t):
 class CycleLengthEnum(t.enum16):
     """Convert CycleLength to enum."""
 
-    Sec_15 = CycleLength.Sec_15
-    Min_15 = CycleLength.Min_15
+    Short_15_sec = CycleLength.Sec_15
+    Long_15_min = CycleLength.Min_15
 
 
 class Occupancy(t.enum8):
@@ -268,14 +268,14 @@ class CycleOutput(t.uint16_t):
 class CycleOutputEnum(t.enum16):
     """Convert CycleOutput to enum."""
 
-    Sec_15 = CycleOutput.Sec_15
-    Min_5 = CycleOutput.Min_5
-    Min_10 = CycleOutput.Min_10
-    Min_15 = CycleOutput.Min_15
-    Min_20 = CycleOutput.Min_20
-    Min_25 = CycleOutput.Min_25
-    Min_30 = CycleOutput.Min_30
-    Off = CycleOutput.Off
+    CycLe_15_Sec = CycleOutput.Sec_15
+    Cycle_5_Min = CycleOutput.Min_5
+    Cycle_10_Min = CycleOutput.Min_10
+    Cycle_15_Min = CycleOutput.Min_15
+    Cycle_20_Min = CycleOutput.Min_20
+    Cycle_25_Min = CycleOutput.Min_25
+    Cycle_30_Min = CycleOutput.Min_30
+    Cycle_Off = CycleOutput.Off
 
 
 class Language(t.enum8):
