@@ -1,15 +1,16 @@
 # Latest firmware version encontered on Neviweb
 
 This is for zigbee devices only as wifi devices can only be managed in Neviweb and neviweb130.
-If your firmware is lower then what is stated here. Connect your device is Neviweb for a firmware update.
+If your firmware is lower than what is stated here, connect your device to Neviweb for a firmware update.
 
 - Thermostats:
 
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
+|TH1123ZB| 1 |0.6.9 | |
 |TH1123ZB| 2 |0.6.8 | |
 |TH1124ZB| 1 |0.6.4 | |
-|TH1124ZB| 2 |0.6.8 | |
+|TH1124ZB| 2 |0.6.9 | |
 |TH1124ZB| 3 |0.6.9 | |
 |TH1123ZB-G2| 0 |0.1.4 | |
 |TH1124ZB-G2| 0 |0.1.4 | |
@@ -49,7 +50,6 @@ If your firmware is lower then what is stated here. Connect your device is Neviw
 
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
-|SP2600ZB| 1 |0.0.9 | |
 |SP2600ZB| 1 |0.1.8 | |
 |SP2610ZB| 1 |0.0.8 | |
 
