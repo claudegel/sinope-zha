@@ -50,7 +50,6 @@ If your firmware is lower than what is stated here, connect your device to Neviw
 
 |Device model|hardware version|firmware version|Note|
 | --- | --- | --- | --- |
-|SP2600ZB| 1 |0.0.9 | |
 |SP2600ZB| 1 |0.1.8 | |
 |SP2610ZB| 1 |0.0.8 | |
 
