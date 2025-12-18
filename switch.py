@@ -194,16 +194,16 @@ class FlowDuration(t.uint32_t):
 class FlowDurationEnum(t.enum32):
     """Convert FlowDuration to enum."""
 
-    M_15 = FlowDuration.M_15
-    M_30 = FlowDuration.M_30
-    M_45 = FlowDuration.M_45
-    M_60 = FlowDuration.M_60
-    M_75 = FlowDuration.M_75
-    M_90 = FlowDuration.M_90
-    H_3 = FlowDuration.H_3
-    H_6 = FlowDuration.H_6
-    H_12 = FlowDuration.H_12
-    H_24 = FlowDuration.H_24
+    Flow_15_min = FlowDuration.M_15
+    Flow_30_min = FlowDuration.M_30
+    Flow_45_min = FlowDuration.M_45
+    Flow_60_min = FlowDuration.M_60
+    Flow_75_min = FlowDuration.M_75
+    Flow_90_min = FlowDuration.M_90
+    Flow_3_hrs = FlowDuration.H_3
+    Flow_6_hrs = FlowDuration.H_6
+    Flow_12_hrs = FlowDuration.H_12
+    Flow_24_hrs = FlowDuration.H_24
 
 
 class InputDelay(t.uint16_t):
@@ -225,15 +225,15 @@ class InputDelayEnum(t.enum16):
     """Convert InputDelay to enum."""
 
     Off = InputDelay.Off
-    M_1 = InputDelay.M_1
-    M_2 = InputDelay.M_2
-    M_5 = InputDelay.M_5
-    M_10 = InputDelay.M_10
-    M_15 = InputDelay.M_15
-    M_30 = InputDelay.M_30
-    H_1 = InputDelay.H_1
-    H_2 = InputDelay.H_2
-    H_3 = InputDelay.H_3
+    Input_1_min = InputDelay.M_1
+    Input_2_min = InputDelay.M_2
+    Input_5_min = InputDelay.M_5
+    Input_10_min = InputDelay.M_10
+    Input_15_min = InputDelay.M_15
+    Input_30_min = InputDelay.M_30
+    Input_1_hrs = InputDelay.H_1
+    Input_2_hrs = InputDelay.H_2
+    Input_3_hrs = InputDelay.H_3
 
 
 class EnergySource(t.enum8):
