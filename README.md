@@ -42,6 +42,11 @@ Sinope-zha is now implementing V2 for ZHA. This imply many changes:
   You can send data directly to them.
 - Temperature in your automation can be sent as normal °C, no need to send °C * 100. The convertion is done automatically in both direction
 - You can configure your device directly in device page in ZHA.
+- ZHA-V2 detect new paired devices differently from V1. If your devices was in V1 before switching to V2, it will pair without problem.
+  If your devices have never been connected to ZHA. For some devices they are not detected correctly and this can lead to missing attributs
+  or functions. The solution in that case is to simply remove the V2 quirs files (four files) from zhaquirks directory and restart HA.
+  Once done and your devices are all loaded. Re-add the four V2 files and restart HA. Your device should work correctly.
+- Please report device model that are not correctly detected in V2. Known models that do not paire correctly in V2 are TH1123ZB and TH1124ZB.
 
 # Custom cluster attributes details:
 
