@@ -401,6 +401,15 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         translation_key="connected_load",
         fallback_name="Connected load",
     )
+    .number(  # Minimum intensity
+        attribute_name=LightManufacturerCluster.AttributeDefs.min_intensity.name,
+        cluster_id=LightManufacturerCluster.cluster_id,
+        step=1,
+        min_value=1,
+        max_value=255,
+        translation_key="min_intensity",
+        fallback_name="Minimum on level",
+    )
     .number(  # Timer
         attribute_name=LightManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=LightManufacturerCluster.cluster_id,
