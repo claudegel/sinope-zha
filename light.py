@@ -404,8 +404,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .number(  # Minimum intensity
         attribute_name=LightManufacturerCluster.AttributeDefs.min_intensity.name,
         cluster_id=LightManufacturerCluster.cluster_id,
-        step=1,
-        min_value=1,
+        step=30,
+        min_value=0,
         max_value=3000,
         translation_key="min_intensity",
         fallback_name="Minimum on level",
@@ -491,8 +491,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .number(  # Minimum intensity
         attribute_name=LightManufacturerCluster.AttributeDefs.min_intensity.name,
         cluster_id=LightManufacturerCluster.cluster_id,
-        step=1,
-        min_value=1,
+        step=30,
+        min_value=0,
         max_value=3000,
         translation_key="min_intensity",
         fallback_name="Minimum on level",
