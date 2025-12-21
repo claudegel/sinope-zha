@@ -406,7 +406,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=1,
-        max_value=255,
+        max_value=3000,
         translation_key="min_intensity",
         fallback_name="Minimum on level",
     )
@@ -493,7 +493,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         cluster_id=LightManufacturerCluster.cluster_id,
         step=1,
         min_value=1,
-        max_value=255,
+        max_value=3000,
         translation_key="min_intensity",
         fallback_name="Minimum on level",
     )
