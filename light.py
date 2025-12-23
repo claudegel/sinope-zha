@@ -351,9 +351,6 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=60
-        ),
         translation_key="current_summation_delivered",
         fallback_name="Current summation delivered",
     )
@@ -441,9 +438,6 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=60
-        ),
         translation_key="current_summation_delivered",
         fallback_name="Current summation delivered",
     )
