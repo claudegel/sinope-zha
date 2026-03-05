@@ -18,7 +18,7 @@ from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
                              ReportingConfig, SensorDeviceClass,
                              SensorStateClass)
 from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
-                                           UnitOfEnergy, UnitOfTime)
+                                           UnitOfEnergy, UnitOfTime, UnitOfVolume)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
@@ -546,11 +546,11 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
 
-        status: Final = ZCLAttributeDef(
-            id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True
+        status_mf: Final = ZCLAttributeDef(
+            id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=False
         )
-        unit_of_measure: Final = ZCLAttributeDef(
-            id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
+        unit_of_measure_mf: Final = ZCLAttributeDef(
+            id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=False
         )
 
 
@@ -655,8 +655,8 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
         cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
         enum_class=EnergySource,
-        translation_key="power_source",
-        fallback_name="Power source",
+        translation_key="energy_source",
+        fallback_name="Energy source",
     )
     .enum(  # power source
         attribute_name=SinopeManufacturerCluster.AttributeDefs.power_source.name,
@@ -695,7 +695,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Emergency power source",
     )
     .enum(  # Valve status
-        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status.name,
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status_mf.name,
         cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
         enum_class=ValveStatus,
         translation_key="valve_status",
@@ -750,6 +750,27 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_converter=dev_status_converter,
         translation_key="dev_status",
         fallback_name="Device status",
+    )
+    .sensor(  # Flow volume delivered
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfVolume.LITERS,
+        device_class=SensorDeviceClass.WATER,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=60
+        ),
+        translation_key="flow_volume_delivered",
+        fallback_name="Flow volume delivered",
+    )
+    .sensor(  # Instantaneous demand
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.instantaneous_demand.name,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL,
+        unit="L/h",
+        device_class=SensorDeviceClass.WATER,
+        translation_key="instantaneous_demand",
+        fallback_name="Instantaneous_demand",
     )
     .number(  # Valve closure countdown
         attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
