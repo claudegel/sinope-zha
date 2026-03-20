@@ -304,7 +304,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0284|644|t.uint16_t|coldLoadPickupRemainingTime|65535=off countdown| |
 |0xff01|0xFFFD|65533|t.uint16_t|cluster_revision| |read|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0500|0x0002|2|t.uint16_t|ZoneStatus|48=no leak, 49=temp sensor disconnected, 50=leak sensor disconnected|read|
+|0x0500|0x0002|2|t.uint16_t|ZoneStatus|48=no leak, 49=temp sensor disconnected, 50=leak sensor disconnected, 56=both sensor disconnected|read|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0006|0x0000|0|t.Bool|OnOff|1=on, 0=off|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
