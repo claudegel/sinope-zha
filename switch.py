@@ -34,8 +34,8 @@ STATUS_MAP = {
 
 ZONE_MAP = {
     0x0030: "OK",
-    0x0031: "Connector_1",
-    0x0032: "Connector_2",
+    0x0031: "Leak",
+    0x0032: "Temperature",
     0x0038: "Low_battery",
     0x003A: "Connector_low_bat",
 }
@@ -269,8 +269,8 @@ class ZoneStatus(t.uint16_t):
     """IAS zone status."""
 
     Ok = 0x0030
-    Connector_1 = 0x0031
-    Connector_2 = 0x0032
+    Leak = 0x0031
+    Temperature = 0x0032
     Low_battery = 0x0038
     Connector_low_bat = 0x003A
 
