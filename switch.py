@@ -546,10 +546,10 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
 
-        status: Final = ZCLAttributeDef(
+        status_mf: Final = ZCLAttributeDef(
             id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True
         )
-        unit_of_measure: Final = ZCLAttributeDef(
+        unit_of_measure_mf: Final = ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
         )
 
@@ -695,7 +695,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Emergency power source",
     )
     .enum(  # Valve status
-        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status.name,
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status_mf.name,
         cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
         enum_class=ValveStatus,
         translation_key="valve_status",
