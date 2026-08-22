@@ -4,12 +4,15 @@ Manufacturer specific cluster implements attributes to control displaying
 of outdoor temperature, setting occupancy on/off and setting device time.
 """
 
+from asyncio import TimeoutError
+from types import MappingProxyType
 from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
@@ -18,19 +21,23 @@ from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
-STATUS_MAP = {
-    0x00000000: "Ok",
-    0x00000020: "Floor_sensor",
-    0x00000040: "Temp_sensor",
-    0x00000060: "Both_sensor",
-}
+STATUS_MAP = MappingProxyType(
+    {
+        0x00000000: "Ok",
+        0x00000020: "Floor_sensor",
+        0x00000040: "Temp_sensor",
+        0x00000060: "Both_sensor",
+    }
+)
 
-FLOOR_MAP = {
-    0x00: "Ok",
-    0x01: "Low_reached",
-    0x02: "Max_reached",
-    0x03: "Max_air_reached",
-}
+FLOOR_MAP = MappingProxyType(
+    {
+        0x00: "Ok",
+        0x01: "Low_reached",
+        0x02: "Max_reached",
+        0x03: "Max_air_reached",
+    }
+)
 
 
 def device_status_converter(value):
@@ -52,17 +59,19 @@ def floor_status_converter(value):
 class ManufacturerReportingMixin:
     """Mixin to configure the attributes reporting in manufacturer cluster."""
 
-    MANUFACTURER_REPORTING = {
-        # attribut_id: (min_interval, max_interval, reportable_change)
-        0x0002: (10, 300, 1),  # keypad_lockout
-        0x012B: (10, 300, 25),  # current_setpoint
-        0x0070: (10, 43268, 1),  # current_load
-        0x010C: (10, 3600, 1),  # floor_limit_status
-        0x012D: (19, 300, 25),  # report_local_temperature
-        0x0115: (10, 3600, 1),  # gfci_status
-        0x0200: (10, 0, 1),  # status
-        # ... add other attributes
-    }
+    MANUFACTURER_REPORTING = MappingProxyType(
+        {
+            # attribut_id: (min_interval, max_interval, reportable_change)
+            0x0002: (10, 300, 1),  # keypad_lockout
+            0x0070: (10, 43268, 1),  # current_load
+            0x010C: (10, 3600, 1),  # floor_limit_status
+            0x0115: (10, 3600, 1),  # gfci_status
+            0x012B: (10, 300, 25),  # current_setpoint
+            0x012D: (19, 300, 25),  # report_local_temperature
+            0x0200: (10, 0, 1),  # status
+            # ... add other attributes
+        }
+    )
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
@@ -75,8 +84,10 @@ class ManufacturerReportingMixin:
                     reportable_change=change,
                 )
                 self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except Exception as e:
-                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+                self.debug(
+                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                )
 
 
 class KeypadLock(t.enum8):

@@ -5,7 +5,9 @@ VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
 
+from asyncio import TimeoutError
 from enum import Enum
+from types import MappingProxyType
 from typing import Final
 
 import zigpy.profiles.zha as zha_p
@@ -13,37 +15,45 @@ import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
                               CustomDeviceTemperatureCluster)
+from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
                              ReportingConfig, SensorDeviceClass,
                              SensorStateClass)
 from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
-                                           UnitOfEnergy, UnitOfTime)
+                                           UnitOfEnergy, UnitOfTime,
+                                           UnitOfVolume, UnitOfVolumeFlowRate)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
                                   ZCLAttributeDef)
 
-STATUS_MAP = {
-    0x00000000: "Ok",
-    0x00000040: "Leak_cable_disconected",
-    0x00000020: "Temp_cable_disconected",
-    0x00000060: "Both_cables_disconected",
-}
+STATUS_MAP = MappingProxyType(
+    {
+        0x00000000: "Ok",
+        0x00000020: "Temp_cable_disconected",
+        0x00000040: "Leak_cable_disconected",
+        0x00000060: "Both_cables_disconected",
+    }
+)
 
-ZONE_MAP = {
-    0x0030: "OK",
-    0x0031: "Leak",
-    0x0032: "Temperature",
-    0x0038: "Low_battery",
-    0x003A: "Connector_low_bat",
-}
+ZONE_MAP = MappingProxyType(
+    {
+        0x0030: "OK",
+        0x0031: "Leak",
+        0x0032: "Temperature",
+        0x0038: "Low_battery",
+        0x003A: "Connector_low_bat",
+    }
+)
 
-BATTERY_MAP = {
-    0x00000000: "Ok",
-    0x00000001: "Low",
-}
+BATTERY_MAP = MappingProxyType(
+    {
+        0x00000000: "Ok",
+        0x00000001: "Low",
+    }
+)
 
 
 def dev_status_converter(value):
@@ -73,20 +83,22 @@ def battery_alarm_converter(value):
 class ManufacturerReportingMixin:
     """Mixin to configure the attributes reporting in manufacturer cluster."""
 
-    MANUFACTURER_REPORTING = {
-        # attribut_id: (min_interval, max_interval, reportable_change)
-        0x0010: (19, 300, 25),  # outdoor_temp
-        0x0070: (60, 3678, 1),  # current_load
-        0x0076: (0, 86400, 1),  # dr_config_water_temp_min
-        0x0077: (0, 86400, 1),  # dr_config_water_temp_time
-        0x007C: (19, 300, 25),  # min_measured_temp
-        0x007D: (19, 300, 25),  # max_measured_temp
-        0x0090: (59, 1799, 60),  # current_summation_delivered
-        0x0200: (60, 43688, 1),  # dev_status
-        0x0280: (19, 300, 25),  # max_measured_value
-        0x0283: (0, 86400, 1),  # cold_load_pickup_status
-        # ... add other attributes
-    }
+    MANUFACTURER_REPORTING = MappingProxyType(
+        {
+            # attribut_id: (min_interval, max_interval, reportable_change)
+            0x0010: (19, 300, 25),  # outdoor_temp
+            0x0070: (60, 3678, 1),  # current_load
+            0x0076: (0, 86400, 1),  # dr_config_water_temp_min
+            0x0077: (0, 86400, 1),  # dr_config_water_temp_time
+            0x007C: (19, 300, 25),  # min_measured_temp
+            0x007D: (19, 300, 25),  # max_measured_temp
+            0x0090: (59, 1799, 60),  # current_summation_delivered
+            0x0200: (60, 43688, 1),  # dev_status
+            0x0280: (19, 300, 25),  # max_measured_value
+            0x0283: (0, 86400, 1),  # cold_load_pickup_status
+            # ... add other attributes
+        }
+    )
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
@@ -99,8 +111,10 @@ class ManufacturerReportingMixin:
                     reportable_change=change,
                 )
                 self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except Exception as e:
-                self.debug(f"Reporting configuration fail for attr {hex(attr_id)}: {e}")
+            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+                self.debug(
+                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                )
 
 
 class KeypadLock(t.enum8):
@@ -750,6 +764,30 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_converter=dev_status_converter,
         translation_key="dev_status",
         fallback_name="Device status",
+    )
+    .sensor(  # Water volume delivered
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        unit=UnitOfVolume.LITERS,
+        device_class=SensorDeviceClass.WATER,
+        reporting_config=ReportingConfig(
+            min_interval=59, max_interval=1799, reportable_change=1
+        ),
+        translation_key="current_summ_delivered",
+        fallback_name="Water summation delivered",
+    )
+    .sensor(  # Instantaneous water flow
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.instantaneous_demand.name,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+        device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+        reporting_config=ReportingConfig(
+            min_interval=30, max_interval=600, reportable_change=1
+        ),
+        translation_key="instantaneous_demand",
+        fallback_name="Current water flow",
     )
     .number(  # Valve closure countdown
         attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
