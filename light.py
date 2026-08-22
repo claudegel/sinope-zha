@@ -7,47 +7,26 @@ DM2550ZB-G2.
 import logging
 from asyncio import TimeoutError
 from types import MappingProxyType
-from typing import Any, Final, Optional, Union
+from typing import Any, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
+from zhaquirks import EventableCluster
+from zhaquirks.const import (ATTRIBUTE_ID, ATTRIBUTE_NAME, BUTTON,
+                             COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
+                             COMMAND_M_MULTI_PRESS_COMPLETE,
+                             COMMAND_M_SHORT_RELEASE, DESCRIPTION, TURN_OFF,
+                             TURN_ON, VALUE, ZHA_SEND_EVENT)
+from zhaquirks.sinope import (ATTRIBUTE_ACTION, LIGHT_DEVICE_TRIGGERS, SINOPE,
+                              SINOPE_MANUFACTURER_CLUSTER_ID, ButtonAction,
+                              CustomDeviceTemperatureCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import QuirkBuilder, SensorDeviceClass, SensorStateClass
 from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
-from zigpy.zcl.foundation import (
-    BaseAttributeDefs,
-    BaseCommandDefs,
-    GeneralCommand,
-    ZCLAttributeDef,
-    ZCLCommandDef,
-    ZCLHeader,
-    ZCL_CLUSTER_REVISION_ATTR,
-)
-
-from zhaquirks import EventableCluster
-from zhaquirks.const import (
-    ATTRIBUTE_ID,
-    ATTRIBUTE_NAME,
-    BUTTON,
-    COMMAND_M_INITIAL_PRESS,
-    COMMAND_M_LONG_RELEASE,
-    COMMAND_M_MULTI_PRESS_COMPLETE,
-    COMMAND_M_SHORT_RELEASE,
-    DESCRIPTION,
-    TURN_OFF,
-    TURN_ON,
-    VALUE,
-    ZHA_SEND_EVENT,
-)
-from zhaquirks.sinope import (
-    ATTRIBUTE_ACTION,
-    ButtonAction,
-    CustomDeviceTemperatureCluster,
-    LIGHT_DEVICE_TRIGGERS,
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-)
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  BaseCommandDefs, GeneralCommand,
+                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
 
 
 class ManufacturerReportingMixin:
@@ -56,10 +35,10 @@ class ManufacturerReportingMixin:
     MANUFACTURER_REPORTING = MappingProxyType(
         {
             # attribut_id: (min_interval, max_interval, reportable_change)
-            0x0054: (0, 0, 1),      # action_report
-            0x0058: (0, 0, 1),      # double_up_full
-            0x0090: (3, 602, 1),    # current_summation_delivered
-            0x0200: (60, 43688, 1), # status
+            0x0054: (0, 0, 1),  # action_report
+            0x0058: (0, 0, 1),  # double_up_full
+            0x0090: (3, 602, 1),  # current_summation_delivered
+            0x0200: (60, 43688, 1),  # status
             # ... add other attributes
         }
     )

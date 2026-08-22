@@ -8,72 +8,56 @@ from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Final
 
-from homeassistant.components.number import NumberDeviceClass, NumberMode
-
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
+from homeassistant.components.number import NumberDeviceClass, NumberMode
+from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
+from zhaquirks.sinope.switch import (EnergySource,
+                                     SinopeTechnologiesBasicCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    DEGREE,
-    UnitOfElectricPotential,
-    UnitOfTime,
-)
-from zigpy.zcl.clusters.general import (
-    AnalogInput,
-    PollControl,
-    PowerConfiguration,
-)
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorDeviceClass, SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
+                                           UnitOfTime)
+from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
+                                        PowerConfiguration)
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-    ZCL_CLUSTER_REVISION_ATTR,
-)
-
-from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
-
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 SENSOR_MAP = MappingProxyType(
     {
-        0x000E: "No_sensor",            # 14
-        0x0018: "Unknown",              # 24
-        0x001F: "Unknown",              # 31
-        0x0020: "Probe_disconnected",   # 32
-        0x0021: "Probe_disconnected",   # 33
-        0x0023: "Probe_disconnected",   # 35
-        0x004A: "Ok",                   # 74
-        0x004B: "Ok",                   # 75
-        0x004C: "Ok",                   # 76
-        0x004E: "Ok",                   # 78
-        0x004F: "Min_temp_alert",       # 79
-        0x0051: "Max_temp_alert",       # 81
-        0x0085: "Unknown_Alert",        # 133
+        0x000E: "No_sensor",  # 14
+        0x0018: "Unknown",  # 24
+        0x001F: "Unknown",  # 31
+        0x0020: "Probe_disconnected",  # 32
+        0x0021: "Probe_disconnected",  # 33
+        0x0023: "Probe_disconnected",  # 35
+        0x004A: "Ok",  # 74
+        0x004B: "Ok",  # 75
+        0x004C: "Ok",  # 76
+        0x004E: "Ok",  # 78
+        0x004F: "Min_temp_alert",  # 79
+        0x0051: "Max_temp_alert",  # 81
+        0x0085: "Unknown_Alert",  # 133
     }
 )
 
 ZONE_MAP = MappingProxyType(
     {
-        0x0030: "Ok",                     # 48
-        0x0031: "Leak_detected",          # 49
-        0x0032: "Probe_disconected",      # 50
-        0x0033: "Leak_and_probe",         # 51
-        0x0038: "Low_battery",            # 56
+        0x0030: "Ok",  # 48
+        0x0031: "Leak_detected",  # 49
+        0x0032: "Probe_disconected",  # 50
+        0x0033: "Leak_and_probe",  # 51
+        0x0038: "Low_battery",  # 56
         0x003A: "Connector_and_low_bat",  # 58
     }
 )
 
 STATUS_MAP = MappingProxyType(
     {
-        0x00000000: "Ok",           # 0
+        0x00000000: "Ok",  # 0
         0x00000020: "Temp_sensor",  # 32
     }
 )
@@ -124,11 +108,11 @@ class ManufacturerReportingMixin:
     MANUFACTURER_REPORTING = MappingProxyType(
         {
             # attribut_id: (min_interval, max_interval, reportable_change)
-            0x0034: (1, 43495, 1),   # device_status
-            0x0035: (1, 43655, 1),   # sensor_status
-            0x0038: (1, 43655, 1),   # probe_connected
-            0x0039: (0, 65535, 1),   # probe_type
-            0x0200: (10, 0, 1),      # status
+            0x0034: (1, 43495, 1),  # device_status
+            0x0035: (1, 43655, 1),  # sensor_status
+            0x0038: (1, 43655, 1),  # probe_connected
+            0x0039: (0, 65535, 1),  # probe_type
+            0x0200: (10, 0, 1),  # status
             # ... add other attributes
         }
     )

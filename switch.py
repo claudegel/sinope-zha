@@ -13,39 +13,21 @@ from typing import Final
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
+from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
+                              CustomDeviceTemperatureCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    BinarySensorDeviceClass,
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    PERCENTAGE,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfTime,
-    UnitOfVolume,
-    UnitOfVolumeFlowRate,
-)
+from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+                             ReportingConfig, SensorDeviceClass,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
+                                           UnitOfEnergy, UnitOfTime,
+                                           UnitOfVolume, UnitOfVolumeFlowRate)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-    ZCL_CLUSTER_REVISION_ATTR,
-)
-
-from zhaquirks.sinope import (
-    CustomDeviceTemperatureCluster,
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-)
-
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 STATUS_MAP = MappingProxyType(
     {
@@ -104,16 +86,16 @@ class ManufacturerReportingMixin:
     MANUFACTURER_REPORTING = MappingProxyType(
         {
             # attribut_id: (min_interval, max_interval, reportable_change)
-            0x0010: (19, 300, 25),    # outdoor_temp
-            0x0070: (60, 3678, 1),    # current_load
-            0x0076: (0, 86400, 1),    # dr_config_water_temp_min
-            0x0077: (0, 86400, 1),    # dr_config_water_temp_time
-            0x007C: (19, 300, 25),    # min_measured_temp
-            0x007D: (19, 300, 25),    # max_measured_temp
-            0x0090: (59, 1799, 60),   # current_summation_delivered
-            0x0200: (60, 43688, 1),   # dev_status
-            0x0280: (19, 300, 25),    # max_measured_value
-            0x0283: (0, 86400, 1),    # cold_load_pickup_status
+            0x0010: (19, 300, 25),  # outdoor_temp
+            0x0070: (60, 3678, 1),  # current_load
+            0x0076: (0, 86400, 1),  # dr_config_water_temp_min
+            0x0077: (0, 86400, 1),  # dr_config_water_temp_time
+            0x007C: (19, 300, 25),  # min_measured_temp
+            0x007D: (19, 300, 25),  # max_measured_temp
+            0x0090: (59, 1799, 60),  # current_summation_delivered
+            0x0200: (60, 43688, 1),  # dev_status
+            0x0280: (19, 300, 25),  # max_measured_value
+            0x0283: (0, 86400, 1),  # cold_load_pickup_status
             # ... add other attributes
         }
     )
