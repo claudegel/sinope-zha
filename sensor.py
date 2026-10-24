@@ -202,7 +202,7 @@ class SensorStatus(t.uint16_t):
     Unknown = 0x001F  # 31
     Probe_disconnected = 0x0020  # 32
     Disconnected = 0x0021  # 33
-    Probe_disconnected = 0x0023  # 35
+    Probe_error = 0x0023  # 35
     Normal = 0x004A  # 74
     Good = 0x004B  # 75
     Ok = 0x004E  # 78
