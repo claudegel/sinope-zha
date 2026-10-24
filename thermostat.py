@@ -17,8 +17,11 @@ from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 STATUS_MAP = MappingProxyType(
     {

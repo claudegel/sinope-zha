@@ -11,19 +11,24 @@ import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass, NumberMode
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import (EnergySource,
-                                     SinopeTechnologiesBasicCluster)
+from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorDeviceClass, SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
-                                           UnitOfTime)
-from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
-                                        PowerConfiguration)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import DEGREE, UnitOfElectricPotential, UnitOfTime
+from zigpy.zcl.clusters.general import AnalogInput, PollControl, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 SENSOR_MAP = MappingProxyType(
     {

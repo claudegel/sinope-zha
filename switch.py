@@ -12,21 +12,37 @@ from typing import Final
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
-from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
-                              CustomDeviceTemperatureCluster)
+from zhaquirks.sinope import (
+    SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
+    CustomDeviceTemperatureCluster,
+)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
-                             ReportingConfig, SensorDeviceClass,
-                             SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
-                                           UnitOfEnergy, UnitOfTime,
-                                           UnitOfVolume, UnitOfVolumeFlowRate)
+from zigpy.quirks.v2 import (
+    BinarySensorDeviceClass,
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    PERCENTAGE,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfTime,
+    UnitOfVolume,
+    UnitOfVolumeFlowRate,
+)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 STATUS_MAP = MappingProxyType(
     {
