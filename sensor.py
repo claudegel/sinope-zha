@@ -4,7 +4,6 @@ It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S, WL4210 and LM4110-ZB
 """
 
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Final
 
@@ -12,34 +11,19 @@ import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass, NumberMode
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
-
+from zhaquirks.sinope.switch import (EnergySource,
+                                     SinopeTechnologiesBasicCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    DEGREE,
-    UnitOfElectricPotential,
-    UnitOfTime,
-)
-from zigpy.zcl.clusters.general import (
-    AnalogInput,
-    PollControl,
-    PowerConfiguration,
-)
+from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
+                             SensorDeviceClass, SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
+                                           UnitOfTime)
+from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
+                                        PowerConfiguration)
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-    ZCL_CLUSTER_REVISION_ATTR,
-)
-
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 SENSOR_MAP = MappingProxyType(
     {
@@ -140,11 +124,9 @@ class ManufacturerReportingMixin:
         """Configure reporting of all configured attributes."""
 
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
-
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: "
-                    "(%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,

@@ -5,48 +5,27 @@ DM2550ZB-G2.
 """
 
 import logging
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Any, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from zhaquirks import EventableCluster
-from zhaquirks.const import (
-    ATTRIBUTE_ID,
-    ATTRIBUTE_NAME,
-    BUTTON,
-    COMMAND_M_INITIAL_PRESS,
-    COMMAND_M_LONG_RELEASE,
-    COMMAND_M_MULTI_PRESS_COMPLETE,
-    COMMAND_M_SHORT_RELEASE,
-    DESCRIPTION,
-    TURN_OFF,
-    TURN_ON,
-    VALUE,
-    ZHA_SEND_EVENT,
-)
-from zhaquirks.sinope import (
-    ATTRIBUTE_ACTION,
-    ButtonAction,
-    CustomDeviceTemperatureCluster,
-    LIGHT_DEVICE_TRIGGERS,
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-)
+from zhaquirks.const import (ATTRIBUTE_ID, ATTRIBUTE_NAME, BUTTON,
+                             COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
+                             COMMAND_M_MULTI_PRESS_COMPLETE,
+                             COMMAND_M_SHORT_RELEASE, DESCRIPTION, TURN_OFF,
+                             TURN_ON, VALUE, ZHA_SEND_EVENT)
+from zhaquirks.sinope import (ATTRIBUTE_ACTION, LIGHT_DEVICE_TRIGGERS, SINOPE,
+                              SINOPE_MANUFACTURER_CLUSTER_ID, ButtonAction,
+                              CustomDeviceTemperatureCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import QuirkBuilder, SensorDeviceClass, SensorStateClass
 from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    BaseCommandDefs,
-    GeneralCommand,
-    ZCLAttributeDef,
-    ZCLCommandDef,
-    ZCLHeader,
-)
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  BaseCommandDefs, GeneralCommand,
+                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
 
 
 class ManufacturerReportingMixin:
@@ -71,11 +50,9 @@ class ManufacturerReportingMixin:
         """Configure reporting of all configured attributes."""
 
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
-
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: "
-                    "(%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,

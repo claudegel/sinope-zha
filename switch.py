@@ -5,7 +5,6 @@ VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
 
-from asyncio import TimeoutError
 from enum import Enum
 from types import MappingProxyType
 from typing import Final
@@ -13,39 +12,21 @@ from typing import Final
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
-from zhaquirks.sinope import (
-    CustomDeviceTemperatureCluster,
-    SINOPE,
-    SINOPE_MANUFACTURER_CLUSTER_ID,
-)
-
+from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
+                              CustomDeviceTemperatureCluster)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (
-    BinarySensorDeviceClass,
-    EntityType,
-    QuirkBuilder,
-    ReportingConfig,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from zigpy.quirks.v2.homeassistant import (
-    PERCENTAGE,
-    UnitOfElectricPotential,
-    UnitOfEnergy,
-    UnitOfTime,
-    UnitOfVolume,
-    UnitOfVolumeFlowRate,
-)
+from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
+                             ReportingConfig, SensorDeviceClass,
+                             SensorStateClass)
+from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
+                                           UnitOfEnergy, UnitOfTime,
+                                           UnitOfVolume, UnitOfVolumeFlowRate)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-)
-
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 STATUS_MAP = MappingProxyType(
     {
@@ -126,11 +107,9 @@ class ManufacturerReportingMixin:
         """Configure reporting of all configured attributes."""
 
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
-
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: "
-                    "(%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,

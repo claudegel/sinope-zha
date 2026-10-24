@@ -4,7 +4,6 @@ Manufacturer specific cluster implements attributes to control displaying
 of outdoor temperature, setting occupancy on/off and setting device time.
 """
 
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Final
 
@@ -18,13 +17,8 @@ from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (
-    ZCL_CLUSTER_REVISION_ATTR,
-    BaseAttributeDefs,
-    ZCLAttributeDef,
-
-)
-
+from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
+                                  ZCLAttributeDef)
 
 STATUS_MAP = MappingProxyType(
     {
@@ -85,11 +79,9 @@ class ManufacturerReportingMixin:
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
-
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: "
-                    "(%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,
