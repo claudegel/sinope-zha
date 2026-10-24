@@ -314,7 +314,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="power_source",
         fallback_name="Power source",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -322,7 +322,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .number(  # Min temperature limit
         attribute_name=SinopeManufacturerCluster.AttributeDefs.min_temperature_limit.name,
@@ -401,7 +401,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="power_source",
         fallback_name="Power source",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -409,7 +409,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .number(  # Min temperature limit
         attribute_name=SinopeManufacturerCluster.AttributeDefs.min_temperature_limit.name,
@@ -531,7 +531,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="status",
         fallback_name="Device status",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -539,7 +539,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .add_to_registry()
 )
