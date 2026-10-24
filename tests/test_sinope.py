@@ -5,6 +5,7 @@ from unittest import mock
 import pytest
 import zhaquirks
 import zigpy.types as t
+from tests.common import ClusterListener
 from zhaquirks.const import (
     COMMAND_M_INITIAL_PRESS,
     COMMAND_M_LONG_RELEASE,
@@ -21,8 +22,6 @@ from zhaquirks.sinope.light import (
 from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import DeviceTemperature, PowerConfiguration
 from zigpy.zcl.clusters.smartenergy import Metering
-
-from tests.common import ClusterListener
 
 zhaquirks.setup()
 
