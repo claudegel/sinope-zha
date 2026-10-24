@@ -17,7 +17,6 @@ from zhaquirks.sinope import (
     SINOPE_MANUFACTURER_CLUSTER_ID,
     CustomDeviceTemperatureCluster,
 )
-
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import (
@@ -600,7 +599,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     UnitOfMeasure: Final = UnitOfMeasure
 
     DIVISOR = 0x0302
-    _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
+    _CONSTANT_ATTRIBUTES: ClassVar[dict[int, int]] = {DIVISOR: 1000}
 
     class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
