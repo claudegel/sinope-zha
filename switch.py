@@ -109,8 +109,7 @@ class ManufacturerReportingMixin:
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: "
-                    "(%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,
