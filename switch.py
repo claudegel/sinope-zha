@@ -7,7 +7,7 @@ VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 
 from enum import Enum
 from types import MappingProxyType
-from typing import Final
+from typing import ClassVar, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
@@ -17,6 +17,7 @@ from zhaquirks.sinope import (
     SINOPE_MANUFACTURER_CLUSTER_ID,
     CustomDeviceTemperatureCluster,
 )
+
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import (
@@ -333,10 +334,10 @@ class ZoneStatus(t.uint16_t):
 class FlowMeter(t.LVList):
     """Flow meter configuration values."""
 
-    No_flow_meter = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-    FS4220 = [194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
-    FS4221 = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
-    FS4222 = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    No_flow_meter: ClassVar[list[int]] = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    FS4220: ClassVar[list[int]] = [194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
+    FS4221: ClassVar[list[int]] = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
+    FS4222: ClassVar[list[int]] = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
 
 
 class FlowMeterEnum(Enum):
