@@ -497,7 +497,7 @@ Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055
 
 Device reporting allow device to report any changes that occur on some cluster attributes. It is done automatically by ZHA. If it is not working, no reporting, it is possible that the binding fail between your device and your Zigbee gateway. in that case you'll need to proceed manually. You can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** or higher, and following example below:
 
-Following are the cluster/attributes set for reproting in Neviweb:
+Following are the cluster/attributes set for reproting in Neviweb. Never go above 65535 for min time and max time, ZHA use a uint16 value to store them.
 
 - Thermostat:
 
