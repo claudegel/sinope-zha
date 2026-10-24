@@ -40,10 +40,10 @@ You can edit the files as you like and restart HA to test your changes. If it wo
 Sinope-zha is now implementing V2 for ZHA. This imply many changes:
 - No need to use ieee in your automations. Most important attributes are now implemented as sensor, number, select, binary_sensor and button.
   You can send data directly to them.
-- Temperature in your automation can be sent as normal °C, no need to send °C * 100. The convertion is done automatically in both direction
+- Temperature in your automation can be sent as normal °C, no need to send °C * 100. The conversion is done automatically in both direction
 - You can configure your device directly in ZHA device page.
 - ZHA-V2 detect new paired devices differently from V1. If your devices was in ZHA V1 before switching to V2, it will be detected without problem.
-  If your devices have never been connected to ZHA. For some devices they are not detected correctly and this can lead to missing attributs
+  If your devices have never been connected to ZHA. For some devices they are not detected correctly and this can lead to missing attributes
   or functions. The solution in that case is to simply remove the V2 quirks files (four files) from config/zhaquirks directory. Delete your
   new device from ZHA and restart HA. Then repair your device in ZHA-V1. Once done and your devices are all loaded. Re-add the four V2 quirks files
   and restart HA. Your device should work correctly with ZHA-V2.
@@ -55,7 +55,7 @@ Sinope-zha is now implementing V2 for ZHA. This imply many changes:
 I'll list here all the custom cluster attribute with explanation about how to use them in your automation.
 - **Thermostats:** (TH1123ZB, TH1123ZB-G2, TH1124ZB,TH1124ZB-G2, TH1300ZB, TH1400ZB, TH1500ZB, TH1134ZB-HC, HP6000ZB-MA, HP6000ZB-HS, HP6000ZB-GE, OTH3600-GA-ZB)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.Bool|unknown|0, 1|read/write/report|
 |0xff01|0x0002|2|t.enum8|keypad_lockout|0 = unlocked, 1 = locked, 2 = prevent disconnect|read/write/report|
@@ -116,7 +116,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0264|612|t.enum8|unknown|0,1|read/write/report|
 |0xff01|0x0265|613|t.enum8|unknown|0,1|read/write/report|
 |0xff01|0x0266|614|t.enum8|unknown|0|read/write/report|
-|0xff01|0x0267|615|t.EUI64|hc_model_mac_addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac adress|read/write/report|
+|0xff01|0x0267|615|t.EUI64|hc_model_mac_addr|None = [255,255,255,255,255,255,255,255], heat/cool model Mac address|read/write/report|
 |0xff01|0x0268|616|t.bitmap8|unknown|0, 2|read/write/report|
 |0xff01|0x0269|617|t.bitmap8|unknown|0, 3|read/write/report|
 |0xff01|0x026A|618|t.bitmap8|unknown|0, 15|read/write/report|
@@ -174,7 +174,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0b04|0x050d|1293|t.uint16_t|active_power_max|watt/hr|read|
 |0x0b04|0x050f|1295|t.uint16_t|Apparent_Power|watt/hr|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
-|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celsius, 1=farenheight|read/write|
+|0x0204|0x0000|0|t.enum8|TemperatureDisplayMode|0=celsius, 1=fahrenheit|read/write|
 |0x0204|0x0001|1|t.enum8|keypadLockout|0=no lock, 1=lock|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0402|0x0000|0|t.int16s|measured_value|celsius*100|read/write/report|
@@ -184,7 +184,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **lights and dimmer**: (SW2500ZB, SW2500ZB-G2, DM2500ZB, DM2500ZB-G2, DM2550ZB, DM2550ZB-G2)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|Unknown|0, 1|read/write|
 |0xff01|0x0002|2|t.enum8|KeypadLock| Locked: 1, Unlocked: 0|read/write|
@@ -197,7 +197,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0051|81|t.uint24_t|offLedColor| 0x0affdc - Lim, 0x000a4b - Amber, 0x0100a5 - Fushia, 0x64ffff - Perle, 0xffff00 - Blue|read/write|
 |0xff01|0x0052|82|t.uint8_t|onLedIntensity| Percent|read/write|
 |0xff01|0x0053|83|t.uint8_t|offLedIntensity| Percent|read/write|
-|0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/repport|
+|0xff01|0x0054|84|t.enum8|actionReport| singleTapUp: 2, doubleTapUp: 4, singleTapDown: 18, doubleTapDown: 20|read/report|
 |0xff01|0x0055|85|t.uint16_t|minIntensity| 0 to 3000|read/write|
 |0xff01|0x0056|86|t.enum8|phase_control|0=forward, 1=reverse|read/write|
 |0xff01|0x0058|88|t.enum8|double_up_full|0=off, 1=on|read/write|
@@ -218,7 +218,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Switch**: (SP2600ZB, SP2610ZB)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
 |0xff01|0x0220|544|t.bitmap16|Unknown|0|report/read/write|
@@ -235,7 +235,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Load Controller**: (RM3250ZB)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.bool|unknown|0, 1|read/write|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write|
@@ -263,7 +263,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Calypso**: (RM3500ZB)  water tank controller
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0001|1|t.Bool|Unknown|0, 1|read/write/report|
 |0xff01|0x0002|2|t.enum8|keypadLockout|0 = unlocked, 1 = locked|read/write/report|
@@ -321,7 +321,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **multi controller**: (MC3100ZB) 
 
-|Endpoint|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Endpoint|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |1|0x0001|0x0020|32|t.uint8_t|Battery_Voltage| Volt*10|read/report|
 |1|0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm|read/report|
@@ -355,7 +355,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Valve**: VA4200WZ, VA4201WZ, VA4200ZB VA4201ZB, VA4220ZB, VA4221ZB
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|Battery_Voltage|Volt*10|read/report|
 |0x0001|0x0021|33|t.uint8_t|Battery_percentage_remaining|%|read/report|
@@ -374,7 +374,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Valve G2**: (VA4220ZB G2, VA4221ZB G2) with flow meter
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0000|0x0007|7|t.enum8|power_source|129,130=mains, 3=battery, 4=dc|read|
 | --- | --- | --- | --- | --- | --- | ---|
@@ -383,7 +383,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0x0001|0x003e|62|t.bitmap32|BatteryAlarmState| 0=no alarm, 1=alarm, 15=no battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0008|0x0000|0|t.uint8_t|Current_level|From 0 to 254|read/report|
-|0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve openning value limit|read/write|
+|0x0008|0x0011|17|t.uint8_t|On_level|0=off, 1 to 255 valve opening value limit|read/write|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0101|257|Array|unknown|Array(type=AnonymousLVList, value=[0, 3, 3, 2])|read|
 |0xff01|0x0200|512|t.bitmap32|dev_status| 0x00000000|read/report|
@@ -422,7 +422,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Leak Sensors**: (WL4200, WL4200S, WL4200C)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read|
@@ -446,7 +446,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Leak Sensors**: (WL4210)
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0xff01|0x0003|3|t.uint16_t|firmware_number| |read/report|
 |0xff01|0x0004|4|t.CharacterString|firmware_version| |read/report|
@@ -458,7 +458,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0035|53|t.uint16_t|sensor_status|14= ?, 24-29=unknown, 31-35 = probe disconnected, 71-78= ok, 79=min temp alert, 81=max temp alert,133=unknown alert|read/report|
 |0xff01|0x0036|54|t.uint16_t|battery_type|7=|read/write/report|
 |0xff01|0x0037|55|t.uint16_t|unknown|1000|read/write/report|
-|0xff01|0x0038|56|t.enum8|probe_connected|0=disconected, 1=connected|read/report|
+|0xff01|0x0038|56|t.enum8|probe_connected|0=disconnected, 1=connected|read/report|
 |0xff01|0x0039|57|t.enum8|probe_type|0=internal, 1=external_probe|read/write/report|
 |0xff01|0x0080|128|t.uint32_t|unknown|16973824|read/report|
 |0xff01|0x0200|512|t.bitmap32|dev_status|0x00000000|read/report|
@@ -474,10 +474,10 @@ I'll list here all the custom cluster attribute with explanation about how to us
 
 - **Tank level monitor**: (LM4110-ZB) 
 
-|Cluster|Attributes|Atribute decimal|Data type|Fonction |Value|Access|
+|Cluster|Attributes|Attribute decimal|Data type|Function |Value|Access|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0001|0x0020|32|t.uint8_t|battery voltage|54, volt*10|read/report|
-|0x0001|0x0021|33|t.uint8_t|remaining battey percentage|%|read/report|
+|0x0001|0x0021|33|t.uint8_t|remaining battery percentage|%|read/report|
 |0x0001|0x003e|62|t.bitmap32|battery_alarm_state|0=ok, 1=weak battery|read/report|
 | --- | --- | --- | --- | --- | --- | ---|
 |0x0402|0x0000|0|t.int16s|MeasuredValue, device Temperature|celsius * 100|read/report|
@@ -497,7 +497,7 @@ Propane level is reported as gauge needle angle cluster 0x000c, attribute 0x0055
 
 Device reporting allow device to report any changes that occur on some cluster attributes. It is done automatically by ZHA. If it is not working, no reporting, it is possible that the binding fail between your device and your Zigbee gateway. in that case you'll need to proceed manually. You can do it by installing ZHA Toolkit (https://github.com/mdeweerd/zha-toolkit) **v0.8.31** or higher, and following example below:
 
-Following are the cluster/attributes set for reproting in Neviweb. Never go above 65535 for min time and max time, ZHA use a uint16 value to store them.
+Following are the cluster/attributes set for reporting in Neviweb. Never go above 65535 for min time and max time, ZHA use a uint16 value to store them.
 
 - Thermostat:
 
@@ -548,10 +548,10 @@ Following are the cluster/attributes set for reproting in Neviweb. Never go abov
 |Data|Cluster|Attribute|format|min time|max time|minimum change|Note|
 | --- | --- | --- | --- | --- | --- | --- | ---|
 |status|0x0001|0x003e|0x1b|60|43688|1| 
-|remaining battey percentage|0x0001|0x0021|0x20|0|65535|1|
+|remaining battery percentage|0x0001|0x0021|0x20|0|65535|1|
 |battery voltage|0x0001|0x0020|0x20|60|43646|1|
 |battery alarm|0x003E|0x1B|60|43688|1|
-|present value, angle|0x000c|0x0055|0x39|5|3666|1|Value of -2 = probe disconected
+|present value, angle|0x000c|0x0055|0x39|5|3666|1|Value of -2 = probe disconnected
 |device temperature|0x0402|0x0000|0x29|60|3678|1|(only if temperature goes below 5oC)
 
 - Calypso RM3500ZB:
@@ -584,7 +584,7 @@ Following are the cluster/attributes set for reproting in Neviweb. Never go abov
 | |0xff01|0x013B| |0|65535| |null|
 
 # Setting the flow meter model for your VA422xZB valve 2n gen.
-To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter: (It is possible that ZHA will throw an error for the read_after_write portion but the attribut will be updated correctly).
+To add your flow meter to your valve, you need to use the service ZHA Toolkit: Write Attribute. The data to set the flow meter is written in an attr_type array. The command is different for each type of flow meter: (It is possible that ZHA will throw an error for the read_after_write portion but the attribute will be updated correctly).
 - FS4220: (3/4 inch)
 ```
 service: zha_toolkit.attr_write
@@ -639,9 +639,9 @@ data:
 ```
 
 ## Light switch and dimmer double tap, long press reporting : 
-Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example bellow : 
+Sinopé light switches (SW2500ZB), dimmer (DM2500ZB and DM2550ZB) supports single, double and long click, but requires to enable device reporting on attribute 0x0054, cluster 0xff01 to get the action fired in ZHA. To proceed use zha_toolkit services and follow the example below : 
 
-The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribut: 0x0054.
+The action done on the light switch and dimmer is defined in the cluster: 0xff01 attribute: 0x0054.
 |Description|Attribute|Value received|
 | --- | --- | --- |
 |Single Tap UP|0x0054|2|
@@ -652,8 +652,8 @@ The action done on the light switch and dimmer is defined in the cluster: 0xff01
 |Long press DOWN|0x0054|19|
 
 ### a) create the reporting :
-Here is an exemple of how to proceed.
-In this exemple : 
+Here is an example of how to proceed.
+In this example : 
 - 50:0b:91:40:00:03:db:c2 is your light switch 
 - 00:12:4b:00:24:c0:c1:e0 is your Zigbee Coordinator
 
@@ -706,7 +706,7 @@ actions:
       domain: light
 mode: single
 ```
-For automations you will have acces to those events in the UI for device triggers:
+For automations you will have access to those events in the UI for device triggers:
 - "Turn on" pressed
 - "Turn off" pressed
 - "Turn on" double clicked
@@ -716,7 +716,7 @@ For automations you will have acces to those events in the UI for device trigger
 
 # LM4110-ZB setup for angle and level % reporting :
 This sensor is a sleepy device. That mean the device is sleeping and wake up at specific interval to report his state. When it is sleeping it is impossible to reach hit.
-We can't send any command to that devive except when it is awake.
+We can't send any command to that device except when it is awake.
 To be able to configure the device you need to install ZHA-TOOLKIT component. This will allow to do all operations to setup the device.
 
 the steps to configure your LM4110-ZB sensor is as follow:
@@ -816,7 +816,7 @@ This automation will create the sensor.current_angle or any other name you want.
   mode: single
 ```
 
-### Do the calculation to transfert angle to % level:
+### Do the calculation to transfer angle to % level:
 There are two different tank gauge, scale from 10 to 80 (R3D 10-80) or scale from 5 to 95 (R3D 5-95). Calculation is different for each one.
 
 - First set gauge type and value offset. For this you need to create input_number and input_text to set those value in <b>configuration.yaml</b>
@@ -886,8 +886,8 @@ Availables automations are availables there:
 ![blueprints](automation/blueprints)
 
 - send_outdoor_temperature:
-  - Celsius: ![send temperature celcius](automation/blueprints/send_outdoor_temperature.yaml)
-  - Farenheight: ![send temperature farenheight](automation/blueprints/send_outdoor_farenheight_temperature.yaml)
+  - Celsius: ![send temperature Celsius](automation/blueprints/send_outdoor_temperature.yaml)
+  - Fahrenheit: ![send temperature Fahrenheit](automation/blueprints/send_outdoor_Fahrenheit_temperature.yaml)
 
 You can use either 0xff01 or 65281 in automation. You can send temperature on regular timely basis or when the outside temperature change. Do not pass over 60 minutes or thermostat display will go back to setpoint display. You can change that delay with the outdoor_temp_timeout attribute 0x0011.
 
