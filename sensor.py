@@ -40,6 +40,7 @@ from zigpy.zcl.foundation import (
     ZCL_CLUSTER_REVISION_ATTR,
 )
 
+
 SENSOR_MAP = MappingProxyType(
     {
         0x000E: "No_sensor",  # 14
