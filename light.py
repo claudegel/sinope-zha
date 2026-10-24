@@ -5,6 +5,7 @@ DM2550ZB-G2.
 """
 
 import logging
+from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Any, Final
 
@@ -50,6 +51,7 @@ class ManufacturerReportingMixin:
         """Configure reporting of all configured attributes."""
 
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
                     "Invalid reporting configuration for attr %s: (%s, %s, %s)",
@@ -64,7 +66,7 @@ class ManufacturerReportingMixin:
                 await self.configure_reporting(
                     attribute=attr_id,
                     min_interval=min_i,
-                    max_interval=min(max_i, 0xFFFF),
+                    max_interval=max_i,
                     reportable_change=change,
                 )
 
@@ -73,7 +75,11 @@ class ManufacturerReportingMixin:
                     hex(attr_id),
                 )
 
-            except Exception as err:
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
                 self.warning(
                     "Configure reporting failed on cluster %s: %s",
                     hex(attr_id),
