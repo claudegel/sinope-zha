@@ -12,19 +12,33 @@ import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass, NumberMode
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import (EnergySource,
-                                     SinopeTechnologiesBasicCluster)
+from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
+
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorDeviceClass, SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
-                                           UnitOfTime)
-from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
-                                        PowerConfiguration)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    DEGREE,
+    UnitOfElectricPotential,
+    UnitOfTime,
+)
+from zigpy.zcl.clusters.general import (
+    AnalogInput,
+    PollControl,
+    PowerConfiguration,
+)
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+    ZCL_CLUSTER_REVISION_ATTR,
+)
 
 SENSOR_MAP = MappingProxyType(
     {
@@ -103,7 +117,11 @@ def probe_converter(value):
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
@@ -119,18 +137,38 @@ class ManufacturerReportingMixin:
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
+
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: "
+                    "(%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
                     min_interval=min_i,
-                    max_interval=max_i,
+                    max_interval=min(max_i, 0xFFFF),
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except Exception as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -250,8 +288,17 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
-        await self.configure_reporting_all()
+        result = await super().bind()
+
+        try:
+            await self.configure_reporting_all()
+        except Exception as err:
+            self.warning(
+                "Configure reporting failed: %s",
+                err,
+            )
+
+        return result
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
