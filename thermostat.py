@@ -81,7 +81,8 @@ class ManufacturerReportingMixin:
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
             if min_i > 0xFFFF or max_i > 0xFFFF:
                 self.warning(
-                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
+                    "Invalid reporting configuration for attr %s: "
+                    "(%s, %s, %s)",
                     hex(attr_id),
                     min_i,
                     max_i,
@@ -93,7 +94,7 @@ class ManufacturerReportingMixin:
                 await self.configure_reporting(
                     attribute=attr_id,
                     min_interval=min_i,
-                    max_interval=min(max_i, 0xFFFF),
+                    max_interval=max_i,
                     reportable_change=change,
                 )
                 self.debug(
@@ -101,7 +102,11 @@ class ManufacturerReportingMixin:
                     hex(attr_id),
                 )
 
-            except Exception as err:
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
                 self.warning(
                     "Configure reporting failed on cluster %s: %s",
                     hex(attr_id),
@@ -609,13 +614,7 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         """Bind the cluster and configure reporting."""
         result = await super().bind()
 
-        try:
-            await self.configure_reporting_all()
-        except Exception as err:
-            self.warning(
-                "Configure reporting failed: %s",
-                err,
-            )
+        await self.configure_reporting_all()
 
         return result
 
