@@ -18,8 +18,13 @@ from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+
+)
+
 
 STATUS_MAP = MappingProxyType(
     {
@@ -57,7 +62,11 @@ def floor_status_converter(value):
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
@@ -76,17 +85,35 @@ class ManufacturerReportingMixin:
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: "
+                    "(%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
                     min_interval=min_i,
-                    max_interval=max_i,
+                    max_interval=min(max_i, 0xFFFF),
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except Exception as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -588,8 +615,17 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
-        await self.configure_reporting_all()
+        result = await super().bind()
+
+        try:
+            await self.configure_reporting_all()
+        except Exception as err:
+            self.warning(
+                "Configure reporting failed: %s",
+                err,
+            )
+
+        return result
 
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
