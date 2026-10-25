@@ -4,7 +4,6 @@ Manufacturer specific cluster implements attributes to control displaying
 of outdoor temperature, setting occupancy on/off and setting device time.
 """
 
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Final
 
@@ -18,8 +17,11 @@ from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 STATUS_MAP = MappingProxyType(
     {
@@ -57,7 +59,11 @@ def floor_status_converter(value):
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
@@ -76,6 +82,16 @@ class ManufacturerReportingMixin:
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
@@ -83,10 +99,20 @@ class ManufacturerReportingMixin:
                     max_interval=max_i,
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -329,42 +355,26 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
     class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        unknown_attr_1: Final = ZCLAttributeDef(
-            id=0x0001, type=t.Bool, access="rwp", is_manufacturer_specific=True
-        )
-        keypad_lockout: Final = ZCLAttributeDef(
-            id=0x0002, type=KeypadLock, access="rwp", is_manufacturer_specific=True
-        )
-        firmware_number: Final = ZCLAttributeDef(
-            id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True
-        )
+        unknown_attr_1: Final = ZCLAttributeDef(id=0x0001, type=t.Bool, access="rwp", is_manufacturer_specific=True)
+        keypad_lockout: Final = ZCLAttributeDef(id=0x0002, type=KeypadLock, access="rwp", is_manufacturer_specific=True)
+        firmware_number: Final = ZCLAttributeDef(id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True)
         firmware_version: Final = ZCLAttributeDef(
             id=0x0004,
             type=t.CharacterString,
             access="rp",
             is_manufacturer_specific=True,
         )
-        display_language: Final = ZCLAttributeDef(
-            id=0x0005, type=Language, access="rwp", is_manufacturer_specific=True
-        )
-        outdoor_temp: Final = ZCLAttributeDef(
-            id=0x0010, type=t.int16s, access="rwp", is_manufacturer_specific=True
-        )
+        display_language: Final = ZCLAttributeDef(id=0x0005, type=Language, access="rwp", is_manufacturer_specific=True)
+        outdoor_temp: Final = ZCLAttributeDef(id=0x0010, type=t.int16s, access="rwp", is_manufacturer_specific=True)
         outdoor_temp_timeout: Final = ZCLAttributeDef(
             id=0x0011, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
         config_2nd_display: Final = ZCLAttributeDef(
             id=0x0012, type=Display, access="rwp", is_manufacturer_specific=True
         )
-        weather_icons: Final = ZCLAttributeDef(
-            id=0x0013, type=WeatherIcon, access="rwp", is_manufacturer_specific=True
-        )
-        secs_since_2k: Final = ZCLAttributeDef(
-            id=0x0020, type=t.uint32_t, access="rwp", is_manufacturer_specific=True
-        )
-        current_load: Final = ZCLAttributeDef(
-            id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-        )
+        weather_icons: Final = ZCLAttributeDef(id=0x0013, type=WeatherIcon, access="rwp", is_manufacturer_specific=True)
+        secs_since_2k: Final = ZCLAttributeDef(id=0x0020, type=t.uint32_t, access="rwp", is_manufacturer_specific=True)
+        current_load: Final = ZCLAttributeDef(id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True)
         eco_delta_setpoint: Final = ZCLAttributeDef(
             id=0x0071, type=t.int8s, access="rwp", is_manufacturer_specific=True
         )
@@ -374,39 +384,17 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         eco_safety_temperature_delta: Final = ZCLAttributeDef(
             id=0x0073, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_2: Final = ZCLAttributeDef(
-            id=0x0075, type=t.bitmap32, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_3: Final = ZCLAttributeDef(
-            id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_4: Final = ZCLAttributeDef(
-            id=0x0100, type=t.uint8_t, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_5: Final = ZCLAttributeDef(
-            id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_6: Final = ZCLAttributeDef(
-            id=0x0102, type=t.uint8_t, access="r", is_manufacturer_specific=True
-        )
-        unknown_attr_7: Final = ZCLAttributeDef(
-            id=0x0103, type=t.LVList, access="r", is_manufacturer_specific=True
-        )
-        setpoint: Final = ZCLAttributeDef(
-            id=0x0104, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        air_floor_mode: Final = ZCLAttributeDef(
-            id=0x0105, type=FloorMode, access="rw", is_manufacturer_specific=True
-        )
-        aux_output_mode: Final = ZCLAttributeDef(
-            id=0x0106, type=AuxMode, access="rw", is_manufacturer_specific=True
-        )
-        floor_temperature: Final = ZCLAttributeDef(
-            id=0x0107, type=t.int16s, access="r", is_manufacturer_specific=True
-        )
-        air_max_limit: Final = ZCLAttributeDef(
-            id=0x0108, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
+        unknown_attr_2: Final = ZCLAttributeDef(id=0x0075, type=t.bitmap32, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_3: Final = ZCLAttributeDef(id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True)
+        unknown_attr_4: Final = ZCLAttributeDef(id=0x0100, type=t.uint8_t, access="rp", is_manufacturer_specific=True)
+        unknown_attr_5: Final = ZCLAttributeDef(id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True)
+        unknown_attr_6: Final = ZCLAttributeDef(id=0x0102, type=t.uint8_t, access="r", is_manufacturer_specific=True)
+        unknown_attr_7: Final = ZCLAttributeDef(id=0x0103, type=t.LVList, access="r", is_manufacturer_specific=True)
+        setpoint: Final = ZCLAttributeDef(id=0x0104, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        air_floor_mode: Final = ZCLAttributeDef(id=0x0105, type=FloorMode, access="rw", is_manufacturer_specific=True)
+        aux_output_mode: Final = ZCLAttributeDef(id=0x0106, type=AuxMode, access="rw", is_manufacturer_specific=True)
+        floor_temperature: Final = ZCLAttributeDef(id=0x0107, type=t.int16s, access="r", is_manufacturer_specific=True)
+        air_max_limit: Final = ZCLAttributeDef(id=0x0108, type=t.int16s, access="rw", is_manufacturer_specific=True)
         floor_min_setpoint: Final = ZCLAttributeDef(
             id=0x0109, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
@@ -419,51 +407,29 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         floor_limit_status: Final = ZCLAttributeDef(
             id=0x010C, type=LimitStatus, access="rp", is_manufacturer_specific=True
         )
-        room_temperature: Final = ZCLAttributeDef(
-            id=0x010D, type=t.int16s, access="r", is_manufacturer_specific=True
-        )
-        time_format: Final = ZCLAttributeDef(
-            id=0x0114, type=TimeFormat, access="rwp", is_manufacturer_specific=True
-        )
-        gfci_status: Final = ZCLAttributeDef(
-            id=0x0115, type=GfciStatus, access="rp", is_manufacturer_specific=True
-        )
-        hvac_mode: Final = ZCLAttributeDef(
-            id=0x0116, type=SystemMode, access="r", is_manufacturer_specific=True
-        )
-        unknown_attr_8: Final = ZCLAttributeDef(
-            id=0x0117, type=t.LVList, access="r", is_manufacturer_specific=True
-        )
+        room_temperature: Final = ZCLAttributeDef(id=0x010D, type=t.int16s, access="r", is_manufacturer_specific=True)
+        time_format: Final = ZCLAttributeDef(id=0x0114, type=TimeFormat, access="rwp", is_manufacturer_specific=True)
+        gfci_status: Final = ZCLAttributeDef(id=0x0115, type=GfciStatus, access="rp", is_manufacturer_specific=True)
+        hvac_mode: Final = ZCLAttributeDef(id=0x0116, type=SystemMode, access="r", is_manufacturer_specific=True)
+        unknown_attr_8: Final = ZCLAttributeDef(id=0x0117, type=t.LVList, access="r", is_manufacturer_specific=True)
         aux_connected_load: Final = ZCLAttributeDef(
             id=0x0118, type=t.uint16_t, access="rw", is_manufacturer_specific=True
         )
-        connected_load: Final = ZCLAttributeDef(
-            id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
+        connected_load: Final = ZCLAttributeDef(id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
         pump_protection_status: Final = ZCLAttributeDef(
             id=0x0128, type=PumpStatus, access="rw", is_manufacturer_specific=True
         )
         pump_protection_duration: Final = ZCLAttributeDef(
             id=0x012A, type=PumpDuration, access="rwp", is_manufacturer_specific=True
         )
-        current_setpoint: Final = ZCLAttributeDef(
-            id=0x012B, type=t.int16s, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_9: Final = ZCLAttributeDef(
-            id=0x012C, type=t.LVList, access="r", is_manufacturer_specific=True
-        )
+        current_setpoint: Final = ZCLAttributeDef(id=0x012B, type=t.int16s, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_9: Final = ZCLAttributeDef(id=0x012C, type=t.LVList, access="r", is_manufacturer_specific=True)
         report_local_temperature: Final = ZCLAttributeDef(
             id=0x012D, type=t.int16s, access="rp", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = ZCLAttributeDef(
-            id=0x0130, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
-        )
-        balance_point: Final = ZCLAttributeDef(
-            id=0x0134, type=t.int16s, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_19: Final = ZCLAttributeDef(
-            id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True
-        )
+        unknown_attr_17: Final = ZCLAttributeDef(id=0x0130, type=t.bitmap8, access="rwp", is_manufacturer_specific=True)
+        balance_point: Final = ZCLAttributeDef(id=0x0134, type=t.int16s, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_19: Final = ZCLAttributeDef(id=0x0135, type=t.int16s, access="rwp", is_manufacturer_specific=True)
         weather_icons_timeout: Final = ZCLAttributeDef(
             id=0x0136, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
@@ -479,48 +445,24 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         cool_lockout_temperature: Final = ZCLAttributeDef(
             id=0x013A, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = ZCLAttributeDef(
-            id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-        )
-        status: Final = ZCLAttributeDef(
-            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_12: Final = ZCLAttributeDef(
-            id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True
-        )
+        unknown_attr_11: Final = ZCLAttributeDef(id=0x013B, type=t.bitmap8, access="rp", is_manufacturer_specific=True)
+        status: Final = ZCLAttributeDef(id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True)
+        unknown_attr_12: Final = ZCLAttributeDef(id=0x0202, type=t.enum8, access="r", is_manufacturer_specific=True)
         unknown_attr_22: Final = ZCLAttributeDef(
             id=0x0260, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
         unknown_attr_21: Final = ZCLAttributeDef(
             id=0x0261, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_24: Final = ZCLAttributeDef(
-            id=0x0262, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_25: Final = ZCLAttributeDef(
-            id=0x0263, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_26: Final = ZCLAttributeDef(
-            id=0x0264, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_27: Final = ZCLAttributeDef(
-            id=0x0265, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_28: Final = ZCLAttributeDef(
-            id=0x0266, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        hc_model_mac_addr: Final = ZCLAttributeDef(
-            id=0x0267, type=t.EUI64, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_29: Final = ZCLAttributeDef(
-            id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_42: Final = ZCLAttributeDef(
-            id=0x0269, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_31: Final = ZCLAttributeDef(
-            id=0x026A, type=t.bitmap8, access="rwp", is_manufacturer_specific=True
-        )
+        unknown_attr_24: Final = ZCLAttributeDef(id=0x0262, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_25: Final = ZCLAttributeDef(id=0x0263, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_26: Final = ZCLAttributeDef(id=0x0264, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_27: Final = ZCLAttributeDef(id=0x0265, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_28: Final = ZCLAttributeDef(id=0x0266, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        hc_model_mac_addr: Final = ZCLAttributeDef(id=0x0267, type=t.EUI64, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_29: Final = ZCLAttributeDef(id=0x0268, type=t.bitmap8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_42: Final = ZCLAttributeDef(id=0x0269, type=t.bitmap8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_31: Final = ZCLAttributeDef(id=0x026A, type=t.bitmap8, access="rwp", is_manufacturer_specific=True)
         min_heat_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026B, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
@@ -533,63 +475,36 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         max_cool_setpoint_limit: Final = ZCLAttributeDef(
             id=0x026E, type=t.int16s, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_10: Final = ZCLAttributeDef(
-            id=0x0280, type=t.int16s, access="rwp", is_manufacturer_specific=True
-        )
-        cycle_length: Final = ZCLAttributeDef(
-            id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True
-        )
+        unknown_attr_10: Final = ZCLAttributeDef(id=0x0280, type=t.int16s, access="rwp", is_manufacturer_specific=True)
+        cycle_length: Final = ZCLAttributeDef(id=0x0281, type=CycleLength, access="rwp", is_manufacturer_specific=True)
         cool_cycle_length: Final = ZCLAttributeDef(
             id=0x0282, type=CycleLength, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_13: Final = ZCLAttributeDef(
-            id=0x0283, type=t.enum8, access="rp", is_manufacturer_specific=True
-        )
+        unknown_attr_13: Final = ZCLAttributeDef(id=0x0283, type=t.enum8, access="rp", is_manufacturer_specific=True)
         unknown_attr_14: Final = ZCLAttributeDef(
             id=0x0284, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_15: Final = ZCLAttributeDef(
-            id=0x0285, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_16: Final = ZCLAttributeDef(
-            id=0x0286, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_32: Final = ZCLAttributeDef(
-            id=0xFF04, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_33: Final = ZCLAttributeDef(
-            id=0xFF05, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_34: Final = ZCLAttributeDef(
-            id=0xFF06, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_35: Final = ZCLAttributeDef(
-            id=0xFF07, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_36: Final = ZCLAttributeDef(
-            id=0xFF08, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_37: Final = ZCLAttributeDef(
-            id=0xFF09, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_38: Final = ZCLAttributeDef(
-            id=0xFF0A, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_39: Final = ZCLAttributeDef(
-            id=0xFF0B, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_40: Final = ZCLAttributeDef(
-            id=0xFF0C, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_41: Final = ZCLAttributeDef(
-            id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True
-        )
+        unknown_attr_15: Final = ZCLAttributeDef(id=0x0285, type=t.uint8_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_16: Final = ZCLAttributeDef(id=0x0286, type=t.uint8_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_32: Final = ZCLAttributeDef(id=0xFF04, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_33: Final = ZCLAttributeDef(id=0xFF05, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_34: Final = ZCLAttributeDef(id=0xFF06, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_35: Final = ZCLAttributeDef(id=0xFF07, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_36: Final = ZCLAttributeDef(id=0xFF08, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_37: Final = ZCLAttributeDef(id=0xFF09, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_38: Final = ZCLAttributeDef(id=0xFF0A, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_39: Final = ZCLAttributeDef(id=0xFF0B, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_40: Final = ZCLAttributeDef(id=0xFF0C, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
+        unknown_attr_41: Final = ZCLAttributeDef(id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
+        result = await super().bind()
+
         await self.configure_reporting_all()
+
+        return result
 
 
 class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
@@ -602,9 +517,7 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
     class AttributeDefs(Thermostat.AttributeDefs):
         """Sinope Manufacturer Thermostat Cluster Attributes."""
 
-        set_occupancy: Final = ZCLAttributeDef(
-            id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True
-        )
+        set_occupancy: Final = ZCLAttributeDef(id=0x0400, type=Occupancy, access="rw", is_manufacturer_specific=True)
         main_cycle_output: Final = ZCLAttributeDef(
             id=0x0401, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
@@ -614,65 +527,29 @@ class SinopeTechnologiesThermostatCluster(CustomCluster, Thermostat):
         aux_cycle_output: Final = ZCLAttributeDef(
             id=0x0404, type=CycleOutput, access="rw", is_manufacturer_specific=True
         )
-        unknown_attr_1: Final = ZCLAttributeDef(
-            id=0x0421, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_2: Final = ZCLAttributeDef(
-            id=0x0422, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_3: Final = ZCLAttributeDef(
-            id=0x0423, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_4: Final = ZCLAttributeDef(
-            id=0x0424, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_5: Final = ZCLAttributeDef(
-            id=0x0425, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_6: Final = ZCLAttributeDef(
-            id=0x0426, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_7: Final = ZCLAttributeDef(
-            id=0x0427, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_8: Final = ZCLAttributeDef(
-            id=0x0428, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_9: Final = ZCLAttributeDef(
-            id=0x0429, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_10: Final = ZCLAttributeDef(
-            id=0x0430, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_11: Final = ZCLAttributeDef(
-            id=0x0431, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_12: Final = ZCLAttributeDef(
-            id=0x0432, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_13: Final = ZCLAttributeDef(
-            id=0x0433, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_14: Final = ZCLAttributeDef(
-            id=0x0434, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_15: Final = ZCLAttributeDef(
-            id=0x0435, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_16: Final = ZCLAttributeDef(
-            id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
+        unknown_attr_1: Final = ZCLAttributeDef(id=0x0421, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_2: Final = ZCLAttributeDef(id=0x0422, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_3: Final = ZCLAttributeDef(id=0x0423, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_4: Final = ZCLAttributeDef(id=0x0424, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_5: Final = ZCLAttributeDef(id=0x0425, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_6: Final = ZCLAttributeDef(id=0x0426, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_7: Final = ZCLAttributeDef(id=0x0427, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_8: Final = ZCLAttributeDef(id=0x0428, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_9: Final = ZCLAttributeDef(id=0x0429, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_10: Final = ZCLAttributeDef(id=0x0430, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_11: Final = ZCLAttributeDef(id=0x0431, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_12: Final = ZCLAttributeDef(id=0x0432, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_13: Final = ZCLAttributeDef(id=0x0433, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_14: Final = ZCLAttributeDef(id=0x0434, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        unknown_attr_15: Final = ZCLAttributeDef(id=0x0435, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_16: Final = ZCLAttributeDef(id=0x0436, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
         unknown_attr_18: Final = ZCLAttributeDef(
             id=0x0437, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_17: Final = ZCLAttributeDef(
-            id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
+        unknown_attr_17: Final = ZCLAttributeDef(id=0x0439, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
 
 
-class SinopeTechnologiesElectricalMeasurementCluster(
-    CustomCluster, ElectricalMeasurement
-):
+class SinopeTechnologiesElectricalMeasurementCluster(CustomCluster, ElectricalMeasurement):
     """SinopeTechnologiesElectricalMeasurementCluster custom cluster."""
 
     class AttributeDefs(ElectricalMeasurement.AttributeDefs):

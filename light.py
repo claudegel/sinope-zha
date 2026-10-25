@@ -5,32 +5,55 @@ DM2550ZB-G2.
 """
 
 import logging
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Any, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from zhaquirks import EventableCluster
-from zhaquirks.const import (ATTRIBUTE_ID, ATTRIBUTE_NAME, BUTTON,
-                             COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
-                             COMMAND_M_MULTI_PRESS_COMPLETE,
-                             COMMAND_M_SHORT_RELEASE, DESCRIPTION, TURN_OFF,
-                             TURN_ON, VALUE, ZHA_SEND_EVENT)
-from zhaquirks.sinope import (ATTRIBUTE_ACTION, LIGHT_DEVICE_TRIGGERS, SINOPE,
-                              SINOPE_MANUFACTURER_CLUSTER_ID, ButtonAction,
-                              CustomDeviceTemperatureCluster)
+from zhaquirks.const import (
+    ATTRIBUTE_ID,
+    ATTRIBUTE_NAME,
+    BUTTON,
+    COMMAND_M_INITIAL_PRESS,
+    COMMAND_M_LONG_RELEASE,
+    COMMAND_M_MULTI_PRESS_COMPLETE,
+    COMMAND_M_SHORT_RELEASE,
+    DESCRIPTION,
+    TURN_OFF,
+    TURN_ON,
+    VALUE,
+    ZHA_SEND_EVENT,
+)
+from zhaquirks.sinope import (
+    ATTRIBUTE_ACTION,
+    LIGHT_DEVICE_TRIGGERS,
+    SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
+    ButtonAction,
+    CustomDeviceTemperatureCluster,
+)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import QuirkBuilder, SensorDeviceClass, SensorStateClass
 from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  BaseCommandDefs, GeneralCommand,
-                                  ZCLAttributeDef, ZCLCommandDef, ZCLHeader)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    BaseCommandDefs,
+    GeneralCommand,
+    ZCLAttributeDef,
+    ZCLCommandDef,
+    ZCLHeader,
+)
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
@@ -45,7 +68,18 @@ class ManufacturerReportingMixin:
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
+
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
@@ -53,10 +87,21 @@ class ManufacturerReportingMixin:
                     max_interval=max_i,
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -120,75 +165,42 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
     class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        unknown_attr_1: Final = ZCLAttributeDef(
-            id=0x0001, type=t.Bool, access="rw", is_manufacturer_specific=True
-        )
-        keypad_lockout: Final = ZCLAttributeDef(
-            id=0x0002, type=KeypadLock, access="rw", is_manufacturer_specific=True
-        )
-        firmware_number: Final = ZCLAttributeDef(
-            id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
-        )
+        unknown_attr_1: Final = ZCLAttributeDef(id=0x0001, type=t.Bool, access="rw", is_manufacturer_specific=True)
+        keypad_lockout: Final = ZCLAttributeDef(id=0x0002, type=KeypadLock, access="rw", is_manufacturer_specific=True)
+        firmware_number: Final = ZCLAttributeDef(id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True)
         firmware_version: Final = ZCLAttributeDef(
             id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
         )
-        on_intensity: Final = ZCLAttributeDef(
-            id=0x0010, type=t.int16s, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_2: Final = ZCLAttributeDef(
-            id=0x0012, type=t.enum8, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_3: Final = ZCLAttributeDef(
-            id=0x0013, type=t.enum8, access="rw", is_manufacturer_specific=True
-        )
-        on_led_color: Final = ZCLAttributeDef(
-            id=0x0050, type=t.uint24_t, access="rw", is_manufacturer_specific=True
-        )
-        off_led_color: Final = ZCLAttributeDef(
-            id=0x0051, type=t.uint24_t, access="rw", is_manufacturer_specific=True
-        )
-        on_led_intensity: Final = ZCLAttributeDef(
-            id=0x0052, type=t.uint8_t, access="rw", is_manufacturer_specific=True
-        )
+        on_intensity: Final = ZCLAttributeDef(id=0x0010, type=t.int16s, access="rw", is_manufacturer_specific=True)
+        unknown_attr_2: Final = ZCLAttributeDef(id=0x0012, type=t.enum8, access="rw", is_manufacturer_specific=True)
+        unknown_attr_3: Final = ZCLAttributeDef(id=0x0013, type=t.enum8, access="rw", is_manufacturer_specific=True)
+        on_led_color: Final = ZCLAttributeDef(id=0x0050, type=t.uint24_t, access="rw", is_manufacturer_specific=True)
+        off_led_color: Final = ZCLAttributeDef(id=0x0051, type=t.uint24_t, access="rw", is_manufacturer_specific=True)
+        on_led_intensity: Final = ZCLAttributeDef(id=0x0052, type=t.uint8_t, access="rw", is_manufacturer_specific=True)
         off_led_intensity: Final = ZCLAttributeDef(
             id=0x0053, type=t.uint8_t, access="rw", is_manufacturer_specific=True
         )
-        action_report: Final = ZCLAttributeDef(
-            id=0x0054, type=ButtonAction, access="rp", is_manufacturer_specific=True
-        )
-        min_intensity: Final = ZCLAttributeDef(
-            id=0x0055, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        phase_control: Final = ZCLAttributeDef(
-            id=0x0056, type=PhaseControl, access="rw", is_manufacturer_specific=True
-        )
-        double_up_full: Final = ZCLAttributeDef(
-            id=0x0058, type=DoubleFull, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_4: Final = ZCLAttributeDef(
-            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
-        )
+        action_report: Final = ZCLAttributeDef(id=0x0054, type=ButtonAction, access="rp", is_manufacturer_specific=True)
+        min_intensity: Final = ZCLAttributeDef(id=0x0055, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        phase_control: Final = ZCLAttributeDef(id=0x0056, type=PhaseControl, access="rw", is_manufacturer_specific=True)
+        double_up_full: Final = ZCLAttributeDef(id=0x0058, type=DoubleFull, access="rw", is_manufacturer_specific=True)
+        unknown_attr_4: Final = ZCLAttributeDef(id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True)
         current_summation_delivered: Final = ZCLAttributeDef(
             id=0x0090, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
-        timer: Final = ZCLAttributeDef(
-            id=0x00A0, type=t.uint32_t, access="rw", is_manufacturer_specific=True
-        )
-        timer_countdown: Final = ZCLAttributeDef(
-            id=0x00A1, type=t.uint32_t, access="r", is_manufacturer_specific=True
-        )
-        connected_load: Final = ZCLAttributeDef(
-            id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True
-        )
-        status: Final = ZCLAttributeDef(
-            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
-        )
+        timer: Final = ZCLAttributeDef(id=0x00A0, type=t.uint32_t, access="rw", is_manufacturer_specific=True)
+        timer_countdown: Final = ZCLAttributeDef(id=0x00A1, type=t.uint32_t, access="r", is_manufacturer_specific=True)
+        connected_load: Final = ZCLAttributeDef(id=0x0119, type=t.uint16_t, access="rw", is_manufacturer_specific=True)
+        status: Final = ZCLAttributeDef(id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True)
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
+        result = await super().bind()
+
         await self.configure_reporting_all()
+
+        return result
 
     class ServerCommandDefs(BaseCommandDefs):
         """Server command definitions."""
@@ -216,16 +228,12 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         )
 
         if hdr.command_id != GeneralCommand.Report_Attributes:
-            return super().handle_cluster_general_request(
-                hdr, args, dst_addressing=dst_addressing
-            )
+            return super().handle_cluster_general_request(hdr, args, dst_addressing=dst_addressing)
 
         attr = args[0][0]
 
         if attr.attrid != self.AttributeDefs.action_report.id:
-            return super().handle_cluster_general_request(
-                hdr, args, dst_addressing=dst_addressing
-            )
+            return super().handle_cluster_general_request(hdr, args, dst_addressing=dst_addressing)
 
         action = self.Action(attr.value.value)
 
@@ -249,9 +257,7 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
 
         self.listener_event(ZHA_SEND_EVENT, command, event_args)
 
-    def _get_command_from_action(
-        self, action: ButtonAction
-    ) -> tuple[str | None, str | None]:
+    def _get_command_from_action(self, action: ButtonAction) -> tuple[str | None, str | None]:
         # const lookup = {1: 'up_single', 2: 'up_single_released', 3: 'up_hold', 4: 'up_double',
         #             17: 'down_single, 18: 'down_single_released', 19: 'down_hold', 20: 'down_double'};
         match action:

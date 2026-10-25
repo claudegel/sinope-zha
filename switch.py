@@ -5,29 +5,44 @@ VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
 2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
 """
 
-from asyncio import TimeoutError
 from enum import Enum
 from types import MappingProxyType
-from typing import Final
+from typing import ClassVar, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass
-from zhaquirks.sinope import (SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID,
-                              CustomDeviceTemperatureCluster)
+from zhaquirks.sinope import (
+    SINOPE,
+    SINOPE_MANUFACTURER_CLUSTER_ID,
+    CustomDeviceTemperatureCluster,
+)
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (BinarySensorDeviceClass, EntityType, QuirkBuilder,
-                             ReportingConfig, SensorDeviceClass,
-                             SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (PERCENTAGE, UnitOfElectricPotential,
-                                           UnitOfEnergy, UnitOfTime,
-                                           UnitOfVolume, UnitOfVolumeFlowRate)
+from zigpy.quirks.v2 import (
+    BinarySensorDeviceClass,
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import (
+    PERCENTAGE,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfTime,
+    UnitOfVolume,
+    UnitOfVolumeFlowRate,
+)
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 STATUS_MAP = MappingProxyType(
     {
@@ -81,28 +96,43 @@ def battery_alarm_converter(value):
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
             # attribut_id: (min_interval, max_interval, reportable_change)
             0x0010: (19, 300, 25),  # outdoor_temp
             0x0070: (60, 3678, 1),  # current_load
-            0x0076: (0, 86400, 1),  # dr_config_water_temp_min
-            0x0077: (0, 86400, 1),  # dr_config_water_temp_time
+            0x0076: (0, 65535, 1),  # dr_config_water_temp_min
+            0x0077: (0, 65535, 1),  # dr_config_water_temp_time
             0x007C: (19, 300, 25),  # min_measured_temp
             0x007D: (19, 300, 25),  # max_measured_temp
             0x0090: (59, 1799, 60),  # current_summation_delivered
             0x0200: (60, 43688, 1),  # dev_status
             0x0280: (19, 300, 25),  # max_measured_value
-            0x0283: (0, 86400, 1),  # cold_load_pickup_status
+            0x0283: (0, 65535, 1),  # cold_load_pickup_status
             # ... add other attributes
         }
     )
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
+
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
@@ -110,10 +140,21 @@ class ManufacturerReportingMixin:
                     max_interval=max_i,
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -292,10 +333,10 @@ class ZoneStatus(t.uint16_t):
 class FlowMeter(t.LVList):
     """Flow meter configuration values."""
 
-    No_flow_meter = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-    FS4220 = [194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
-    FS4221 = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
-    FS4222 = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    No_flow_meter: ClassVar[list[int]] = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    FS4220: ClassVar[list[int]] = [194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0]
+    FS4221: ClassVar[list[int]] = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
+    FS4222: ClassVar[list[int]] = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
 
 
 class FlowMeterEnum(Enum):
@@ -343,129 +384,69 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
     class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        unknown_attr_1: Final = ZCLAttributeDef(
-            id=0x0001, type=t.Bool, access="rw", is_manufacturer_specific=True
-        )
-        keypad_lockout: Final = ZCLAttributeDef(
-            id=0x0002, type=KeypadLock, access="rw", is_manufacturer_specific=True
-        )
-        firmware_number: Final = ZCLAttributeDef(
-            id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True
-        )
+        unknown_attr_1: Final = ZCLAttributeDef(id=0x0001, type=t.Bool, access="rw", is_manufacturer_specific=True)
+        keypad_lockout: Final = ZCLAttributeDef(id=0x0002, type=KeypadLock, access="rw", is_manufacturer_specific=True)
+        firmware_number: Final = ZCLAttributeDef(id=0x0003, type=t.uint16_t, access="r", is_manufacturer_specific=True)
         firmware_version: Final = ZCLAttributeDef(
             id=0x0004,
             type=t.CharacterString,
             access="r",
             is_manufacturer_specific=True,
         )
-        outdoor_temp: Final = ZCLAttributeDef(
-            id=0x0010, type=t.int16s, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_2: Final = ZCLAttributeDef(
-            id=0x0013, type=t.enum8, access="rw", is_manufacturer_specific=True
-        )
-        unknown_attr_3: Final = ZCLAttributeDef(
-            id=0x0030, type=t.uint8_t, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_4: Final = ZCLAttributeDef(
-            id=0x0035, type=t.uint16_t, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_5: Final = ZCLAttributeDef(
-            id=0x0037, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_6: Final = ZCLAttributeDef(
-            id=0x0038, type=t.enum8, access="rp", is_manufacturer_specific=True
-        )
-        connected_load: Final = ZCLAttributeDef(
-            id=0x0060, type=t.uint16_t, access="r", is_manufacturer_specific=True
-        )
-        current_load: Final = ZCLAttributeDef(
-            id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_7: Final = ZCLAttributeDef(
-            id=0x0074, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
+        outdoor_temp: Final = ZCLAttributeDef(id=0x0010, type=t.int16s, access="rp", is_manufacturer_specific=True)
+        unknown_attr_2: Final = ZCLAttributeDef(id=0x0013, type=t.enum8, access="rw", is_manufacturer_specific=True)
+        unknown_attr_3: Final = ZCLAttributeDef(id=0x0030, type=t.uint8_t, access="rp", is_manufacturer_specific=True)
+        unknown_attr_4: Final = ZCLAttributeDef(id=0x0035, type=t.uint16_t, access="rp", is_manufacturer_specific=True)
+        unknown_attr_5: Final = ZCLAttributeDef(id=0x0037, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_6: Final = ZCLAttributeDef(id=0x0038, type=t.enum8, access="rp", is_manufacturer_specific=True)
+        connected_load: Final = ZCLAttributeDef(id=0x0060, type=t.uint16_t, access="r", is_manufacturer_specific=True)
+        current_load: Final = ZCLAttributeDef(id=0x0070, type=t.bitmap8, access="rp", is_manufacturer_specific=True)
+        unknown_attr_7: Final = ZCLAttributeDef(id=0x0074, type=t.enum8, access="rwp", is_manufacturer_specific=True)
         dr_config_water_temp_min: Final = ZCLAttributeDef(
             id=0x0076, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
         dr_config_water_temp_time: Final = ZCLAttributeDef(
             id=0x0077, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
         )
-        dr_wt_time_on: Final = ZCLAttributeDef(
-            id=0x0078, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_8: Final = ZCLAttributeDef(
-            id=0x0079, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_9: Final = ZCLAttributeDef(
-            id=0x007A, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
+        dr_wt_time_on: Final = ZCLAttributeDef(id=0x0078, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_8: Final = ZCLAttributeDef(id=0x0079, type=t.bitmap8, access="rp", is_manufacturer_specific=True)
+        unknown_attr_9: Final = ZCLAttributeDef(id=0x007A, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
         unknown_attr_10: Final = ZCLAttributeDef(
             id=0x007B, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
         )
-        min_measured_temp: Final = ZCLAttributeDef(
-            id=0x007C, type=t.int16s, access="rp", is_manufacturer_specific=True
-        )
-        max_measured_temp: Final = ZCLAttributeDef(
-            id=0x007D, type=t.int16s, access="rp", is_manufacturer_specific=True
-        )
+        min_measured_temp: Final = ZCLAttributeDef(id=0x007C, type=t.int16s, access="rp", is_manufacturer_specific=True)
+        max_measured_temp: Final = ZCLAttributeDef(id=0x007D, type=t.int16s, access="rp", is_manufacturer_specific=True)
         water_temp_protection_type: Final = ZCLAttributeDef(
             id=0x007E, type=t.enum8, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_11: Final = ZCLAttributeDef(
-            id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True
-        )
+        unknown_attr_11: Final = ZCLAttributeDef(id=0x0080, type=t.uint32_t, access="r", is_manufacturer_specific=True)
         current_summation_delivered: Final = ZCLAttributeDef(
             id=0x0090, type=t.uint32_t, access="rp", is_manufacturer_specific=True
         )
-        timer: Final = ZCLAttributeDef(
-            id=0x00A0, type=t.uint32_t, access="rw", is_manufacturer_specific=True
-        )
-        timer_countdown: Final = ZCLAttributeDef(
-            id=0x00A1, type=t.uint32_t, access="r", is_manufacturer_specific=True
-        )
-        unknown_attr_12: Final = ZCLAttributeDef(
-            id=0x00B0, type=t.Bool, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_13: Final = ZCLAttributeDef(
-            id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_14: Final = ZCLAttributeDef(
-            id=0x012A, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_15: Final = ZCLAttributeDef(
-            id=0x012C, type=t.LVList, access="rp", is_manufacturer_specific=True
-        )
-        dev_status: Final = ZCLAttributeDef(
-            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_16: Final = ZCLAttributeDef(
-            id=0x0202, type=t.enum8, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_17: Final = ZCLAttributeDef(
-            id=0x0203, type=t.enum8, access="rp", is_manufacturer_specific=True
-        )
+        timer: Final = ZCLAttributeDef(id=0x00A0, type=t.uint32_t, access="rw", is_manufacturer_specific=True)
+        timer_countdown: Final = ZCLAttributeDef(id=0x00A1, type=t.uint32_t, access="r", is_manufacturer_specific=True)
+        unknown_attr_12: Final = ZCLAttributeDef(id=0x00B0, type=t.Bool, access="rp", is_manufacturer_specific=True)
+        unknown_attr_13: Final = ZCLAttributeDef(id=0x0101, type=t.LVList, access="rp", is_manufacturer_specific=True)
+        unknown_attr_14: Final = ZCLAttributeDef(id=0x012A, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_15: Final = ZCLAttributeDef(id=0x012C, type=t.LVList, access="rp", is_manufacturer_specific=True)
+        dev_status: Final = ZCLAttributeDef(id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True)
+        unknown_attr_16: Final = ZCLAttributeDef(id=0x0202, type=t.enum8, access="rp", is_manufacturer_specific=True)
+        unknown_attr_17: Final = ZCLAttributeDef(id=0x0203, type=t.enum8, access="rp", is_manufacturer_specific=True)
         unknown_attr_18: Final = ZCLAttributeDef(
             id=0x0220, type=t.bitmap16, access="rwp", is_manufacturer_specific=True
         )
-        unknown_attr_19: Final = ZCLAttributeDef(
-            id=0x0221, type=t.bitmap16, access="rp", is_manufacturer_specific=True
-        )
+        unknown_attr_19: Final = ZCLAttributeDef(id=0x0221, type=t.bitmap16, access="rp", is_manufacturer_specific=True)
         alarm_flow_threshold: Final = ZCLAttributeDef(
             id=0x0230, type=FlowAlarm, access="rw", is_manufacturer_specific=True
         )
-        alarm_options: Final = ZCLAttributeDef(
-            id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True
-        )
+        alarm_options: Final = ZCLAttributeDef(id=0x0231, type=AlarmAction, access="r", is_manufacturer_specific=True)
         flow_meter_config: Final = ZCLAttributeDef(
             id=0x0240, type=FlowMeter, access="rw", is_manufacturer_specific=True
         )
         alarm_disable_countdown: Final = ZCLAttributeDef(
             id=0x0241, type=t.uint32_t, access="rw", is_manufacturer_specific=True
         )
-        power_source: Final = ZCLAttributeDef(
-            id=0x0250, type=PowerSource, access="rw", is_manufacturer_specific=True
-        )
+        power_source: Final = ZCLAttributeDef(id=0x0250, type=PowerSource, access="rw", is_manufacturer_specific=True)
         emergency_power_source: Final = ZCLAttributeDef(
             id=0x0251, type=EmergencyPower, access="rw", is_manufacturer_specific=True
         )
@@ -490,9 +471,7 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
         cold_load_pickup_remaining_time: Final = ZCLAttributeDef(
             id=0x0284, type=t.uint16_t, access="r", is_manufacturer_specific=True
         )
-        input_on_delay: Final = ZCLAttributeDef(
-            id=0x02A0, type=InputDelay, access="rwp", is_manufacturer_specific=True
-        )
+        input_on_delay: Final = ZCLAttributeDef(id=0x02A0, type=InputDelay, access="rwp", is_manufacturer_specific=True)
         input_off_delay: Final = ZCLAttributeDef(
             id=0x02A1, type=InputDelay, access="rwp", is_manufacturer_specific=True
         )
@@ -500,8 +479,11 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
+        result = await super().bind()
+
         await self.configure_reporting_all()
+
+        return result
 
 
 class SinopeTechnologiesBasicCluster(CustomCluster, Basic):
@@ -512,9 +494,7 @@ class SinopeTechnologiesBasicCluster(CustomCluster, Basic):
     class AttributeDefs(Basic.AttributeDefs):
         """Sinope Manufacturer Basic Cluster Attributes."""
 
-        power_source: Final = ZCLAttributeDef(
-            id=0x0007, type=EnergySource, access="r", is_manufacturer_specific=True
-        )
+        power_source: Final = ZCLAttributeDef(id=0x0007, type=EnergySource, access="r", is_manufacturer_specific=True)
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
@@ -525,9 +505,7 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer ias Cluster Attributes."""
 
-        zone_status: Final = ZCLAttributeDef(
-            id=0x0002, type=ZoneStatus, access="p", is_manufacturer_specific=True
-        )
+        zone_status: Final = ZCLAttributeDef(id=0x0002, type=ZoneStatus, access="p", is_manufacturer_specific=True)
 
 
 class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfiguration):
@@ -555,14 +533,12 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     UnitOfMeasure: Final = UnitOfMeasure
 
     DIVISOR = 0x0302
-    _CONSTANT_ATTRIBUTES = {DIVISOR: 1000}
+    _CONSTANT_ATTRIBUTES: ClassVar[dict[int, int]] = {DIVISOR: 1000}
 
     class AttributeDefs(Metering.AttributeDefs):
         """Sinope Manufacturer Metering Cluster Attributes."""
 
-        status_mf: Final = ZCLAttributeDef(
-            id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True
-        )
+        status_mf: Final = ZCLAttributeDef(id=0x0200, type=ValveStatus, access="r", is_manufacturer_specific=True)
         unit_of_measure_mf: Final = ZCLAttributeDef(
             id=0x0300, type=UnitOfMeasure, access="r", is_manufacturer_specific=True
         )
@@ -587,9 +563,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfEnergy.WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=60
-        ),
+        reporting_config=ReportingConfig(min_interval=59, max_interval=1799, reportable_change=60),
         translation_key="current_summ_delivered",
         fallback_name="Current summ delivered",
     )
@@ -728,9 +702,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         unit=PERCENTAGE,
         device_class=SensorDeviceClass.BATTERY,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
         translation_key="battery_percentage_remaining",
         fallback_name="Battery percentage remaining",
     )
@@ -740,9 +712,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
         attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
@@ -771,9 +741,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfVolume.LITERS,
         device_class=SensorDeviceClass.WATER,
-        reporting_config=ReportingConfig(
-            min_interval=59, max_interval=1799, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=59, max_interval=1799, reportable_change=1),
         translation_key="current_summ_delivered",
         fallback_name="Water summation delivered",
     )
@@ -783,9 +751,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfVolumeFlowRate.LITERS_PER_HOUR,
         device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=600, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=30, max_interval=600, reportable_change=1),
         translation_key="instantaneous_demand",
         fallback_name="Current water flow",
     )
@@ -822,9 +788,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         cluster_id=BinaryInput.cluster_id,
         endpoint_id=1,
         device_class=BinarySensorDeviceClass.TAMPER,
-        reporting_config=ReportingConfig(
-            min_interval=0, max_interval=600, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=0, max_interval=600, reportable_change=1),
         translation_key="out_of_service",
         fallback_name="Out of service",
     )
@@ -915,9 +879,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
         attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",

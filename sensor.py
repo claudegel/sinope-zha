@@ -4,7 +4,6 @@ It add manufacturer attributes for IasZone cluster for the water leak alarm.
 Supported devices are WL4200, WL4200S, WL4210 and LM4110-ZB
 """
 
-from asyncio import TimeoutError
 from types import MappingProxyType
 from typing import Final
 
@@ -12,19 +11,24 @@ import zigpy.profiles.zha as zha_p
 import zigpy.types as t
 from homeassistant.components.number import NumberDeviceClass, NumberMode
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.switch import (EnergySource,
-                                     SinopeTechnologiesBasicCluster)
+from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import (EntityType, QuirkBuilder, ReportingConfig,
-                             SensorDeviceClass, SensorStateClass)
-from zigpy.quirks.v2.homeassistant import (DEGREE, UnitOfElectricPotential,
-                                           UnitOfTime)
-from zigpy.zcl.clusters.general import (AnalogInput, PollControl,
-                                        PowerConfiguration)
+from zigpy.quirks.v2 import (
+    EntityType,
+    QuirkBuilder,
+    ReportingConfig,
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from zigpy.quirks.v2.homeassistant import DEGREE, UnitOfElectricPotential, UnitOfTime
+from zigpy.zcl.clusters.general import AnalogInput, PollControl, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
-from zigpy.zcl.foundation import (ZCL_CLUSTER_REVISION_ATTR, BaseAttributeDefs,
-                                  ZCLAttributeDef)
+from zigpy.zcl.foundation import (
+    ZCL_CLUSTER_REVISION_ATTR,
+    BaseAttributeDefs,
+    ZCLAttributeDef,
+)
 
 SENSOR_MAP = MappingProxyType(
     {
@@ -103,7 +107,11 @@ def probe_converter(value):
 
 
 class ManufacturerReportingMixin:
-    """Mixin to configure the attributes reporting in manufacturer cluster."""
+    """Mixin to configure attribute reporting in manufacturer cluster.
+
+    Zigbee ConfigureReporting encodes min_interval and max_interval
+    as uint16 values. Do not exceed 65535.
+    """
 
     MANUFACTURER_REPORTING = MappingProxyType(
         {
@@ -119,7 +127,18 @@ class ManufacturerReportingMixin:
 
     async def configure_reporting_all(self):
         """Configure reporting of all configured attributes."""
+
         for attr_id, (min_i, max_i, change) in self.MANUFACTURER_REPORTING.items():
+            if min_i > 0xFFFF or max_i > 0xFFFF:
+                self.warning(
+                    "Invalid reporting configuration for attr %s: (%s, %s, %s)",
+                    hex(attr_id),
+                    min_i,
+                    max_i,
+                    change,
+                )
+                continue
+
             try:
                 await self.configure_reporting(
                     attribute=attr_id,
@@ -127,10 +146,21 @@ class ManufacturerReportingMixin:
                     max_interval=max_i,
                     reportable_change=change,
                 )
-                self.debug(f"Reporting configured for attr {hex(attr_id)}")
-            except (ZigbeeException, TimeoutError, DeliveryError) as err:
+
                 self.debug(
-                    f"Reporting configuration fail for attr {hex(attr_id)}: {err}"
+                    "Reporting configured for attr %s",
+                    hex(attr_id),
+                )
+
+            except (
+                ZigbeeException,
+                TimeoutError,
+                DeliveryError,
+            ) as err:
+                self.warning(
+                    "Configure reporting failed on cluster %s: %s",
+                    hex(attr_id),
+                    err,
                 )
 
 
@@ -172,7 +202,7 @@ class SensorStatus(t.uint16_t):
     Unknown = 0x001F  # 31
     Probe_disconnected = 0x0020  # 32
     Disconnected = 0x0021  # 33
-    Probe_disconnected = 0x0023  # 35
+    Probe_error = 0x0023  # 35
     Normal = 0x004A  # 74
     Good = 0x004B  # 75
     Ok = 0x004E  # 78
@@ -201,57 +231,38 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
     class AttributeDefs(BaseAttributeDefs):
         """Sinope Manufacturer Cluster Attributes."""
 
-        firmware_number: Final = ZCLAttributeDef(
-            id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True
-        )
+        firmware_number: Final = ZCLAttributeDef(id=0x0003, type=t.uint16_t, access="rp", is_manufacturer_specific=True)
         firmware_version: Final = ZCLAttributeDef(
             id=0x0004, type=t.CharacterString, access="r", is_manufacturer_specific=True
         )
-        unknown_attr_1: Final = ZCLAttributeDef(
-            id=0x0030, type=t.uint8_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_2: Final = ZCLAttributeDef(
-            id=0x0031, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
+        unknown_attr_1: Final = ZCLAttributeDef(id=0x0030, type=t.uint8_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_2: Final = ZCLAttributeDef(id=0x0031, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
         min_temperature_limit: Final = ZCLAttributeDef(
             id=0x0032, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
         max_temperature_limit: Final = ZCLAttributeDef(
             id=0x0033, type=t.int16s, access="rw", is_manufacturer_specific=True
         )
-        device_status: Final = ZCLAttributeDef(
-            id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True
-        )
-        sensor_status: Final = ZCLAttributeDef(
-            id=0x0035, type=SensorStatus, access="rp", is_manufacturer_specific=True
-        )
-        battery_type: Final = ZCLAttributeDef(
-            id=0x0036, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_5: Final = ZCLAttributeDef(
-            id=0x0037, type=t.uint16_t, access="rwp", is_manufacturer_specific=True
-        )
+        device_status: Final = ZCLAttributeDef(id=0x0034, type=t.bitmap8, access="rp", is_manufacturer_specific=True)
+        sensor_status: Final = ZCLAttributeDef(id=0x0035, type=SensorStatus, access="rp", is_manufacturer_specific=True)
+        battery_type: Final = ZCLAttributeDef(id=0x0036, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_5: Final = ZCLAttributeDef(id=0x0037, type=t.uint16_t, access="rwp", is_manufacturer_specific=True)
         probe_connected: Final = ZCLAttributeDef(
             id=0x0038, type=ProbeConnect, access="rp", is_manufacturer_specific=True
         )
-        probe_type: Final = ZCLAttributeDef(
-            id=0x0039, type=t.enum8, access="rwp", is_manufacturer_specific=True
-        )
-        unknown_attr_4: Final = ZCLAttributeDef(
-            id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True
-        )
-        status: Final = ZCLAttributeDef(
-            id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True
-        )
-        unknown_attr_6: Final = ZCLAttributeDef(
-            id=0x020A, type=t.uint32_t, access="rp", is_manufacturer_specific=True
-        )
+        probe_type: Final = ZCLAttributeDef(id=0x0039, type=t.enum8, access="rwp", is_manufacturer_specific=True)
+        unknown_attr_4: Final = ZCLAttributeDef(id=0x0080, type=t.uint32_t, access="rp", is_manufacturer_specific=True)
+        status: Final = ZCLAttributeDef(id=0x0200, type=DeviceStatus, access="rp", is_manufacturer_specific=True)
+        unknown_attr_6: Final = ZCLAttributeDef(id=0x020A, type=t.uint32_t, access="rp", is_manufacturer_specific=True)
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
-        await super().bind()
+        result = await super().bind()
+
         await self.configure_reporting_all()
+
+        return result
 
 
 class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
@@ -263,12 +274,8 @@ class SinopeTechnologiesIasZoneCluster(CustomCluster, IasZone):
     class AttributeDefs(IasZone.AttributeDefs):
         """Sinope Manufacturer IasZone Cluster Attributes."""
 
-        zone_status: Final = ZCLAttributeDef(
-            id=0x0002, type=ZoneStatus, access="p", is_manufacturer_specific=True
-        )
-        leak_status: Final = ZCLAttributeDef(
-            id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True
-        )
+        zone_status: Final = ZCLAttributeDef(id=0x0002, type=ZoneStatus, access="p", is_manufacturer_specific=True)
+        leak_status: Final = ZCLAttributeDef(id=0x0030, type=LeakStatus, access="rw", is_manufacturer_specific=True)
 
 
 class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfiguration):
@@ -307,7 +314,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="power_source",
         fallback_name="Power source",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -315,7 +322,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .number(  # Min temperature limit
         attribute_name=SinopeManufacturerCluster.AttributeDefs.min_temperature_limit.name,
@@ -347,9 +354,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        reporting_config=ReportingConfig(
-            min_interval=30, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
         attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
@@ -396,7 +401,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="power_source",
         fallback_name="Power source",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -404,7 +409,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .number(  # Min temperature limit
         attribute_name=SinopeManufacturerCluster.AttributeDefs.min_temperature_limit.name,
@@ -436,9 +441,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        reporting_config=ReportingConfig(
-            min_interval=60, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=60, max_interval=43200, reportable_change=1),
         attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
@@ -503,9 +506,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         state_class=SensorStateClass.MEASUREMENT,
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
-        reporting_config=ReportingConfig(
-            min_interval=60, max_interval=43200, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=60, max_interval=43200, reportable_change=1),
         attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
@@ -517,9 +518,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         attribute_converter=lambda x: None if x == -2 else x,
         unit=DEGREE,
         device_class=SensorDeviceClass.VOLUME_STORAGE,
-        reporting_config=ReportingConfig(
-            min_interval=5, max_interval=3600, reportable_change=1
-        ),
+        reporting_config=ReportingConfig(min_interval=5, max_interval=3600, reportable_change=1),
         translation_key="gauge_angle",
         fallback_name="Gauge angle",
     )
@@ -532,7 +531,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         translation_key="status",
         fallback_name="Device status",
     )
-    .number(  # Checkin interval
+    .number(  # Check in interval
         attribute_name=PollControl.AttributeDefs.checkin_interval.name,
         cluster_id=PollControl.cluster_id,
         step=60,
@@ -540,7 +539,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         max_value=21600,
         unit=UnitOfTime.SECONDS,
         translation_key="checkin_interval",
-        fallback_name="Checkin interval",
+        fallback_name="Check in interval",
     )
     .add_to_registry()
 )

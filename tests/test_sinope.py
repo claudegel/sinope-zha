@@ -5,17 +5,23 @@ from unittest import mock
 import pytest
 import zhaquirks
 import zigpy.types as t
-from zhaquirks.const import (COMMAND_M_INITIAL_PRESS, COMMAND_M_LONG_RELEASE,
-                             COMMAND_M_MULTI_PRESS_COMPLETE,
-                             COMMAND_M_SHORT_RELEASE, TURN_OFF, TURN_ON)
+from tests.common import ClusterListener
+from zhaquirks.const import (
+    COMMAND_M_INITIAL_PRESS,
+    COMMAND_M_LONG_RELEASE,
+    COMMAND_M_MULTI_PRESS_COMPLETE,
+    COMMAND_M_SHORT_RELEASE,
+    TURN_OFF,
+    TURN_ON,
+)
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
-from zhaquirks.sinope.light import (LightManufacturerCluster,
-                                    SinopeTechnologiesManufacturerCluster)
+from zhaquirks.sinope.light import (
+    LightManufacturerCluster,
+    SinopeTechnologiesManufacturerCluster,
+)
 from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import DeviceTemperature, PowerConfiguration
 from zigpy.zcl.clusters.smartenergy import Metering
-
-from tests.common import ClusterListener
 
 zhaquirks.setup()
 
@@ -80,9 +86,7 @@ def _get_packet_data(
     attr: foundation.Attribute | None = None,
     dirc: foundation.Direction = foundation.Direction.Server_to_Client,
 ) -> bytes:
-    hdr = foundation.ZCLHeader.general(
-        1, command, SINOPE_MANUFACTURER_ID, dirc
-    ).serialize()
+    hdr = foundation.ZCLHeader.general(1, command, SINOPE_MANUFACTURER_ID, dirc).serialize()
     if attr is not None:
         cmd = foundation.GENERAL_COMMANDS[command].schema([attr]).serialize()
     else:
@@ -106,9 +110,7 @@ def _get_packet_data(
         (t.uint8_t(0x00), None, None),
     ),
 )
-async def test_sinope_light_switch(
-    zigpy_device_from_v2_quirk, press_type, button, exp_event
-):
+async def test_sinope_light_switch(zigpy_device_from_v2_quirk, press_type, button, exp_event):
     """Test that button presses are sent as events."""
     device = zigpy_device_from_v2_quirk(SINOPE, "DM2500ZB")
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
@@ -189,9 +191,7 @@ async def test_sinope_light_switch_non_action_report(zigpy_device_from_v2_quirk)
     # report attributes command, but not "action_report"
     attr = foundation.Attribute(
         attrid=0x10,  # "on_intensity" attribute
-        value=foundation.TypeValue(
-            type=t.int16s(0x29), value=t.int16s(50)
-        ),  # 0x29 = t.int16s
+        value=foundation.TypeValue(type=t.int16s(0x29), value=t.int16s(50)),  # 0x29 = t.int16s
     )
     data = _get_packet_data(foundation.GeneralCommand.Report_Attributes, attr)
     device.packet_received(
@@ -294,9 +294,7 @@ async def test_sinope_device_battery_voltage(zigpy_device_from_v2_quirk, model):
     dev_volt_cluster = device.endpoints[1].in_clusters[PowerConfiguration.cluster_id]
     dev_volt_listener = ClusterListener(dev_volt_cluster)
     dev_volt_attr_id = dev_volt_cluster.AttributeDefs.battery_voltage.id
-    dev_volt_other_attr_id = (
-        dev_volt_cluster.AttributeDefs.battery_percentage_remaining.id
-    )
+    dev_volt_other_attr_id = dev_volt_cluster.AttributeDefs.battery_percentage_remaining.id
 
     # verify battery voltage is divided by 10
     dev_volt_cluster.update_attribute(dev_volt_attr_id, 55)
