@@ -631,7 +631,7 @@ sinope_base_quirk = (
     .number(  # outdoor temperature
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        step=1,
+        step=0.01,
         min_value=-327.68,
         max_value=40.0,
         multiplier=0.01,
