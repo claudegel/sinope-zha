@@ -590,6 +590,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Keypad lockout",
     )
     .number(  # Timer
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
@@ -756,6 +757,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Current water flow",
     )
     .number(  # Valve closure countdown
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=10,
@@ -832,6 +834,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Input 2 off delay",
     )
     .number(  # Timer 1
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=1,
@@ -843,6 +846,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Timer",
     )
     .number(  # Timer 2
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=2,
@@ -936,6 +940,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Keypad lockout",
     )
     .number(  # water temp min limit
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.dr_config_water_temp_min.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
