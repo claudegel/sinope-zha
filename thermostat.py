@@ -582,6 +582,11 @@ sinope_base_quirk = (
     QuirkBuilder()
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
+    # ZHA's generic keypad lockout (User Interface cluster) duplicates the Sinope keypad
+    # setting below (manufacturer cluster), which is the one Neviweb uses.
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=UserInterface.cluster_id, unique_id_suffix="keypad_lockout"
+    )
     .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
