@@ -31,10 +31,13 @@ from zigpy.quirks.v2.homeassistant import (
     PERCENTAGE,
     UnitOfElectricPotential,
     UnitOfEnergy,
+    UnitOfPower,
+    UnitOfTemperature,
     UnitOfTime,
     UnitOfVolume,
     UnitOfVolumeFlowRate,
 )
+from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
@@ -77,6 +80,30 @@ def dev_status_converter(value):
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
+
+WATER_TEMP_MIN_ATTR = 0x0076  # low water temperature protection: 0 = off, 45-55 °C
+# Local-only (virtual) attributes presenting 0x0076 as an on/off switch + a remembered setpoint
+PROTECTION_ON_ATTR = 0xFE00
+PROTECTION_SETPOINT_ATTR = 0xFE01
+VIRTUAL_ATTR_IDS = frozenset({PROTECTION_ON_ATTR, PROTECTION_SETPOINT_ATTR})
+DEFAULT_PROTECTION_C = 45
+
+
+def water_temp_converter(value):
+    """Convert °C*100 to °C, avoiding float noise (5291 -> 52.91)."""
+
+    if value is None or int(value) in (-32768, 32767):
+        return None
+    return round(int(value) / 100, 2)
+
+
+def cold_load_remaining_converter(value):
+    """65535 means no cold-load countdown running."""
+
+    if value is None or int(value) == 0xFFFF:
+        return None
+    return int(value)
 
 
 def zone_status_converter(value):
@@ -475,7 +502,109 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
         input_off_delay: Final = ZCLAttributeDef(
             id=0x02A1, type=InputDelay, access="rwp", is_manufacturer_specific=True
         )
+        # Virtual (not on the device): derived from / written through dr_config_water_temp_min
+        low_temp_protection_on: Final = ZCLAttributeDef(
+            id=PROTECTION_ON_ATTR, type=t.Bool, access="rw", is_manufacturer_specific=True
+        )
+        low_temp_protection_setpoint: Final = ZCLAttributeDef(
+            id=PROTECTION_SETPOINT_ATTR, type=t.uint8_t, access="rw", is_manufacturer_specific=True
+        )
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
+
+    def _attr_id(self, attr):
+        if isinstance(attr, ZCLAttributeDef):
+            return attr.id
+        if isinstance(attr, str):
+            return self.attributes_by_name[attr].id
+        return int(attr)
+
+    def get(self, key, default=None):
+        """Virtual switch is always derived from the device value (0x0076); setpoint is remembered."""
+        try:
+            attr_id = self.find_attribute(key).id
+        except (KeyError, ValueError):
+            return super().get(key, default)
+        if attr_id == PROTECTION_ON_ATTR:
+            raw = super().get(WATER_TEMP_MIN_ATTR)
+            return default if raw is None else t.Bool(int(raw) != 0)
+        value = super().get(key, default)
+        if attr_id == PROTECTION_SETPOINT_ATTR and (value is None or value is default):
+            raw = super().get(WATER_TEMP_MIN_ATTR)
+            if raw is not None:
+                return int(raw) if int(raw) != 0 else DEFAULT_PROTECTION_C
+        return value
+
+    def _sync_protection(self, raw):
+        """Derive the virtual switch/setpoint from the device's 0x0076 value."""
+        raw = int(raw)
+        super()._update_attribute(PROTECTION_ON_ATTR, t.Bool(raw != 0))
+        if raw != 0:
+            super()._update_attribute(PROTECTION_SETPOINT_ATTR, raw)
+        elif self.get(PROTECTION_SETPOINT_ATTR) is None:
+            super()._update_attribute(PROTECTION_SETPOINT_ATTR, DEFAULT_PROTECTION_C)
+
+    def _update_attribute(self, attrid, value):
+        super()._update_attribute(attrid, value)
+        if value is not None and self._attr_id(attrid) == WATER_TEMP_MIN_ATTR:
+            self._sync_protection(value)
+
+    async def read_attributes(
+        self, attributes, allow_cache=False, only_cache=False, manufacturer=foundation.UNDEFINED, **kwargs
+    ):
+        """Answer virtual attributes locally; read 0x0076 from the device to derive them."""
+        ids = [self._attr_id(a) for a in attributes]
+        if not VIRTUAL_ATTR_IDS & set(ids):
+            return await super().read_attributes(attributes, allow_cache, only_cache, manufacturer, **kwargs)
+        real = [a for a, i in zip(attributes, ids) if i not in VIRTUAL_ATTR_IDS]
+        added = WATER_TEMP_MIN_ATTR not in ids
+        if added:
+            real.append(WATER_TEMP_MIN_ATTR)
+        success, failure = {}, {}
+        if real:
+            success, failure = await super().read_attributes(real, allow_cache, only_cache, manufacturer, **kwargs)
+            if added:
+                success.pop(WATER_TEMP_MIN_ATTR, None)
+                failure.pop(WATER_TEMP_MIN_ATTR, None)
+        for attr, attr_id in zip(attributes, ids):
+            if attr_id in VIRTUAL_ATTR_IDS:
+                value = self.get(attr_id)
+                if value is None:
+                    failure[attr] = foundation.Status.UNSUPPORTED_ATTRIBUTE
+                else:
+                    success[attr] = value
+        return success, failure
+
+    async def write_attributes(self, attributes, *args, **kwargs):
+        """Translate the virtual switch/setpoint into writes of 0x0076 (0 = off, 45-55 °C)."""
+        fixed = {}
+        for attr, value in attributes.items():
+            attr_id = self._attr_id(attr)
+            if attr_id == PROTECTION_ON_ATTR:
+                setpoint = int(self.get(PROTECTION_SETPOINT_ATTR) or DEFAULT_PROTECTION_C)
+                fixed[WATER_TEMP_MIN_ATTR] = setpoint if bool(value) else 0
+            elif attr_id == PROTECTION_SETPOINT_ATTR:
+                setpoint = max(45, min(55, round(float(value))))
+                super()._update_attribute(PROTECTION_SETPOINT_ATTR, setpoint)
+                if self.get(PROTECTION_ON_ATTR):
+                    fixed[WATER_TEMP_MIN_ATTR] = setpoint
+            elif attr_id == WATER_TEMP_MIN_ATTR and value is not None:
+                value = round(float(value))
+                fixed[attr] = 0 if value < 45 else min(value, 55)
+            else:
+                fixed[attr] = value
+        if not fixed:
+            return [[foundation.WriteAttributesStatusRecord(foundation.Status.SUCCESS)]]
+        result = await super().write_attributes(fixed, *args, **kwargs)
+        # zigpy updates its cache directly after a write (bypassing _update_attribute),
+        # so re-sync the virtual switch/setpoint and emit their update events here.
+        for attr, value in fixed.items():
+            if (
+                self._attr_id(attr) == WATER_TEMP_MIN_ATTR
+                and value is not None
+                and super().get(WATER_TEMP_MIN_ATTR) == value
+            ):
+                self._sync_protection(value)
+        return result
 
     async def bind(self):
         """Bind the cluster and configure reporting."""
@@ -935,15 +1064,81 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
     )
-    .number(  # water temp min limit
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.dr_config_water_temp_min.name,
+    .switch(  # Low water temperature protection on/off (virtual)
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_on.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        translation_key="low_water_temp_protection",
+        fallback_name="Low water temp protection",
+    )
+    .number(  # Low water temperature protection threshold (virtual), Neviweb: 45-55 °C
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_setpoint.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
         min_value=45,
-        max_value=60,
+        max_value=55,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
-        translation_key="water_temp_min",
-        fallback_name="Water temp min",
+        translation_key="low_water_temp_threshold",
+        fallback_name="Low water temp protection temperature",
+    )
+    .number(  # Auto-off timer
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=86400,
+        unit=UnitOfTime.SECONDS,
+        translation_key="timer",
+        fallback_name="Auto-off timer (0 = off)",
+    )
+    .sensor(  # Timer countdown
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.timer_countdown.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        unit=UnitOfTime.SECONDS,
+        device_class=SensorDeviceClass.DURATION,
+        translation_key="timer_countdown",
+        fallback_name="Timer remaining",
+    )
+    .sensor(  # Connected load, auto-detected by the device
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.connected_load.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        unit=UnitOfPower.WATT,
+        device_class=SensorDeviceClass.POWER,
+        translation_key="connected_load",
+        fallback_name="Connected load",
+    )
+    .sensor(  # Recent low water temperature
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.min_measured_temp.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        attribute_converter=water_temp_converter,
+        translation_key="water_temp_low",
+        fallback_name="Water temperature low",
+    )
+    .sensor(  # Recent high water temperature
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.max_measured_temp.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        attribute_converter=water_temp_converter,
+        translation_key="water_temp_high",
+        fallback_name="Water temperature high",
+    )
+    .sensor(  # Cold load pickup remaining time
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.cold_load_pickup_remaining_time.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=cold_load_remaining_converter,
+        translation_key="cold_load_pickup_remaining",
+        fallback_name="Cold load pickup remaining",
     )
     .sensor(  # Cold load status
         attribute_name=SinopeManufacturerCluster.AttributeDefs.cold_load_pickup_status.name,

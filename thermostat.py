@@ -13,8 +13,8 @@ from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
-from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
+from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorDeviceClass, SensorStateClass
+from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfPower, UnitOfTemperature, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
 from zigpy.zcl.foundation import (
@@ -48,6 +48,18 @@ def device_status_converter(value):
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
+
+LIMIT_OFF_RAW = -32768  # device value meaning "limit disabled"
+LIMIT_ATTR_IDS = frozenset({0x0108, 0x0109, 0x010A})  # air_max_limit, floor_min_setpoint, floor_max_setpoint
+
+
+def floor_temperature_converter(value):
+    """Convert floor temperature (C*100); None when no floor probe is connected."""
+
+    if value is None or int(value) >= 32000 or int(value) <= -32000:
+        return None
+    return round(int(value) / 100, 2)
 
 
 def floor_status_converter(value):
@@ -498,6 +510,39 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         unknown_attr_41: Final = ZCLAttributeDef(id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
+    def _limit_attr_id(self, attr):
+        if isinstance(attr, ZCLAttributeDef):
+            return attr.id
+        if isinstance(attr, str):
+            return self.attributes_by_name[attr].id
+        return int(attr)
+
+    def _update_attribute(self, attrid, value):
+        """Show disabled floor/ambient limits (-32768) as 0."""
+        if value is not None and self._limit_attr_id(attrid) in LIMIT_ATTR_IDS and int(value) == LIMIT_OFF_RAW:
+            value = 0
+        super()._update_attribute(attrid, value)
+
+    def get(self, key, default=None):
+        """Same translation for values zigpy cached directly after a write."""
+        value = super().get(key, default)
+        if isinstance(value, int) and not isinstance(value, bool) and int(value) == LIMIT_OFF_RAW:
+            try:
+                if self.find_attribute(key).id in LIMIT_ATTR_IDS:
+                    return 0
+            except (KeyError, ValueError):
+                pass
+        return value
+
+    async def write_attributes(self, attributes, *args, **kwargs):
+        """Writing 0 to a floor/ambient limit disables it on the device."""
+        fixed = {}
+        for attr, value in attributes.items():
+            if value is not None and self._limit_attr_id(attr) in LIMIT_ATTR_IDS and int(value) == 0:
+                value = LIMIT_OFF_RAW
+            fixed[attr] = value
+        return await super().write_attributes(fixed, *args, **kwargs)
+
     async def bind(self):
         """Bind the cluster and configure reporting."""
         result = await super().bind()
@@ -649,6 +694,19 @@ sinope_base_quirk = (
         translation_key="outdoor_temp_timeout",
         fallback_name="Outdoor temp timeout",
     )
+    .number(  # Away (unoccupied) heating setpoint, used by the away preset
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.unoccupied_heating_setpoint.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        endpoint_id=1,
+        step=0.5,
+        min_value=5,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="away_setpoint",
+        fallback_name="Away setpoint",
+    )
     .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -755,6 +813,82 @@ sinope_base_quirk = (
         attribute_converter=floor_status_converter,
         translation_key="floor_limit_status",
         fallback_name="Floor limit status",
+    )
+    .enum(  # Aux (H2) output cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.aux_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=CycleOutputEnum,
+        translation_key="aux_cycle_length",
+        fallback_name="Aux cycle length",
+    )
+    .number(  # Connected load, used by the device for its energy (summation) estimate
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.connected_load.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=65000,
+        unit=UnitOfPower.WATT,
+        device_class=NumberDeviceClass.POWER,
+        translation_key="connected_load",
+        fallback_name="Connected load",
+    )
+    .number(  # Aux (H2) connected load
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_connected_load.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=65000,
+        unit=UnitOfPower.WATT,
+        device_class=NumberDeviceClass.POWER,
+        translation_key="aux_connected_load",
+        fallback_name="Aux connected load",
+    )
+    .number(  # Floor maximum limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_max_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="floor_max_limit",
+        fallback_name="Floor maximum limit (0 = off)",
+    )
+    .number(  # Floor minimum limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_min_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="floor_min_limit",
+        fallback_name="Floor minimum limit (0 = off)",
+    )
+    .number(  # Ambient limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.air_max_limit.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="ambient_limit",
+        fallback_name="Ambient limit (0 = off)",
+    )
+    .sensor(  # Floor temperature (only with a floor probe)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_temperature.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=floor_temperature_converter,
+        translation_key="floor_temperature",
+        fallback_name="Floor temperature",
     )
     .add_to_registry()
 )
