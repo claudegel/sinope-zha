@@ -71,6 +71,14 @@ BATTERY_MAP = MappingProxyType(
 )
 
 
+def cold_load_converter(value):
+    """Convert cold_load_pickup_status value to name."""
+
+    if value is None:
+        return None
+    return {0: "Active", 1: "Off"}.get(int(value), f"Unmapped({value})")
+
+
 def dev_status_converter(value):
     """Convert dev_status value to name."""
 
@@ -949,7 +957,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_name=SinopeManufacturerCluster.AttributeDefs.cold_load_pickup_status.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=1,
-        device_class=SensorDeviceClass.ENUM,
+        attribute_converter=cold_load_converter,
         translation_key="cold_load_pickup_status",
         fallback_name="Cold load pickup status",
     )
