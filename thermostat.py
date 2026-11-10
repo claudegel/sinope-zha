@@ -121,7 +121,7 @@ class KeypadLock(t.enum8):
 
     Unlocked = 0x00
     Locked = 0x01
-    Partial_lock = 0x02
+    Limited_setpoint_only = 0x02
 
 
 class Display(t.enum8):
@@ -136,7 +136,7 @@ class Display(t.enum8):
 class FloorMode(t.enum8):
     """Air floor mode values."""
 
-    Air_by_floor = 0x01
+    Ambient = 0x01
     Floor = 0x02
 
 
@@ -277,7 +277,7 @@ class Occupancy(t.enum8):
 class Backlight(t.enum8):
     """Backlight auto dim param values for G2 devices."""
 
-    On_demand = 0x00
+    On_request = 0x00
     Always_on = 0x01
     Bedroom = 0x02
 
@@ -285,7 +285,7 @@ class Backlight(t.enum8):
 class Simplebacklight(t.enum8):
     """Backlight auto dim param values for first gen devices."""
 
-    On_demand = 0x00
+    On_request = 0x00
     Always_on = 0x01
 
 
@@ -305,7 +305,7 @@ class CycleOutput(t.uint16_t):
 class CycleOutputEnum(t.enum16):
     """Convert CycleOutput to enum."""
 
-    CycLe_15_Sec = CycleOutput.Sec_15
+    Cycle_15_Sec = CycleOutput.Sec_15
     Cycle_5_Min = CycleOutput.Min_5
     Cycle_10_Min = CycleOutput.Min_10
     Cycle_15_Min = CycleOutput.Min_15
@@ -599,6 +599,7 @@ sinope_base_quirk = (
         fallback_name="Time format",
     )
     .number(  # eco delta setpoint
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -609,6 +610,7 @@ sinope_base_quirk = (
         fallback_name="Eco delta setpoint",
     )
     .number(  # eco max pi heating demand
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_max_pi_heating_demand.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -619,6 +621,7 @@ sinope_base_quirk = (
         fallback_name="Eco max pi heating demand",
     )
     .number(  # eco safety temperature delta
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_safety_temperature_delta.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -629,6 +632,7 @@ sinope_base_quirk = (
         fallback_name="Eco safety temperature delta",
     )
     .number(  # outdoor temperature
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=0.01,
@@ -640,6 +644,7 @@ sinope_base_quirk = (
         fallback_name="Outdoor temperature",
     )
     .number(  # outdoor_temp_timeout
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp_timeout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
@@ -876,6 +881,7 @@ sinope_base_quirk = (
         fallback_name="Config 2nd display",
     )
     .number(  # eco delta setpoint
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -886,6 +892,7 @@ sinope_base_quirk = (
         fallback_name="Eco delta setpoint",
     )
     .number(  # eco max pi heating demand
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_max_pi_heating_demand.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -896,6 +903,7 @@ sinope_base_quirk = (
         fallback_name="Eco max pi heating demand",
     )
     .number(  # eco safety temperature delta
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_safety_temperature_delta.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -958,6 +966,7 @@ sinope_base_quirk = (
         fallback_name="Cycle length",
     )
     .number(  # weather icons timeout
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons_timeout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
