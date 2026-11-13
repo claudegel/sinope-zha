@@ -271,7 +271,7 @@ I'll list here all the custom cluster attribute with explanation about how to us
 |0xff01|0x0004|4|t.CharacterString|firmware_version|378|read/report|
 |0xff01|0x0010|16|t.int16s|unknown|400| |
 |0xff01|0x0013|19|t.enum8|unknown|1,2,3,4,16,21|read/write|
-|0xff01|0x0035|53|t.uint16_t|unknown|0,22|read/report|
+|0xff01|0x0035|53|t.uint16_t|unknown|0,22,100|read/report|
 |0xff01|0x0037|55|t.uint16_t|unknown|744, 1000|read/write/report|
 |0xff01|0x0038|56|t.enum8|unknown|0, 2|read/report|
 |0xff01|0x0060|96|t.uint16_t|ConnectedLoad|watt/hr|read|
