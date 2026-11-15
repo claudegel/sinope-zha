@@ -113,7 +113,7 @@ class KeypadLock(t.enum8):
 
     Unlocked = 0x00
     Locked = 0x01
-    Partial_lock = 0x02
+    Limited_onOff_only = 0x02
 
 
 class PhaseControl(t.enum8):
@@ -140,13 +140,15 @@ class DeviceStatus(t.bitmap32):
 class SinopeLightLedColors(t.enum32):
     """Color values for Sinope light switch status LEDs."""
 
-    Lim = 0x0AFFDC
     Amber = 0x000A4B
-    Fushia = 0x0100A5
-    Perle = 0x64FFFF
     Blue = 0xFFFF00
+    Fuchsia = 0x0A00A5
     Green = 0x00FF00
+    Lime = 0x0AFFDC
+    Orange = 0xFC6A03
+    Pearl = 0x64FFFF
     Red = 0xFF0000
+    White = 0xFFFFFF
 
 
 class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
@@ -301,6 +303,16 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-on_led_color",
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-off_led_color",
+    )
     .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
@@ -379,6 +391,16 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-on_led_color",
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-off_led_color",
+    )
     .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
@@ -466,6 +488,16 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .replaces(CustomDeviceTemperatureCluster)
     .replaces(LightManufacturerCluster)
     .device_automation_triggers(LIGHT_DEVICE_TRIGGERS)
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-on_led_color",
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        unique_id_suffix="65281-off_led_color",
+    )
     .enum(  # Keypad lock
         attribute_name=LightManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=LightManufacturerCluster.cluster_id,
