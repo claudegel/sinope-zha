@@ -327,6 +327,18 @@ class CycleOutputEnum(t.enum16):
     Cycle_Off = CycleOutput.Off
 
 
+class MainCycleOutputEnum(t.enum16):
+    """Main output cycle period values (no Off option)."""
+
+    Cycle_15_Sec = CycleOutput.Sec_15
+    Cycle_5_Min = CycleOutput.Min_5
+    Cycle_10_Min = CycleOutput.Min_10
+    Cycle_15_Min = CycleOutput.Min_15
+    Cycle_20_Min = CycleOutput.Min_20
+    Cycle_25_Min = CycleOutput.Min_25
+    Cycle_30_Min = CycleOutput.Min_30
+
+
 class Language(t.enum8):
     """Display language values."""
 
@@ -615,6 +627,11 @@ sinope_base_quirk = (
     QuirkBuilder()
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
+    # ZHA's generic keypad lockout (User Interface cluster) duplicates the Sinope keypad
+    # setting below (manufacturer cluster), which is the one Neviweb uses.
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=UserInterface.cluster_id, unique_id_suffix="keypad_lockout"
+    )
     .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -649,7 +666,7 @@ sinope_base_quirk = (
         step=1,
         min_value=-128,
         max_value=100,
-        device_class=NumberDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
@@ -680,6 +697,7 @@ sinope_base_quirk = (
         min_value=-327.68,
         max_value=40.0,
         multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="outdoor_temp",
         fallback_name="Outdoor temperature",
@@ -716,7 +734,6 @@ sinope_base_quirk = (
         translation_key="status",
         fallback_name="Device status",
     )
-    .skip_configuration()
 )
 
 (
@@ -778,17 +795,10 @@ sinope_base_quirk = (
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
     )
-    .enum(  # Aux mode
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        enum_class=AuxMode,
-        translation_key="aux_output_mode",
-        fallback_name="Aux output mode",
-    )
-    .enum(  # cycle length
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        enum_class=CycleLengthEnum,
+    .enum(  # Main cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=MainCycleOutputEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
     )
@@ -1015,7 +1025,7 @@ sinope_base_quirk = (
         step=1,
         min_value=-128,
         max_value=100,
-        device_class=NumberDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
