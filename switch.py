@@ -727,6 +727,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Keypad lockout",
     )
     .number(  # Timer
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
@@ -893,6 +894,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Current water flow",
     )
     .number(  # Valve closure countdown
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=10,
@@ -969,6 +971,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Input 2 off delay",
     )
     .number(  # Timer 1
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=1,
@@ -980,6 +983,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Timer",
     )
     .number(  # Timer 2
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         endpoint_id=2,
@@ -1072,14 +1076,9 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
     )
-    .switch(  # Low water temperature protection on/off (virtual)
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_on.name,
-        cluster_id=SinopeManufacturerCluster.cluster_id,
-        translation_key="low_water_temp_protection",
-        fallback_name="Low water temp protection",
-    )
-    .number(  # Low water temperature protection threshold (virtual), Neviweb: 45-55 °C
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_setpoint.name,
+    .number(  # water temp min limit
+        mode="box",
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.dr_config_water_temp_min.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
         min_value=45,
