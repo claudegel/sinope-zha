@@ -70,6 +70,7 @@ PROBE_MAP = MappingProxyType(
     {
         0x00: "internal probe",  # 0
         0x01: "external probe",  # 1
+        0x02: "cable probe",  # 2
     }
 )
 

@@ -41,6 +41,17 @@ FLOOR_MAP = MappingProxyType(
     }
 )
 
+GFCI_MAP = MappingProxyType(
+    {
+        0x00: "Ok",
+        0x01: "Error",
+    }
+)
+
+
+LIMIT_OFF_RAW = -32768  # device value meaning "limit disabled"
+LIMIT_ATTR_IDS = frozenset({0x0108, 0x0109, 0x010A})  # air_max_limit, floor_min_setpoint, floor_max_setpoint
+
 
 def device_status_converter(value):
     """Convert sensor_status value to name."""
@@ -48,10 +59,6 @@ def device_status_converter(value):
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
-
-
-LIMIT_OFF_RAW = -32768  # device value meaning "limit disabled"
-LIMIT_ATTR_IDS = frozenset({0x0108, 0x0109, 0x010A})  # air_max_limit, floor_min_setpoint, floor_max_setpoint
 
 
 def floor_temperature_converter(value):
@@ -68,6 +75,14 @@ def floor_status_converter(value):
     if value is None:
         return None
     return FLOOR_MAP.get(int(value), f"Unmapped({value})")
+
+
+def gfci_status_converter(value):
+    """Convert gfci status value to name."""
+
+    if value is None:
+        return None
+    return GFCI_MAP.get(int(value), f"Unmapped({value})")
 
 
 class ManufacturerReportingMixin:
@@ -257,12 +272,12 @@ class SystemMode(t.enum8):
 class PumpDuration(t.enum8):
     """Pump protection duration period values."""
 
-    T5 = 0x05
-    T10 = 0x0A
-    T15 = 0x0F
-    T20 = 0x14
-    T30 = 0x1E
-    T60 = 0x3C
+    Min_5 = 0x05
+    Min_10 = 0x0A
+    Min_15 = 0x0F
+    Min_20 = 0x14
+    Min_30 = 0x1E
+    Min_60 = 0x3C
 
 
 class CycleLength(t.uint16_t):
@@ -342,8 +357,8 @@ class MainCycleOutputEnum(t.enum16):
 class Language(t.enum8):
     """Display language values."""
 
-    En = 0x00
-    Fr = 0x01
+    English = 0x00
+    French = 0x01
 
 
 class TempFormat(t.enum8):
@@ -668,6 +683,7 @@ sinope_base_quirk = (
         min_value=-128,
         max_value=100,
         unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
@@ -800,6 +816,13 @@ sinope_base_quirk = (
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
     )
+    .enum(  # Aux mode
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        enum_class=AuxMode,
+        translation_key="aux_output_mode",
+        fallback_name="Aux output mode",
+    )
     .enum(  # Main cycle length
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
         cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
@@ -813,21 +836,6 @@ sinope_base_quirk = (
         enum_class=SensorType,
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
-    )
-    .switch(  # Pump protection status
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        translation_key="pump_protection_status",
-        fallback_name="Pump protection status",
-    )
-    .sensor(  # floor_limit_status
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        endpoint_id=1,
-        entity_type=EntityType.DIAGNOSTIC,
-        attribute_converter=floor_status_converter,
-        translation_key="floor_limit_status",
-        fallback_name="Floor limit status",
     )
     .enum(  # Aux (H2) output cycle length
         attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.aux_cycle_output.name,
@@ -905,6 +913,21 @@ sinope_base_quirk = (
         translation_key="floor_temperature",
         fallback_name="Floor temperature",
     )
+    .sensor(  # floor_limit_status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=floor_status_converter,
+        translation_key="floor_limit_status",
+        fallback_name="Floor limit status",
+    )
+    .switch(  # Pump protection status
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.pump_protection_status.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        translation_key="pump_protection_status",
+        fallback_name="Pump protection status",
+    )
     .add_to_registry()
 )
 
@@ -950,6 +973,13 @@ sinope_base_quirk = (
         translation_key="floor_sensor_type",
         fallback_name="Floor sensor type",
     )
+    .enum(  # Main cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=MainCycleOutputEnum,
+        translation_key="cycle_length",
+        fallback_name="Cycle length",
+    )
     .sensor(  # floor_limit_status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_limit_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -962,9 +992,21 @@ sinope_base_quirk = (
     .sensor(  # Gfci status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.gfci_status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=gfci_status_converter,
         translation_key="gfci_status",
         fallback_name="GFCI status",
+    )
+    .sensor(  # room temperature
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.room_temperature.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=lambda value: value / 100,
+        translation_key="room_temperature",
+        fallback_name="Room temperature",
     )
     .add_to_registry()
 )
@@ -1032,6 +1074,7 @@ sinope_base_quirk = (
         min_value=-128,
         max_value=100,
         unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
@@ -1056,6 +1099,32 @@ sinope_base_quirk = (
         unit=PERCENTAGE,
         translation_key="eco_safety_temperature_delta",
         fallback_name="Eco safety temperature delta",
+    )
+    .number(  # Away (unoccupied) heating setpoint, used by the away preset
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.unoccupied_heating_setpoint.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        endpoint_id=1,
+        step=0.5,
+        min_value=5,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="away_setpoint",
+        fallback_name="Away setpoint",
+    )
+    .number(  # Away (unoccupied) cooling setpoint, used by the away preset
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.unoccupied_cooling_setpoint.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        endpoint_id=1,
+        step=0.5,
+        min_value=16,
+        max_value=31,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="away_cooling_setpoint",
+        fallback_name="Away cooling setpoint",
     )
     .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
@@ -1119,6 +1188,19 @@ sinope_base_quirk = (
         unit=UnitOfTime.SECONDS,
         translation_key="icons_timeout",
         fallback_name="Icons timeout",
+    )
+    .number(  # Away (unoccupied) cooling setpoint, used by the away preset
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.unoccupied_cooling_setpoint.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        endpoint_id=1,
+        step=0.5,
+        min_value=16,
+        max_value=31,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="away_cooling_setpoint",
+        fallback_name="Away cooling setpoint",
     )
     .add_to_registry()
 )
