@@ -39,6 +39,10 @@ from zigpy.quirks.v2.homeassistant import (
 )
 from zigpy.zcl import foundation
 from zigpy.zcl.clusters.general import Basic, BinaryInput, PowerConfiguration
+from zigpy.zcl.clusters.measurement import (
+    RelativeHumidity,
+    TemperatureMeasurement,
+)
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (
@@ -198,7 +202,7 @@ class KeypadLock(t.enum8):
 
     Unlocked = 0x00
     Locked = 0x01
-    Partial_lock = 0x02
+    Limited_onoff_only = 0x02
 
 
 class FlowAlarm(t.enum8):
@@ -694,6 +698,11 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     .applies_to(SINOPE, "SP2610ZB")
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
+    .prevent_default_entity_creation(
+        endpoint_id=1,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        unique_id_suffix="current_summ_delivered",
+    )
     .sensor(  # Current summ delivered
         attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
         cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
@@ -834,6 +843,17 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="abnormal_flow_duration",
         fallback_name="Abnormal flow duration",
     )
+    .number(  # Valve closure countdown
+        mode="box",
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        step=10,
+        min_value=0,
+        max_value=86400,
+        unit=UnitOfTime.SECONDS,
+        translation_key="alarm_disable_countdown",
+        fallback_name="Alarm disable countdown",
+    )
     .sensor(  # battery percent
         attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_percentage_remaining.name,
         cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
@@ -893,16 +913,16 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="instantaneous_demand",
         fallback_name="Current water flow",
     )
-    .number(  # Valve closure countdown
-        mode="box",
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.alarm_disable_countdown.name,
-        cluster_id=SinopeManufacturerCluster.cluster_id,
-        step=10,
-        min_value=0,
-        max_value=86400,
-        unit=UnitOfTime.SECONDS,
-        translation_key="alarm_disable_countdown",
-        fallback_name="Alarm disable countdown",
+    .sensor(  # room temperature
+        attribute_name=TemperatureMeasurement.AttributeDefs.measured_value.name,
+        cluster_id=TemperatureMeasurement.cluster_id,
+        endpoint_id=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=lambda value: value / 100,
+        translation_key="room_temperature",
+        fallback_name="Room temperature",
     )
     .add_to_registry()
 )
@@ -1053,6 +1073,39 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="dev_status",
         fallback_name="Device status",
     )
+    .sensor(  # indoor temperature
+        attribute_name=TemperatureMeasurement.AttributeDefs.measured_value.name,
+        cluster_id=TemperatureMeasurement.cluster_id,
+        endpoint_id=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=lambda value: value / 100,
+        translation_key="indoor_temperature",
+        fallback_name="Indoor temperature",
+    )
+    .sensor(  # external temperature
+        attribute_name=TemperatureMeasurement.AttributeDefs.measured_value.name,
+        cluster_id=TemperatureMeasurement.cluster_id,
+        endpoint_id=2,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
+        translation_key="external_temperature",
+        fallback_name="External temperature",
+    )
+    .sensor(  # relative humidity
+        attribute_name=RelativeHumidity.AttributeDefs.measured_value.name,
+        cluster_id=RelativeHumidity.cluster_id,
+        endpoint_id=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.HUMIDITY,
+        unit=PERCENTAGE,
+        attribute_converter=lambda value: value / 100,
+        translation_key="relative_humidity",
+        fallback_name="Relative humidity",
+    )
     .add_to_registry()
 )
 
@@ -1076,9 +1129,9 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="keypad_lockout",
         fallback_name="Keypad lockout",
     )
-    .number(  # water temp min limit
+    .number(  # Low water temperature protection threshold (virtual), Neviweb: 45-55 °C
         mode="box",
-        attribute_name=SinopeManufacturerCluster.AttributeDefs.dr_config_water_temp_min.name,
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_setpoint.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
         min_value=45,
@@ -1089,6 +1142,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         fallback_name="Low water temp protection temperature",
     )
     .number(  # Auto-off timer
+        mode="box",
         attribute_name=SinopeManufacturerCluster.AttributeDefs.timer.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
         step=1,
@@ -1163,6 +1217,23 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_converter=dev_status_converter,
         translation_key="dev_status",
         fallback_name="Device status",
+    )
+    .sensor(  # water temperature
+        attribute_name=TemperatureMeasurement.AttributeDefs.measured_value.name,
+        cluster_id=TemperatureMeasurement.cluster_id,
+        endpoint_id=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=lambda value: value / 100,
+        translation_key="water_temperature",
+        fallback_name="Water temperature",
+    )
+    .switch(  # Low water temperature protection on/off (virtual)
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.low_temp_protection_on.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        translation_key="low_water_temp_protection",
+        fallback_name="Low water temp protection",
     )
     .add_to_registry()
 )
