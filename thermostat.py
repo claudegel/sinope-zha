@@ -13,8 +13,8 @@ from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorStateClass
-from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfTime
+from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorDeviceClass, SensorStateClass
+from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfPower, UnitOfTemperature, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
 from zigpy.zcl.foundation import (
@@ -48,6 +48,18 @@ def device_status_converter(value):
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
+
+LIMIT_OFF_RAW = -32768  # device value meaning "limit disabled"
+LIMIT_ATTR_IDS = frozenset({0x0108, 0x0109, 0x010A})  # air_max_limit, floor_min_setpoint, floor_max_setpoint
+
+
+def floor_temperature_converter(value):
+    """Convert floor temperature (C*100); None when no floor probe is connected."""
+
+    if value is None or int(value) >= 32000 or int(value) <= -32000:
+        return None
+    return round(int(value) / 100, 2)
 
 
 def floor_status_converter(value):
@@ -121,7 +133,7 @@ class KeypadLock(t.enum8):
 
     Unlocked = 0x00
     Locked = 0x01
-    Partial_lock = 0x02
+    Limited_setpoint_only = 0x02
 
 
 class Display(t.enum8):
@@ -136,7 +148,7 @@ class Display(t.enum8):
 class FloorMode(t.enum8):
     """Air floor mode values."""
 
-    Air_by_floor = 0x01
+    Ambient = 0x01
     Floor = 0x02
 
 
@@ -277,7 +289,7 @@ class Occupancy(t.enum8):
 class Backlight(t.enum8):
     """Backlight auto dim param values for G2 devices."""
 
-    On_demand = 0x00
+    On_request = 0x00
     Always_on = 0x01
     Bedroom = 0x02
 
@@ -285,7 +297,7 @@ class Backlight(t.enum8):
 class Simplebacklight(t.enum8):
     """Backlight auto dim param values for first gen devices."""
 
-    On_demand = 0x00
+    On_request = 0x00
     Always_on = 0x01
 
 
@@ -305,7 +317,7 @@ class CycleOutput(t.uint16_t):
 class CycleOutputEnum(t.enum16):
     """Convert CycleOutput to enum."""
 
-    CycLe_15_Sec = CycleOutput.Sec_15
+    Cycle_15_Sec = CycleOutput.Sec_15
     Cycle_5_Min = CycleOutput.Min_5
     Cycle_10_Min = CycleOutput.Min_10
     Cycle_15_Min = CycleOutput.Min_15
@@ -313,6 +325,18 @@ class CycleOutputEnum(t.enum16):
     Cycle_25_Min = CycleOutput.Min_25
     Cycle_30_Min = CycleOutput.Min_30
     Cycle_Off = CycleOutput.Off
+
+
+class MainCycleOutputEnum(t.enum16):
+    """Main output cycle period values (no Off option)."""
+
+    Cycle_15_Sec = CycleOutput.Sec_15
+    Cycle_5_Min = CycleOutput.Min_5
+    Cycle_10_Min = CycleOutput.Min_10
+    Cycle_15_Min = CycleOutput.Min_15
+    Cycle_20_Min = CycleOutput.Min_20
+    Cycle_25_Min = CycleOutput.Min_25
+    Cycle_30_Min = CycleOutput.Min_30
 
 
 class Language(t.enum8):
@@ -498,6 +522,39 @@ class SinopeTechnologiesManufacturerCluster(ManufacturerReportingMixin, CustomCl
         unknown_attr_41: Final = ZCLAttributeDef(id=0xFF0D, type=t.LVBytes, access="rp", is_manufacturer_specific=True)
         cluster_revision: Final = ZCL_CLUSTER_REVISION_ATTR
 
+    def _limit_attr_id(self, attr):
+        if isinstance(attr, ZCLAttributeDef):
+            return attr.id
+        if isinstance(attr, str):
+            return self.attributes_by_name[attr].id
+        return int(attr)
+
+    def _update_attribute(self, attrid, value):
+        """Show disabled floor/ambient limits (-32768) as 0."""
+        if value is not None and self._limit_attr_id(attrid) in LIMIT_ATTR_IDS and int(value) == LIMIT_OFF_RAW:
+            value = 0
+        super()._update_attribute(attrid, value)
+
+    def get(self, key, default=None):
+        """Same translation for values zigpy cached directly after a write."""
+        value = super().get(key, default)
+        if isinstance(value, int) and not isinstance(value, bool) and int(value) == LIMIT_OFF_RAW:
+            try:
+                if self.find_attribute(key).id in LIMIT_ATTR_IDS:
+                    return 0
+            except (KeyError, ValueError):
+                pass
+        return value
+
+    async def write_attributes(self, attributes, *args, **kwargs):
+        """Writing 0 to a floor/ambient limit disables it on the device."""
+        fixed = {}
+        for attr, value in attributes.items():
+            if value is not None and self._limit_attr_id(attr) in LIMIT_ATTR_IDS and int(value) == 0:
+                value = LIMIT_OFF_RAW
+            fixed[attr] = value
+        return await super().write_attributes(fixed, *args, **kwargs)
+
     async def bind(self):
         """Bind the cluster and configure reporting."""
         result = await super().bind()
@@ -570,6 +627,11 @@ sinope_base_quirk = (
     QuirkBuilder()
     .replaces(SinopeTechnologiesThermostatCluster)
     .replaces(SinopeTechnologiesManufacturerCluster)
+    # ZHA's generic keypad lockout (User Interface cluster) duplicates the Sinope keypad
+    # setting below (manufacturer cluster), which is the one Neviweb uses.
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=UserInterface.cluster_id, unique_id_suffix="keypad_lockout"
+    )
     .enum(  # Keypad lock
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.keypad_lockout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
@@ -599,16 +661,18 @@ sinope_base_quirk = (
         fallback_name="Time format",
     )
     .number(  # eco delta setpoint
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
         min_value=-128,
         max_value=100,
-        device_class=NumberDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
     .number(  # eco max pi heating demand
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_max_pi_heating_demand.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -619,6 +683,7 @@ sinope_base_quirk = (
         fallback_name="Eco max pi heating demand",
     )
     .number(  # eco safety temperature delta
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_safety_temperature_delta.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -629,17 +694,20 @@ sinope_base_quirk = (
         fallback_name="Eco safety temperature delta",
     )
     .number(  # outdoor temperature
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=0.01,
         min_value=-327.68,
         max_value=40.0,
         multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         translation_key="outdoor_temp",
         fallback_name="Outdoor temperature",
     )
     .number(  # outdoor_temp_timeout
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.outdoor_temp_timeout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
@@ -648,6 +716,19 @@ sinope_base_quirk = (
         unit=UnitOfTime.SECONDS,
         translation_key="outdoor_temp_timeout",
         fallback_name="Outdoor temp timeout",
+    )
+    .number(  # Away (unoccupied) heating setpoint, used by the away preset
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.unoccupied_heating_setpoint.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        endpoint_id=1,
+        step=0.5,
+        min_value=5,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="away_setpoint",
+        fallback_name="Away setpoint",
     )
     .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
@@ -658,7 +739,6 @@ sinope_base_quirk = (
         translation_key="status",
         fallback_name="Device status",
     )
-    .skip_configuration()
 )
 
 (
@@ -720,17 +800,10 @@ sinope_base_quirk = (
         translation_key="backlight_auto_dim",
         fallback_name="Backlight auto dim",
     )
-    .enum(  # Aux mode
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_output_mode.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        enum_class=AuxMode,
-        translation_key="aux_output_mode",
-        fallback_name="Aux output mode",
-    )
-    .enum(  # cycle length
-        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.cycle_length.name,
-        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        enum_class=CycleLengthEnum,
+    .enum(  # Main cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.main_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=MainCycleOutputEnum,
         translation_key="cycle_length",
         fallback_name="Cycle length",
     )
@@ -755,6 +828,82 @@ sinope_base_quirk = (
         attribute_converter=floor_status_converter,
         translation_key="floor_limit_status",
         fallback_name="Floor limit status",
+    )
+    .enum(  # Aux (H2) output cycle length
+        attribute_name=SinopeTechnologiesThermostatCluster.AttributeDefs.aux_cycle_output.name,
+        cluster_id=SinopeTechnologiesThermostatCluster.cluster_id,
+        enum_class=CycleOutputEnum,
+        translation_key="aux_cycle_length",
+        fallback_name="Aux cycle length",
+    )
+    .number(  # Connected load, used by the device for its energy (summation) estimate
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.connected_load.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=65000,
+        unit=UnitOfPower.WATT,
+        device_class=NumberDeviceClass.POWER,
+        translation_key="connected_load",
+        fallback_name="Connected load",
+    )
+    .number(  # Aux (H2) connected load
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.aux_connected_load.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=1,
+        min_value=0,
+        max_value=65000,
+        unit=UnitOfPower.WATT,
+        device_class=NumberDeviceClass.POWER,
+        translation_key="aux_connected_load",
+        fallback_name="Aux connected load",
+    )
+    .number(  # Floor maximum limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_max_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="floor_max_limit",
+        fallback_name="Floor maximum limit (0 = off)",
+    )
+    .number(  # Floor minimum limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_min_setpoint.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="floor_min_limit",
+        fallback_name="Floor minimum limit (0 = off)",
+    )
+    .number(  # Ambient limit (0 = off)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.air_max_limit.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        step=0.5,
+        min_value=0,
+        max_value=36,
+        multiplier=0.01,
+        unit=UnitOfTemperature.CELSIUS,
+        device_class=NumberDeviceClass.TEMPERATURE,
+        translation_key="ambient_limit",
+        fallback_name="Ambient limit (0 = off)",
+    )
+    .sensor(  # Floor temperature (only with a floor probe)
+        attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.floor_temperature.name,
+        cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
+        endpoint_id=1,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfTemperature.CELSIUS,
+        attribute_converter=floor_temperature_converter,
+        translation_key="floor_temperature",
+        fallback_name="Floor temperature",
     )
     .add_to_registry()
 )
@@ -876,16 +1025,18 @@ sinope_base_quirk = (
         fallback_name="Config 2nd display",
     )
     .number(  # eco delta setpoint
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_delta_setpoint.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
         min_value=-128,
         max_value=100,
-        device_class=NumberDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
         translation_key="eco_delta_setpoint",
         fallback_name="Eco delta setpoint",
     )
     .number(  # eco max pi heating demand
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_max_pi_heating_demand.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -896,6 +1047,7 @@ sinope_base_quirk = (
         fallback_name="Eco max pi heating demand",
     )
     .number(  # eco safety temperature delta
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.eco_safety_temperature_delta.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=1,
@@ -958,6 +1110,7 @@ sinope_base_quirk = (
         fallback_name="Cycle length",
     )
     .number(  # weather icons timeout
+        mode="box",
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.weather_icons_timeout.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
         step=10,
