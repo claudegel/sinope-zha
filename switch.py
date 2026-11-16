@@ -74,6 +74,17 @@ BATTERY_MAP = MappingProxyType(
     {
         0x00000000: "Ok",
         0x00000001: "Low",
+        0x00000002: "Very_low",
+        0x00000004: "Minimum",
+        0x00000008: "Critical",
+    }
+)
+
+VALVE_MAP = MappingProxyType(
+    {
+        0x00: "Closed",
+        0x01: "Closed and armed",
+        0x02: "Open",
     }
 )
 
@@ -92,6 +103,14 @@ def dev_status_converter(value):
     if value is None:
         return None
     return STATUS_MAP.get(int(value), f"Unmapped({value})")
+
+
+def valve_status_converter(value):
+    """Convert valve_status value to name."""
+
+    if value is None:
+        return None
+    return VALVE_MAP.get(int(value), f"Unmapped({value})")
 
 
 WATER_TEMP_MIN_ATTR = 0x0076  # low water temperature protection: 0 = off, 45-55 °C
@@ -131,7 +150,33 @@ def battery_alarm_converter(value):
 
     if value is None:
         return None
-    return BATTERY_MAP.get(int(value), f"Unmapped({value})")
+
+    value = int(value)
+
+    if value == 0:
+        return BATTERY_MAP[0]
+
+    states = []
+    known_bits = 0
+
+    if value & 0x01:
+        states.append(BATTERY_MAP[0x01])
+
+    if value & 0x02:
+        states.append(BATTERY_MAP[0x02])
+
+    if value & 0x04:
+        states.append(BATTERY_MAP[0x04])
+
+    if value & 0x08:
+        states.append(BATTERY_MAP[0x08])
+
+    unknown_bits = value & ~known_bits
+
+    if unknown_bits:
+        states.append(f"Unmapped(0x{unknown_bits:08X})")
+
+    return ", ".join(states)
 
 
 class ManufacturerReportingMixin:
@@ -345,9 +390,9 @@ class EnergySource(t.enum8):
 class ValveStatus(t.bitmap8):
     """Valve_status."""
 
-    Off = 0x00
-    Off_armed = 0x01
-    On = 0x02
+    Closed = 0x00
+    Closed_and_armed = 0x01
+    Open = 0x02
 
 
 class DeviceStatus(t.bitmap32):
@@ -399,6 +444,9 @@ class BatteryStatus(t.bitmap32):
 
     Ok = 0x00000000
     Low = 0x00000001
+    Very_low = 0x00000002
+    Minimum = 0x00000004
+    Critical = 0x00000008
 
 
 class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
@@ -829,13 +877,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="emergency_power_source",
         fallback_name="Emergency power source",
     )
-    .enum(  # Valve status
-        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status_mf.name,
-        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
-        enum_class=ValveStatus,
-        translation_key="valve_status",
-        fallback_name="Valve status",
-    )
     .enum(  # abnormal flow duration
         attribute_name=SinopeManufacturerCluster.AttributeDefs.abnormal_flow_duration.name,
         cluster_id=SinopeManufacturerCluster.cluster_id,
@@ -854,13 +895,14 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="alarm_disable_countdown",
         fallback_name="Alarm disable countdown",
     )
-    .sensor(  # battery percent
+    .sensor(  # battery percentage
         attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_percentage_remaining.name,
         cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
         state_class=SensorStateClass.MEASUREMENT,
         unit=PERCENTAGE,
         device_class=SensorDeviceClass.BATTERY,
         reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
+        attribute_converter=lambda x: None if x is None else x / 2,
         translation_key="battery_percentage_remaining",
         fallback_name="Battery percentage remaining",
     )
@@ -871,7 +913,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
-        attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
     )
@@ -892,6 +933,15 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         attribute_converter=dev_status_converter,
         translation_key="dev_status",
         fallback_name="Device status",
+    )
+    .sensor(  # Valve status
+        attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.status_mf.name,
+        cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=valve_status_converter,
+        translation_key="valve_status",
+        fallback_name="Valve status",
     )
     .sensor(  # Water volume delivered
         attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
@@ -1041,7 +1091,6 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
-        attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
     )
