@@ -3,9 +3,13 @@
 from unittest import mock
 
 import pytest
-import zhaquirks
 import zigpy.types as t
+from zigpy.zcl import foundation
+from zigpy.zcl.clusters.general import DeviceTemperature, PowerConfiguration
+from zigpy.zcl.clusters.smartenergy import Metering
+
 from tests.common import ClusterListener
+import zhaquirks
 from zhaquirks.const import (
     COMMAND_M_INITIAL_PRESS,
     COMMAND_M_LONG_RELEASE,
@@ -19,9 +23,7 @@ from zhaquirks.sinope.light import (
     LightManufacturerCluster,
     SinopeTechnologiesManufacturerCluster,
 )
-from zigpy.zcl import foundation
-from zigpy.zcl.clusters.general import DeviceTemperature, PowerConfiguration
-from zigpy.zcl.clusters.smartenergy import Metering
+from zhaquirks.sinope.switch import FlowMeter, FlowMeterEnum
 
 zhaquirks.setup()
 
@@ -59,16 +61,17 @@ async def test_sinope_device_temp(zigpy_device_from_v2_quirk):
     assert dev_temp_listener.attribute_updates[1][1] == 25  # not modified
 
 
-async def test_sinope_flow_measurement(zigpy_device_from_v2_quirk):
+@pytest.mark.parametrize("model", ["VA4220ZB", "VA4221ZB"])
+async def test_sinope_flow_measurement(zigpy_device_from_v2_quirk, model):
     """Test that metering values are handled correctly for Sinope valve."""
-    device = zigpy_device_from_v2_quirk(SINOPE, "VA4220ZB")
+    device = zigpy_device_from_v2_quirk(SINOPE, model)
 
     metering_cluster = device.endpoints[1].smartenergy_metering
     metering_listener = ClusterListener(metering_cluster)
     metering_attr_id = Metering.AttributeDefs.current_summ_delivered.id
     metering_other_attr_id = Metering.AttributeDefs.multiplier.id
 
-    # verify measured value is divided by 10
+    # verify measured value is not divided
     metering_cluster.update_attribute(metering_attr_id, 2500)
     assert len(metering_listener.attribute_updates) == 1
     assert metering_listener.attribute_updates[0][0] == metering_attr_id
@@ -86,7 +89,9 @@ def _get_packet_data(
     attr: foundation.Attribute | None = None,
     dirc: foundation.Direction = foundation.Direction.Server_to_Client,
 ) -> bytes:
-    hdr = foundation.ZCLHeader.general(1, command, SINOPE_MANUFACTURER_ID, dirc).serialize()
+    hdr = foundation.ZCLHeader.general(
+        1, command, SINOPE_MANUFACTURER_ID, dirc
+    ).serialize()
     if attr is not None:
         cmd = foundation.GENERAL_COMMANDS[command].schema([attr]).serialize()
     else:
@@ -110,7 +115,9 @@ def _get_packet_data(
         (t.uint8_t(0x00), None, None),
     ),
 )
-async def test_sinope_light_switch(zigpy_device_from_v2_quirk, press_type, button, exp_event):
+async def test_sinope_light_switch(
+    zigpy_device_from_v2_quirk, press_type, button, exp_event
+):
     """Test that button presses are sent as events."""
     device = zigpy_device_from_v2_quirk(SINOPE, "DM2500ZB")
     cluster_id = SINOPE_MANUFACTURER_CLUSTER_ID
@@ -191,7 +198,9 @@ async def test_sinope_light_switch_non_action_report(zigpy_device_from_v2_quirk)
     # report attributes command, but not "action_report"
     attr = foundation.Attribute(
         attrid=0x10,  # "on_intensity" attribute
-        value=foundation.TypeValue(type=t.int16s(0x29), value=t.int16s(50)),  # 0x29 = t.int16s
+        value=foundation.TypeValue(
+            type=t.int16s(0x29), value=t.int16s(50)
+        ),  # 0x29 = t.int16s
     )
     data = _get_packet_data(foundation.GeneralCommand.Report_Attributes, attr)
     device.packet_received(
@@ -286,7 +295,7 @@ async def test_sinope_device_current_sum(zigpy_device_from_v2_quirk):
     assert dev_summ_listener.attribute_updates[1][1] == 2500  # not modified
 
 
-@pytest.mark.parametrize("model", ["VA4220ZB", "LM4110-ZB"])
+@pytest.mark.parametrize("model", ["VA4220ZB", "VA4221ZB", "LM4110-ZB"])
 async def test_sinope_device_battery_voltage(zigpy_device_from_v2_quirk, model):
     """Test that device battery voltage is divided by 10."""
     device = zigpy_device_from_v2_quirk(SINOPE, model)
@@ -294,7 +303,9 @@ async def test_sinope_device_battery_voltage(zigpy_device_from_v2_quirk, model):
     dev_volt_cluster = device.endpoints[1].in_clusters[PowerConfiguration.cluster_id]
     dev_volt_listener = ClusterListener(dev_volt_cluster)
     dev_volt_attr_id = dev_volt_cluster.AttributeDefs.battery_voltage.id
-    dev_volt_other_attr_id = dev_volt_cluster.AttributeDefs.battery_percentage_remaining.id
+    dev_volt_other_attr_id = (
+        dev_volt_cluster.AttributeDefs.battery_percentage_remaining.id
+    )
 
     # verify battery voltage is divided by 10
     dev_volt_cluster.update_attribute(dev_volt_attr_id, 55)
@@ -307,3 +318,65 @@ async def test_sinope_device_battery_voltage(zigpy_device_from_v2_quirk, model):
     assert len(dev_volt_listener.attribute_updates) == 2
     assert dev_volt_listener.attribute_updates[1][0] == dev_volt_other_attr_id
     assert dev_volt_listener.attribute_updates[1][1] == 55  # not modified
+
+
+@pytest.mark.parametrize("model", ["VA4220ZB", "VA4221ZB"])
+@pytest.mark.parametrize(
+    ("flow_meter_enum", "expected_bytes"),
+    [
+        (
+            FlowMeterEnum.No_flow_meter,
+            b"\x20\x0c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00",
+        ),
+        (
+            FlowMeterEnum.FS4220,
+            b"\x20\x0c\x00\xc2\x11\x00\x00\x88\x77\x00\x00\x01\x00\x00\x00",
+        ),
+        (
+            FlowMeterEnum.FS4221,
+            b"\x20\x0c\x00\x9f\x26\x00\x00\x4c\x55\x01\x00\x01\x00\x00\x00",
+        ),
+        (
+            FlowMeterEnum.FS4222,
+            b"\x20\x0c\x00\x01\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00",
+        ),
+    ],
+)
+async def test_sinope_valve_flow_meter_config(
+    zigpy_device_from_v2_quirk,
+    model,
+    flow_meter_enum,
+    expected_bytes,
+):
+    """Test reading and writing the Sinope valve flow meter configuration."""
+    device = zigpy_device_from_v2_quirk(SINOPE, model)
+    cluster = device.endpoints.in_clusters[SINOPE_MANUFACTURER_CLUSTER_ID]
+    flow_meter_attr_id = cluster.AttributeDefs.flow_meter_config.id
+
+    # Verify binary serialization (uint8 type 0x20 + len 12 + 12 data bytes)
+    flow_meter_obj = FlowMeter(flow_meter_enum.value)
+    assert flow_meter_obj.serialize() == expected_bytes
+
+    # Test writing via write_attributes (simulates ZHA select entity)
+    with mock.patch.object(
+        cluster.endpoint,
+        "request",
+        return_value=[
+            [foundation.WriteAttributesStatusRecord(foundation.Status.SUCCESS)]
+        ],
+    ) as mock_request:
+        res = await cluster.write_attributes(
+            {"flow_meter_config": flow_meter_enum},
+            manufacturer=SINOPE_MANUFACTURER_ID,
+        )
+        assert res == [
+            [foundation.WriteAttributesStatusRecord(foundation.Status.SUCCESS)]
+        ]
+        mock_request.assert_called_once()
+
+    # Test attribute update and round-trip lookup in FlowMeterEnum
+    cluster.update_attribute(flow_meter_attr_id, flow_meter_obj)
+    cached_val = cluster.get(flow_meter_attr_id)
+    assert cached_val is not None
+    assert list(cached_val.value) == flow_meter_enum.value
+    assert FlowMeterEnum(list(cached_val.value)) == flow_meter_enum
