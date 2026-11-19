@@ -35,8 +35,8 @@ from zhaquirks.sinope import (
 )
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import QuirkBuilder, SensorDeviceClass, SensorStateClass
-from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime
+from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorDeviceClass, SensorStateClass
+from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime, UnitOfPower
 from zigpy.zcl.foundation import (
     ZCL_CLUSTER_REVISION_ATTR,
     BaseAttributeDefs,
@@ -288,8 +288,9 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     """LightManufacturerCluster: fire events corresponding to press type."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == self.AttributeDefs.current_summation_delivered.id:
+        if attrid == self.AttributeDefs.current_summation_delivered.id and value is not None:
             value = value / 100
+
         super()._update_attribute(attrid, value)
 
 
@@ -340,7 +341,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         step=1,
         min_value=0,
         max_value=5000,
-        unit=UnitOfEnergy.WATT_HOUR,
+        unit=UnitOfPower.WATT,
         translation_key="connected_load",
         fallback_name="Connected load",
     )
@@ -365,8 +366,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .sensor(  # Current summ delivered
@@ -375,7 +376,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
-        translation_key="current_summation_delivered",
+        translation_key="current_summ_delivered",
         fallback_name="Current summation delivered",
     )
     .add_to_registry()
@@ -428,7 +429,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         step=1,
         min_value=0,
         max_value=5000,
-        unit=UnitOfEnergy.WATT_HOUR,
+        unit=UnitOfPower.WATT,
         translation_key="connected_load",
         fallback_name="Connected load",
     )
@@ -462,8 +463,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .sensor(  # Current summ delivered
@@ -472,7 +473,7 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
         state_class=SensorStateClass.TOTAL_INCREASING,
         unit=UnitOfEnergy.KILO_WATT_HOUR,
         device_class=SensorDeviceClass.ENERGY,
-        translation_key="current_summation_delivered",
+        translation_key="current_summ_delivered",
         fallback_name="Current summation delivered",
     )
     .add_to_registry()
@@ -556,8 +557,8 @@ class LightManufacturerCluster(EventableCluster, SinopeTechnologiesManufacturerC
     .sensor(  # Device status
         attribute_name=LightManufacturerCluster.AttributeDefs.status.name,
         cluster_id=LightManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .add_to_registry()
