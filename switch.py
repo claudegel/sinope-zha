@@ -2,7 +2,7 @@
 
 Supported devices, SP2600ZB, SP2610ZB, RM3250ZB, RM3500ZB,
 VA4200WZ, VA4201WZ, VA4200ZB, VA4201ZB, VA4220ZB, VA4221ZB and MC3100ZB,
-2nd gen VA4220ZB, VA4221ZB with flow meeter FS4220, FS4221.
+2nd gen VA4220ZB, VA4221ZB with flow meter FS4220, FS4221.
 """
 
 from enum import Enum
@@ -11,7 +11,6 @@ from typing import ClassVar, Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
-from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import (
     SINOPE,
     SINOPE_MANUFACTURER_CLUSTER_ID,
@@ -22,6 +21,7 @@ from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import (
     BinarySensorDeviceClass,
     EntityType,
+    NumberDeviceClass,
     QuirkBuilder,
     ReportingConfig,
     SensorDeviceClass,
@@ -46,17 +46,20 @@ from zigpy.zcl.clusters.measurement import (
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (
+    Array,
+    DataTypeId,
     ZCL_CLUSTER_REVISION_ATTR,
     BaseAttributeDefs,
     ZCLAttributeDef,
 )
 
+
 STATUS_MAP = MappingProxyType(
     {
         0x00000000: "Ok",
-        0x00000020: "Temp_cable_disconected",
-        0x00000040: "Leak_cable_disconected",
-        0x00000060: "Both_cables_disconected",
+        0x00000020: "Temp_cable_disconnected",
+        0x00000040: "Leak_cable_disconnected",
+        0x00000060: "Both_cables_disconnected",
     }
 )
 
@@ -72,19 +75,21 @@ ZONE_MAP = MappingProxyType(
 
 BATTERY_MAP = MappingProxyType(
     {
-        0x00000000: "Ok",
-        0x00000001: "Low",
-        0x00000002: "Very_low",
-        0x00000004: "Minimum",
-        0x00000008: "Critical",
+        0x00000000: "Battery Ok",
+        0x00000001: "Battery Low",
+        0x00000003: "Battery Very_low",
+        0x00000007: "Battery Critical",
+        0x0000000F: "Battery Dead",
+        0x0000000C: "Evaluating Battery",
+        0x0000000E: "Evaluating Battery",
     }
 )
 
 VALVE_MAP = MappingProxyType(
     {
-        0x00: "Closed",
-        0x01: "Closed and armed",
-        0x02: "Open",
+        0x00: "Open",
+        0x01: "Closed",
+        0x02: "Closed and armed",
     }
 )
 
@@ -113,6 +118,7 @@ def valve_status_converter(value):
     return VALVE_MAP.get(int(value), f"Unmapped({value})")
 
 
+FLOW_METER_ATTR = 0x0240
 WATER_TEMP_MIN_ATTR = 0x0076  # low water temperature protection: 0 = off, 45-55 °C
 # Local-only (virtual) attributes presenting 0x0076 as an on/off switch + a remembered setpoint
 PROTECTION_ON_ATTR = 0xFE00
@@ -153,30 +159,7 @@ def battery_alarm_converter(value):
 
     value = int(value)
 
-    if value == 0:
-        return BATTERY_MAP[0]
-
-    states = []
-    known_bits = 0
-
-    if value & 0x01:
-        states.append(BATTERY_MAP[0x01])
-
-    if value & 0x02:
-        states.append(BATTERY_MAP[0x02])
-
-    if value & 0x04:
-        states.append(BATTERY_MAP[0x04])
-
-    if value & 0x08:
-        states.append(BATTERY_MAP[0x08])
-
-    unknown_bits = value & ~known_bits
-
-    if unknown_bits:
-        states.append(f"Unmapped(0x{unknown_bits:08X})")
-
-    return ", ".join(states)
+    return BATTERY_MAP.get(value, f"Unmapped({value})")
 
 
 class ManufacturerReportingMixin:
@@ -376,32 +359,32 @@ class InputDelayEnum(t.enum16):
 
 
 class EnergySource(t.enum8):
-    """Power source."""
+    """Basic.power_source values."""
 
-    Unknown = 0x0000
-    DC_mains = 0x0001
-    Battery = 0x0003
-    DC_source = 0x0004
-    ACUPS_01 = 0x0081
-    ACUPS01 = 0x0082
+    Unknown = 0x00
+    DC_mains = 0x01
+    Battery = 0x03
+    DC_source = 0x04
+    External_power_or_ACUPS_01 = 0x0081
+    ACUPS_01 = 0x0082
     DC_12_24 = 0x0084
 
 
 class ValveStatus(t.bitmap8):
     """Valve_status."""
 
-    Closed = 0x00
-    Closed_and_armed = 0x01
-    Open = 0x02
+    Open = 0x00
+    Closed = 0x01
+    Closed_and_armed = 0x02
 
 
 class DeviceStatus(t.bitmap32):
     """Device general status."""
 
     Ok = 0x00000000
-    Leak_cable_disconected = 0x00000040
-    Temp_cable_disconected = 0x00000020
-    Both_cables_disconected = 0x00000060
+    Leak_cable_disconnected = 0x00000040
+    Temp_cable_disconnected = 0x00000020
+    Both_cables_disconnected = 0x00000060
 
 
 class ZoneStatus(t.uint16_t):
@@ -414,7 +397,11 @@ class ZoneStatus(t.uint16_t):
     Connector_low_bat = 0x003A
 
 
-class FlowMeter(t.LVList):
+class _Uint8ArrayPayload(t.LVList[t.uint8_t, t.uint16_t]):
+    """Internal ZCL Array payload: uint16 length + uint8 items."""
+
+
+class FlowMeter(Array):
     """Flow meter configuration values."""
 
     No_flow_meter: ClassVar[list[int]] = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
@@ -422,14 +409,27 @@ class FlowMeter(t.LVList):
     FS4221: ClassVar[list[int]] = [159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0]
     FS4222: ClassVar[list[int]] = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
 
+    def __init__(self, value: list[int] | Array | None = None, **kwargs) -> None:
+        """Initialize the ZCL Array with uint8 (0x20) item type."""
+        if isinstance(value, Array):
+            raw_items = list(value.value)
+        elif value is not None:
+            raw_items = list(value)
+        else:
+            raw_items = []
+
+        # Convert each Python int to t.uint8_t and wrap in _Uint8ArrayPayload
+        payload = _Uint8ArrayPayload([t.uint8_t(x) for x in raw_items])
+        super().__init__(type=DataTypeId.uint8, value=payload)
+
 
 class FlowMeterEnum(Enum):
     """Create a list from FlowMeter."""
 
-    No_flow_meter = (0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-    FS4220 = (194, 17, 0, 0, 136, 119, 0, 0, 1, 0, 0, 0)
-    FS4221 = (159, 38, 0, 0, 76, 85, 1, 0, 1, 0, 0, 0)
-    FS4222 = (1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+    No_flow_meter = FlowMeter(FlowMeter.No_flow_meter)
+    FS4220 = FlowMeter(FlowMeter.FS4220)
+    FS4221 = FlowMeter(FlowMeter.FS4221)
+    FS4222 = FlowMeter(FlowMeter.FS4222)
 
 
 class UnitOfMeasure(t.enum8):
@@ -444,9 +444,11 @@ class BatteryStatus(t.bitmap32):
 
     Ok = 0x00000000
     Low = 0x00000001
-    Very_low = 0x00000002
-    Minimum = 0x00000004
-    Critical = 0x00000008
+    Very_low = 0x00000003
+    Critical = 0x00000007
+    Evaluating_Status_12 = 0x0000000C
+    Evaluating_Status_14 = 0x0000000E
+    Dead = 0x0000000F
 
 
 class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
@@ -637,6 +639,7 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
     async def write_attributes(self, attributes, *args, **kwargs):
         """Translate the virtual switch/setpoint into writes of 0x0076 (0 = off, 45-55 °C)."""
         fixed = {}
+
         for attr, value in attributes.items():
             attr_id = self._attr_id(attr)
             if attr_id == PROTECTION_ON_ATTR:
@@ -650,6 +653,13 @@ class SinopeManufacturerCluster(ManufacturerReportingMixin, CustomCluster):
             elif attr_id == WATER_TEMP_MIN_ATTR and value is not None:
                 value = round(float(value))
                 fixed[attr] = 0 if value < 45 else min(value, 55)
+            elif attr_id == FLOW_METER_ATTR:
+                if isinstance(value, FlowMeterEnum):
+                    fixed[attr] = FlowMeter(value.value)
+                elif isinstance(value, FlowMeter):
+                    fixed[attr] = value
+                else:
+                    fixed[attr] = FlowMeter(value)
             else:
                 fixed[attr] = value
         if not fixed:
@@ -819,27 +829,94 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     # device_type=3, device_version=0,
     # input_clusters=[0, 1, 3, 4, 5, 6, 8, 2821, 65281]
     # output_clusters=[3, 25]>
-    # <SimpleDescriptor(endpoint=1, profile=260,
-    # device_type=3, device_version=0,
-    # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
-    # output_clusters=[3, 6, 25]>
     QuirkBuilder(SINOPE, "VA4200WZ")
     .applies_to(SINOPE, "VA4201WZ")
     .applies_to(SINOPE, "VA4200ZB")
     .applies_to(SINOPE, "VA4201ZB")
-    .applies_to(SINOPE, "VA4220ZB")
-    .applies_to(SINOPE, "VA4221ZB")
     .replaces(SinopeTechnologiesBasicCluster)
     .replaces(SinopeTechnologiesPowerConfigurationCluster)
-    .replaces(SinopeTechnologiesIasZoneCluster)
     .replaces(SinopeTechnologiesMeteringCluster)
     .replaces(SinopeManufacturerCluster)
     .enum(  # energy source
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
         cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
         enum_class=EnergySource,
+        entity_type=EntityType.DIAGNOSTIC,
         translation_key="power_source",
         fallback_name="Power source",
+    )
+    .sensor(  # battery percentage
+        attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_percentage_remaining.name,
+        cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=PERCENTAGE,
+        device_class=SensorDeviceClass.BATTERY,
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
+        attribute_converter=lambda x: None if x is None else x / 2,
+        translation_key="battery_percentage_remaining",
+        fallback_name="Battery percentage remaining",
+    )
+    .sensor(  # battery voltage
+        attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_voltage.name,
+        cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
+        state_class=SensorStateClass.MEASUREMENT,
+        unit=UnitOfElectricPotential.VOLT,
+        device_class=SensorDeviceClass.VOLTAGE,
+        reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
+        translation_key="battery_voltage",
+        fallback_name="Battery voltage",
+    )
+    .sensor(  # Battery alarm
+        attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
+        cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=battery_alarm_converter,
+        translation_key="battery_alarm_state",
+        fallback_name="Battery alarm",
+    )
+    .add_to_registry()
+)
+
+(
+    # <SimpleDescriptor(endpoint=1, profile=260,
+    # device_type=3, device_version=0,
+    # input_clusters=[0, 1, 3, 4, 5, 6, 8, 1026, 1280, 1794, 2821, 65281]
+    # output_clusters=[3, 6, 25]>
+    QuirkBuilder(SINOPE, "VA4220ZB")
+    .applies_to(SINOPE, "VA4221ZB")
+    .replaces(SinopeTechnologiesBasicCluster)
+    .replaces(SinopeTechnologiesPowerConfigurationCluster)
+    .replaces(SinopeTechnologiesIasZoneCluster)
+    .replaces(SinopeTechnologiesMeteringCluster)
+    .replaces(SinopeManufacturerCluster)
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="current_summ_delivered"
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="instantaneous_demand"
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="status"
+    )
+    .prevent_default_entity_creation(
+        endpoint_id=1, cluster_id=TemperatureMeasurement.cluster_id, unique_id_suffix="measured_value"
+    )
+    .enum(  # flow meter configuration
+        attribute_name=SinopeManufacturerCluster.AttributeDefs.flow_meter_config.name,
+        cluster_id=SinopeManufacturerCluster.cluster_id,
+        enum_class=FlowMeterEnum,
+        entity_type=EntityType.CONFIG,
+        translation_key="flow_meter_model",
+        fallback_name="Flow meter model",
+    )
+    .enum(  # energy source
+        attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
+        cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
+        enum_class=EnergySource,
+        entity_type=EntityType.DIAGNOSTIC,
+        translation_key="energy_source",
+        fallback_name="Energy source",
     )
     .enum(  # power source
         attribute_name=SinopeManufacturerCluster.AttributeDefs.power_source.name,
@@ -943,6 +1020,15 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="valve_status",
         fallback_name="Valve status",
     )
+    .sensor(  # Battery alarm
+        attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
+        cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
+        endpoint_id=1,
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=battery_alarm_converter,
+        translation_key="battery_alarm_state",
+        fallback_name="Battery alarm",
+    )
     .sensor(  # Water volume delivered
         attribute_name=SinopeTechnologiesMeteringCluster.AttributeDefs.current_summ_delivered.name,
         cluster_id=SinopeTechnologiesMeteringCluster.cluster_id,
@@ -970,7 +1056,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
-        attribute_converter=lambda value: value / 100,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
         translation_key="room_temperature",
         fallback_name="Room temperature",
     )
@@ -1001,10 +1087,11 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="out_of_service",
         fallback_name="Out of service",
     )
-    .enum(  # energy source
+    .enum(  # Power source
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
         cluster_id=SinopeTechnologiesBasicCluster.cluster_id,
         enum_class=EnergySource,
+        entity_type=EntityType.DIAGNOSTIC,
         translation_key="power_source",
         fallback_name="Power source",
     )
@@ -1104,7 +1191,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         translation_key="current_load",
         fallback_name="Current load",
     )
-    .sensor(  # Battery status
+    .sensor(  # Battery alarm
         attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
         cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
         endpoint_id=1,
@@ -1129,7 +1216,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
-        attribute_converter=lambda value: value / 100,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
         translation_key="indoor_temperature",
         fallback_name="Indoor temperature",
     )
@@ -1151,7 +1238,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.HUMIDITY,
         unit=PERCENTAGE,
-        attribute_converter=lambda value: value / 100,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
         translation_key="relative_humidity",
         fallback_name="Relative humidity",
     )
@@ -1274,7 +1361,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
-        attribute_converter=lambda value: value / 100,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
         translation_key="water_temperature",
         fallback_name="Water temperature",
     )
