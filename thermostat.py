@@ -9,11 +9,16 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
-from homeassistant.components.number import NumberDeviceClass
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
-from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorDeviceClass, SensorStateClass
+from zigpy.quirks.v2 import (
+    EntityType,
+    NumberDeviceClass,
+    QuirkBuilder,
+    SensorDeviceClass,
+    SensorStateClass,
+)
 from zigpy.quirks.v2.homeassistant import PERCENTAGE, UnitOfPower, UnitOfTemperature, UnitOfTime
 from zigpy.zcl.clusters.homeautomation import ElectricalMeasurement
 from zigpy.zcl.clusters.hvac import Thermostat, UserInterface
@@ -752,7 +757,7 @@ sinope_base_quirk = (
         endpoint_id=1,
         entity_type=EntityType.DIAGNOSTIC,
         attribute_converter=device_status_converter,
-        translation_key="status",
+        translation_key="dev_status",
         fallback_name="Device status",
     )
 )
@@ -1004,7 +1009,7 @@ sinope_base_quirk = (
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
-        attribute_converter=lambda value: value / 100,
+        attribute_converter=lambda value: value / 100 if value is not None else None,
         translation_key="room_temperature",
         fallback_name="Room temperature",
     )
@@ -1129,8 +1134,9 @@ sinope_base_quirk = (
     .sensor(  # Device status
         attribute_name=SinopeTechnologiesManufacturerCluster.AttributeDefs.status.name,
         cluster_id=SinopeTechnologiesManufacturerCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
-        translation_key="status",
+        entity_type=EntityType.DIAGNOSTIC,
+        attribute_converter=device_status_converter,
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .add_to_registry()
