@@ -9,13 +9,13 @@ from typing import Final
 
 import zigpy.profiles.zha as zha_p
 import zigpy.types as t
-from homeassistant.components.number import NumberDeviceClass, NumberMode
 from zhaquirks.sinope import SINOPE, SINOPE_MANUFACTURER_CLUSTER_ID
 from zhaquirks.sinope.switch import EnergySource, SinopeTechnologiesBasicCluster
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import (
     EntityType,
+    NumberDeviceClass,
     QuirkBuilder,
     ReportingConfig,
     SensorDeviceClass,
@@ -283,7 +283,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     """SinopeTechnologiesPowerConfigurationCluster custom cluster."""
 
     def _update_attribute(self, attrid, value):
-        if attrid == self.AttributeDefs.battery_voltage.id:
+        if attrid == self.AttributeDefs.battery_voltage.id and value is not None:
             value = value / 10
         super()._update_attribute(attrid, value)
 
@@ -307,6 +307,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     QuirkBuilder(SINOPE, "WL4200")
     .applies_to(SINOPE, "WL4200S")
     .replaces(SinopeTechnologiesIasZoneCluster)
+    .replaces(SinopeTechnologiesPowerConfigurationCluster)
     .replaces(SinopeManufacturerCluster)
     .enum(  # Power source
         attribute_name=SinopeTechnologiesBasicCluster.AttributeDefs.power_source.name,
@@ -332,7 +333,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         min_value=3.0,
         max_value=15.0,
         device_class=NumberDeviceClass.TEMPERATURE,
-        mode=NumberMode.BOX,
+        mode="box",
         multiplier=0.01,
         translation_key="min_temperature_limit",
         fallback_name="Min temperature limit",
@@ -344,7 +345,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         min_value=15,
         max_value=30,
         device_class=NumberDeviceClass.TEMPERATURE,
-        mode=NumberMode.BOX,
+        mode="box",
         multiplier=0.01,
         translation_key="max_temperature_limit",
         fallback_name="Max temperature limit",
@@ -356,7 +357,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         reporting_config=ReportingConfig(min_interval=30, max_interval=43200, reportable_change=1),
-        attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
     )
@@ -387,6 +387,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     # output_clusters=[25]>
     QuirkBuilder(SINOPE, "WL4210")
     .replaces(SinopeTechnologiesIasZoneCluster)
+    .replaces(SinopeTechnologiesPowerConfigurationCluster)
     .replaces(SinopeManufacturerCluster)
     .enum(  # Probe connected
         attribute_name=SinopeManufacturerCluster.AttributeDefs.probe_connected.name,
@@ -419,7 +420,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         min_value=3.0,
         max_value=15.0,
         device_class=NumberDeviceClass.TEMPERATURE,
-        mode=NumberMode.BOX,
+        mode="box",
         multiplier=0.01,
         translation_key="min_temperature_limit",
         fallback_name="Min temperature limit",
@@ -431,7 +432,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         min_value=15,
         max_value=30,
         device_class=NumberDeviceClass.TEMPERATURE,
-        mode=NumberMode.BOX,
+        mode="box",
         multiplier=0.01,
         translation_key="max_temperature_limit",
         fallback_name="Max temperature limit",
@@ -443,7 +444,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         reporting_config=ReportingConfig(min_interval=60, max_interval=43200, reportable_change=1),
-        attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
     )
@@ -479,7 +479,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         endpoint_id=1,
         entity_type=EntityType.DIAGNOSTIC,
         attribute_converter=status_converter,
-        translation_key="status",
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .add_to_registry()
@@ -496,7 +496,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
     .sensor(  # Battery status
         attribute_name=SinopeTechnologiesPowerConfigurationCluster.AttributeDefs.battery_alarm_state.name,
         cluster_id=SinopeTechnologiesPowerConfigurationCluster.cluster_id,
-        state_class=SensorStateClass.MEASUREMENT,
+        entity_type=EntityType.DIAGNOSTIC,
         suggested_display_precision=0,
         translation_key="battery_alarm_state",
         fallback_name="Battery alarm",
@@ -508,7 +508,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         unit=UnitOfElectricPotential.VOLT,
         device_class=SensorDeviceClass.VOLTAGE,
         reporting_config=ReportingConfig(min_interval=60, max_interval=43200, reportable_change=1),
-        attribute_converter=lambda x: None if x is None else x / 10,
         translation_key="battery_voltage",
         fallback_name="Battery voltage",
     )
@@ -518,7 +517,6 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         state_class=SensorStateClass.MEASUREMENT,
         attribute_converter=lambda x: None if x == -2 else x,
         unit=DEGREE,
-        device_class=SensorDeviceClass.VOLUME_STORAGE,
         reporting_config=ReportingConfig(min_interval=5, max_interval=3600, reportable_change=1),
         translation_key="gauge_angle",
         fallback_name="Gauge angle",
@@ -529,7 +527,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         endpoint_id=1,
         entity_type=EntityType.DIAGNOSTIC,
         attribute_converter=status_converter,
-        translation_key="status",
+        translation_key="dev_status",
         fallback_name="Device status",
     )
     .number(  # Check in interval
