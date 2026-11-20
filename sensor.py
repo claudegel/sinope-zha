@@ -21,7 +21,7 @@ from zigpy.quirks.v2 import (
     SensorDeviceClass,
     SensorStateClass,
 )
-from zigpy.quirks.v2.homeassistant import DEGREE, UnitOfElectricPotential, UnitOfTime
+from zigpy.quirks.v2.homeassistant import DEGREE, UnitOfElectricPotential, UnitOfTemperature, UnitOfTime
 from zigpy.zcl.clusters.general import AnalogInput, PollControl, PowerConfiguration
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.foundation import (
@@ -332,6 +332,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         step=0.1,
         min_value=3.0,
         max_value=15.0,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         mode="box",
         multiplier=0.01,
@@ -344,6 +345,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         step=0.1,
         min_value=15,
         max_value=30,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         mode="box",
         multiplier=0.01,
@@ -419,6 +421,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         step=0.1,
         min_value=3.0,
         max_value=15.0,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         mode="box",
         multiplier=0.01,
@@ -431,6 +434,7 @@ class SinopeTechnologiesPowerConfigurationCluster(CustomCluster, PowerConfigurat
         step=0.1,
         min_value=15,
         max_value=30,
+        unit=UnitOfTemperature.CELSIUS,
         device_class=NumberDeviceClass.TEMPERATURE,
         mode="box",
         multiplier=0.01,
