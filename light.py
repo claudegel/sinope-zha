@@ -36,7 +36,7 @@ from zhaquirks.sinope import (
 from zigpy.exceptions import DeliveryError, ZigbeeException
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import EntityType, QuirkBuilder, SensorDeviceClass, SensorStateClass
-from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfTime, UnitOfPower
+from zigpy.quirks.v2.homeassistant import UnitOfEnergy, UnitOfPower, UnitOfTime
 from zigpy.zcl.foundation import (
     ZCL_CLUSTER_REVISION_ATTR,
     BaseAttributeDefs,
