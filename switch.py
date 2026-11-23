@@ -46,10 +46,10 @@ from zigpy.zcl.clusters.measurement import (
 from zigpy.zcl.clusters.security import IasZone
 from zigpy.zcl.clusters.smartenergy import Metering
 from zigpy.zcl.foundation import (
-    Array,
-    DataTypeId,
     ZCL_CLUSTER_REVISION_ATTR,
+    Array,
     BaseAttributeDefs,
+    DataTypeId,
     ZCLAttributeDef,
 )
 
@@ -86,9 +86,9 @@ BATTERY_MAP = MappingProxyType(
 
 VALVE_MAP = MappingProxyType(
     {
-        0x00: "Open",
-        0x01: "Closed",
-        0x02: "Closed and armed",
+        0x00: "Closed",
+        0x01: "Closed and armed",
+        0x02: "Open",
     }
 )
 
@@ -372,9 +372,9 @@ class EnergySource(t.enum8):
 class ValveStatus(t.bitmap8):
     """Valve_status."""
 
-    Open = 0x00
-    Closed = 0x01
-    Closed_and_armed = 0x02
+    Closed = 0x00
+    Closed_and_armed = 0x01
+    Open = 0x02
 
 
 class DeviceStatus(t.bitmap32):
