@@ -53,7 +53,6 @@ from zigpy.zcl.foundation import (
     ZCLAttributeDef,
 )
 
-
 STATUS_MAP = MappingProxyType(
     {
         0x00000000: "Ok",
@@ -896,9 +895,7 @@ class SinopeTechnologiesMeteringCluster(CustomCluster, Metering):
     .prevent_default_entity_creation(
         endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="instantaneous_demand"
     )
-    .prevent_default_entity_creation(
-        endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="status"
-    )
+    .prevent_default_entity_creation(endpoint_id=1, cluster_id=Metering.cluster_id, unique_id_suffix="status")
     .prevent_default_entity_creation(
         endpoint_id=1, cluster_id=TemperatureMeasurement.cluster_id, unique_id_suffix="measured_value"
     )
